@@ -67,7 +67,7 @@ bindsym $mod+p exec --no-startup-id "pkill picom || picom &"
 bindsym $mod+Shift+q kill
 
 # Start dmenu
-bindsym $mod+d exec --no-startup-id dmenu_run
+bindsym $mod+d exec --no-startup-id dmenu_run -nb '#1f1510' -nf '#f4e1b5' -sb '#3d2d1f' -sf '#ffbf7f' -fn 'monospace-10'
 
 # Change focus with hjkl
 bindsym $mod+h focus left
