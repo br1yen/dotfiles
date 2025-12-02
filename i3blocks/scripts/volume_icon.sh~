@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Get current volume and mute status
+VOL=$(pactl get-sink-volume @DEFAULT_SINK@ | awk '{print $5}' | head -n1)
+MUTED=$(pactl get-sink-mute @DEFAULT_SINK@ | awk '{print $2}')
+
+# Handle clicks
+case "$BLOCK_BUTTON" in
+    1) pavucontrol & ;;            # Left click: open volume control
+    4) pactl set-sink-volume @DEFAULT_SINK@ +5% ;;  # Scroll up: volume up
+    5) pactl set-sink-volume @DEFAULT_SINK@ -5% ;;  # Scroll down: volume down
+esac
+
+# Display icon based on volume/mute
+if [ "$MUTED" = "yes" ]; then
+    ICON="🔇"
+elif [ "${VOL%\%}" -lt 30 ]; then
+    ICON="🔈"
+elif [ "${VOL%\%}" -lt 70 ]; then
+    ICON="🔉"
+else
+    ICON="🔊"
+fi
+
+echo "$ICON $VOL"
+exit 0
+
