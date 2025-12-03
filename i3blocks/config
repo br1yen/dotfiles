@@ -1,6 +1,11 @@
 [time]
-command=date '+%I : %M : %S     %m / %d / %y                                                                 ' 
+command=date '+%I : %M : %S      %m / %d / %y                                                     ' 
 interval=1
+
+[pomodoro]
+command=~/.config/i3blocks/scripts/pomodoro.sh
+interval=1
+markup=none
 
 [cpu]
 command=~/.config/i3blocks/scripts/cpu.sh

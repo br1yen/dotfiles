@@ -16,14 +16,14 @@ vim.o.cursorline = false
 vim.o.scrolloff = 10
 vim.o.list = false
 vim.o.wrap = true
-vim.o.breakindent = true 
+vim.o.breakindent = true
 vim.o.hlsearch = false
 vim.o.confirm = true
 vim.o.autochdir = true
-vim.opt.tabstop = 2   
+vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
-vim.opt.smartindent = true 
+vim.opt.smartindent = true
 
 -- Sync clipboard between OS and Neovim. Schedule the setting after `UiEnter` because it can
 -- increase startup-time. Remove this option if you want your OS clipboard to remain independent.
@@ -39,12 +39,12 @@ vim.api.nvim_create_autocmd('UIEnter', {
 vim.keymap.set('n', '<leader>w', '<cmd>write<cr>')
 
 -- copy and paste to system clipboard
-vim.keymap.set({'n', 'x'}, 'gy', '"+y')
-vim.keymap.set({'n', 'x'}, 'gp', '"+p')
+vim.keymap.set({ 'n', 'x' }, 'gy', '"+y')
+vim.keymap.set({ 'n', 'x' }, 'gp', '"+p')
 
 -- delete without changing register
-vim.keymap.set({'n', 'x'}, 'x', '"_x')
-vim.keymap.set({'n', 'x'}, 'X', '"_d')
+vim.keymap.set({ 'n', 'x' }, 'x', '"_x')
+vim.keymap.set({ 'n', 'x' }, 'X', '"_d')
 
 -- Use <Esc> to exit terminal mode
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
@@ -58,6 +58,19 @@ vim.keymap.set({ 'n' }, '<A-h>', '<C-w>h')
 vim.keymap.set({ 'n' }, '<A-j>', '<C-w>j')
 vim.keymap.set({ 'n' }, '<A-k>', '<C-w>k')
 vim.keymap.set({ 'n' }, '<A-l>', '<C-w>l')
+
+vim.o.foldmethod = 'expr'
+vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = 'markdown',
+  callback = function()
+    vim.opt_local.foldmethod = "expr"
+    vim.opt_local.foldexpr = "nvim_treesitter#foldexpr()"
+    vim.opt_local.foldenable = true
+    vim.opt_local.foldlevel = 99
+  end,
+})
 
 -- [[ Basic Autocommands ]].
 -- See `:h lua-guide-autocommands`, `:h autocmd`, `:h nvim_create_autocmd()`

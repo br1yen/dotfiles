@@ -4,10 +4,14 @@
 set $mod Mod4
 
 # Background Image
-exec_always --no-startup-id feh --bg-scale ~/holycorpse/Pictures/forestbackmain.jpg
+exec_always --no-startup-id feh --bg-scale ~/holycorpse/pictures/forestbackmai:.jpg
 
 # Font for window titles and bar
 font pango:monospace 8
+
+# Pomodoro timer controls
+bindsym Mod1+o exec --no-startup-id ~/.config/i3blocks/scripts/pomodoro.sh start
+bindsym Mod1+p exec --no-startup-id ~/.config/i3blocks/scripts/pomodoro.sh pause
 
 # Disable mouse focus
 focus_follows_mouse no
