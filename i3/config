@@ -4,7 +4,7 @@
 set $mod Mod4
 
 # Background Image
-exec_always --no-startup-id feh --bg-scale ~/holycorpse/pictures/forestbackmai:.jpg
+exec_always --no-startup-id feh --bg-scale ~/holycorpse/pictures/forestbackmain.jpg
 
 # Font for window titles and bar
 font pango:monospace 8
@@ -62,7 +62,7 @@ bindsym XF86AudioMicMute exec --no-startup-id pactl set-source-mute @DEFAULT_SOU
 bindsym $mod+Return exec kitty
 
 # Screenshot with ksnip
-bindsym Control+Shift+s exec ksnip
+bindsym Ctrl+Shift+s exec --no-startup-id ksnip -r
 
 # Binding to reload picom
 bindsym $mod+p exec --no-startup-id "pkill picom || picom &"
