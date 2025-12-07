@@ -1,5 +1,5 @@
 [time]
-command=date '+%I : %M : %S      %m / %d / %y                                                     ' 
+command=date '+%I : %M : %S    %m / %d / %y                                                                                             ' 
 interval=1
 
 [pomodoro]

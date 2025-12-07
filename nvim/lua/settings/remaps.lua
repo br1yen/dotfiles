@@ -13,10 +13,6 @@ vim.keymap.set("v", "K", ":m '<-2<cr>gv=gv", { desc = "Move selection up" })
 vim.keymap.set("n", "<C-d>", "<C-d>zz>")
 vim.keymap.set("n", "<C-u>", "<C-u>zz>")
 
--- O and o doesn't enter insert mode automatically
-vim.keymap.set("n", "o", "o<Esc>", { desc = "New line below" })
-vim.keymap.set("n", "O", "O<Esc>", { desc = "New line above" })
-
 -- Paste and keep pasting
 vim.keymap.set("x", "<leader>p", '"_dp')
 

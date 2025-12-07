@@ -17,7 +17,7 @@ bindsym Mod1+p exec --no-startup-id ~/.config/i3blocks/scripts/pomodoro.sh pause
 focus_follows_mouse no
 
 # Brown/Amber color scheme
-set $bg-color            #3d2d1f
+set $bg-color            #967BB6
 set $inactive-bg-color   #2b1f14
 set $text-color          #ffbf7f
 set $inactive-text-color #8b6f47
@@ -45,13 +45,13 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id nm-ap:withplet
 
 # Gaps
-gaps inner 6
-gaps outer 6
+gaps inner 0
+gaps outer 0
 
 # Optional: remove window titlebars for cleaner look with gaps
 for_window [class=".*"] border pixel 2
 
-# Volume controls
+# Volume controls 
 set $refresh_i3status killall -SIGUSR1 i3status
 bindsym XF86AudioRaiseVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +10% && $refresh_i3status
 bindsym XF86AudioLowerVolume exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ -10% && $refresh_i3status
@@ -97,7 +97,7 @@ bindsym $mod+Shift+Down move down
 bindsym $mod+Shift+Up move up
 bindsym $mod+Shift+Right move right
 
-# Use Mouse+$mod to drag floating windows
+# Use Mouse+$mod to drag floating windows 
 floating_modifier $mod
 
 # Split orientation
@@ -108,7 +108,7 @@ bindsym $mod+v split v
 bindsym $mod+f fullscreen toggle
 
 # Container layout
-bindsym $mod+s layout stacking
+#bindsym $mod+s layout stacking
 bindsym $mod+w layout tabbed
 bindsym $mod+e layout toggle split
 
@@ -193,7 +193,7 @@ bar {
     status_command i3blocks
     position top
     tray_output none
-    font pango:monospace 10
+    font pango:monospace 8
     separator_symbol " "
     
     colors {
