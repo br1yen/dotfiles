@@ -1,0 +1,64 @@
+{
+  "layer": "top",
+  "position": "top",
+  "spacing": 6,
+
+  "modules-left": [
+    "custom/arch",
+    "river/tags"
+  ],
+
+  "modules-center": [
+    "clock"
+  ],
+
+  "modules-right": [
+    "pulseaudio",
+    "network",
+    "battery",
+    "tray"
+  ],
+
+  "custom/arch": {
+    "format": "",
+    "tooltip": false
+  },
+
+  "river/tags": {
+    "num-tags": 9,
+    "tag-labels": ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+    "disable-click": false,
+    "urgent": ""
+  },
+
+  "clock": {
+    "format": "{:%a %b %d  •  %I:%M %p   }",
+    "tooltip": false
+  },
+
+  "pulseaudio": {
+    "format": "{icon} {volume}%",
+    "format-muted": "󰝟 muted",
+    "format-icons": {
+      "default": ["", "", ""]
+    }
+  },
+
+  "network": {
+    "format-wifi": "  {signalStrength}%",
+    "format-ethernet": "󰈀",
+    "format-disconnected": "󰖪",
+    "tooltip-format": "{ifname}: {ipaddr}"
+  },
+
+  "battery": {
+    "format": "{icon} {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-icons": ["󰁺", "󰁼", "󰁾", "󰂀", "󰂂"]
+  },
+
+  "tray": {
+    "spacing": 8
+  }
+}
+

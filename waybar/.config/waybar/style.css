@@ -1,0 +1,152 @@
+@define-color base03  #002b36;
+@define-color base02  #073642;
+@define-color base01  #586e75;
+@define-color base00  #657b83;
+@define-color base0   #839496;
+@define-color base1   #93a1a1;
+@define-color base2   #eee8d5;
+@define-color base3   #fdf6e3;
+
+@define-color yellow  #b58900;
+@define-color orange  #cb4b16;
+@define-color red     #dc322f;
+@define-color magenta #d33682;
+@define-color violet  #6c71c4;
+@define-color blue    #268bd2;
+@define-color cyan    #2aa198;
+@define-color green   #859900;
+
+
+/* ─────────────────────────────
+   Base
+   ───────────────────────────── */
+
+* {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 13px;
+    font-weight: 600;
+}
+
+window#waybar {
+    background: transparent;
+    color: @base1;
+}
+
+
+/* ─────────────────────────────
+   Layout
+   ───────────────────────────── */
+
+.modules-left,
+.modules-center,
+.modules-right {
+    background: transparent;
+    border: none;
+    margin: 6px 8px;
+    padding: 0;
+}
+
+
+/* ─────────────────────────────
+   Arch
+   ───────────────────────────── */
+
+#custom-arch {
+    color: @blue;
+    background: transparent;
+    padding: 0 8px;
+    margin: 0;
+    font-size: 18px;
+}
+
+
+/* ─────────────────────────────
+   River tags
+   ───────────────────────────── */
+
+#tags {
+    padding: 0;
+}
+
+#tags button {
+    color: @base01;
+    background: transparent;
+    border: none;
+    border-radius: 0;
+    padding: 0 8px;
+    margin: 0;
+}
+
+#tags button:hover {
+    color: @base1;
+    background: transparent;
+}
+
+#tags button.focused {
+    color: @base3;
+    background: transparent;
+}
+
+#tags button.urgent {
+    color: @red;
+    background: transparent;
+}
+
+
+/* ─────────────────────────────
+   Clock
+   ───────────────────────────── */
+
+#clock {
+    color: @base1;
+    padding: 0 8px;
+}
+
+
+/* ─────────────────────────────
+   System
+   ───────────────────────────── */
+
+#pulseaudio,
+#network,
+#battery,
+#tray {
+    background: transparent;
+    border: none;
+    color: @base1;
+    padding: 0 7px;
+    margin: 0;
+}
+
+
+/* Audio */
+#pulseaudio {
+    color: @cyan;
+}
+
+
+/* Network */
+#network {
+    color: @blue;
+}
+
+
+/* Battery */
+#battery {
+    color: @green;
+}
+
+#battery.warning {
+    color: @yellow;
+}
+
+#battery.critical {
+    color: @red;
+}
+
+
+/* Tray */
+#tray {
+    color: @base1;
+}
+
