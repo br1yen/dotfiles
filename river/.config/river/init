@@ -151,3 +151,9 @@ riverctl rule-add -app-id "bar" csd
 # River will send the process group of the init executable SIGTERM on exit.
 riverctl default-layout rivertile
 rivertile -view-padding 6 -outer-padding 6 &
+
+# Screenshot to clipboard
+riverctl map normal Mod4 S spawn 'grim -g "$(slurp)" - | wl-copy'
+
+# Screenshot to ~/Pictures/screenshots
+riverctl map normal Mod4+Shift S spawn 'grim -g "$(slurp)" ~/pictures/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png'
