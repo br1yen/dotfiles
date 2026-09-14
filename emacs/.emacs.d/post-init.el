@@ -155,7 +155,7 @@
   ;; available in the *Completions* buffer, add it to the
   ;; `completion-list-mode-map'.
   :bind (:map minibuffer-local-map
-         ("M-A" . marginalia-cycle))
+              ("M-A" . marginalia-cycle))
 
   ;; The :init section is always executed.
   :init
@@ -260,19 +260,12 @@
 ;; Remove GTK client-side window decorations
 (add-to-list 'default-frame-alist '(undecorated . t))
 
-;; Changing the theme
-(use-package doom-themes
-  :custom
-  ;; Global settings (defaults)
-  (doom-themes-enable-bold t)   ; if nil, bold is universally disabled
-  (doom-themes-enable-italic t) ; if nil, italics is universally disabled
-  :config
-  (load-theme 'modus-operandi t)
-
-  ;; Enable flashing mode-line on errors
-  (doom-themes-visual-bell-config)
-  ;; Corrects (and improves) org-mode's native fontification.
-  (doom-themes-org-config))
+;; Default theme
+(let ((inhibit-redisplay t))
+  ;; Disable all active themes
+  (mapc #'disable-theme custom-enabled-themes)
+  ;; Load the built-in theme
+  (load-theme 'modus-operandi t))
 
 ;; Uncomment the following if you are using undo-fu
 (setq evil-undo-system 'undo-fu)
@@ -383,7 +376,16 @@
 
 (use-package evil-org
   :after org evil
-  :hook (org-mode . evil-org-mode))
+  :hook (org-mode . evil-org-mode)
+
+  :config
+  ;; Vim-style folding for Org
+  (evil-define-key 'normal org-mode-map
+    (kbd "za") #'org-cycle
+    (kbd "zo") #'org-show-subtree
+    (kbd "zc") #'org-hide-subtree
+    (kbd "zR") #'org-show-all
+    (kbd "zM") #'org-overview))
 
 (with-eval-after-load 'evil
   (define-key evil-normal-state-map (kbd "<escape>") #'evil-ex-nohighlight))
@@ -436,9 +438,18 @@
     "fr" #'consult-recent-file
     "fs" #'save-buffer
 
-    ;; Notes
-    "n" '(:ignore t :which-key "notes")
+    ;; Org / Notes
+    "n"  '(:ignore t :which-key "org")
+    "na" #'org-agenda
+    "ns" #'org-schedule
+    "nd" #'org-deadline
     "nc" #'org-capture
+    "nw" #'org-agenda-list
+    "no" #'org-clock-in
+    "ni" #'org-clock-out
+    "nt" #'org-todo
+    "np" #'org-set-property
+    "ng" #'org-set-tags-command
 
     ;; Buffers
     "b" '(:ignore t :which-key "buffers")
@@ -553,32 +564,24 @@
 ;; Make the text width thinner
 (use-package visual-fill-column
   :custom
-  (visual-fill-column-width 90)
+  (visual-fill-column-width 88)
   (visual-fill-column-center-text t)
   :hook (org-mode . visual-fill-column-mode))
 
 ;; Org
 (use-package org
-  :commands (org-mode org-version)
-  :mode ("\\.org\\'" . org-mode)
   :hook ((org-mode . visual-line-mode)
          (org-mode . variable-pitch-mode)
          (org-mode . org-indent-mode))
 
   :custom
-  ;; Appearance
   (org-hide-leading-stars t)
   (org-hide-emphasis-markers t)
-
-  ;; Indentation
-  (org-adapt-indentation t)
-
-  ;; Editing
+  (org-pretty-entities t)
+  (org-adapt-indentation nil)
+  (org-tags-column 0)
+  (org-indent-indentation-per-level 2)
   (org-edit-src-content-indentation 0)
-  (org-startup-truncated t)
-
-  ;; Structure templates
-  (org-use-speed-commands t)
 
   :config
   (require 'org-tempo)
@@ -587,7 +590,9 @@
             (lambda ()
               (setq-local line-spacing 0.15)
 
-              (dolist (face '(org-code
+              (dolist (face '(org-meta-line
+                              org-document-title
+                              org-code
                               org-block
                               org-block-begin-line
                               org-block-end-line
@@ -599,7 +604,7 @@
                               org-date
                               org-tag))
                 (set-face-attribute face nil
-                                    :family "JetBrains Mono Nerd Font")))))
+                                    :family "IBM Plex Mono")))))
 
 (use-package org-superstar
   :after org
@@ -607,37 +612,59 @@
 
   :custom
   (org-superstar-headline-bullets-list
-   '(" " " " " " " "))
+   '("*" "*" "*" "*"))
   (org-superstar-item-bullet-alist
    '((?- . ?-)
      (?+ . ?•)
      (?* . ?*))))
 
+(use-package org-appear
+  :commands org-appear-mode
+  :hook (org-mode . org-appear-mode))
+
 ;; Slightly larger Org headings while preserving the theme's colors.
 (custom-set-faces
- '(org-level-1 ((t (:inherit outline-1 :height 1.20 :weight bold))))
- '(org-level-2 ((t (:inherit outline-2 :height 1.12 :weight bold))))
- '(org-level-3 ((t (:inherit outline-3 :height 1.07 :weight bold))))
- '(org-level-4 ((t (:inherit outline-4 :height 1.04 :weight bold))))
- '(org-level-5 ((t (:inherit outline-5 :height 1.02 :weight bold)))))
+ '(org-level-1 ((t (:inherit outline-1 :height 1.30))))
+ '(org-level-2 ((t (:inherit outline-2 :height 1.20))))
+ '(org-level-3 ((t (:inherit outline-3 :height 1.15))))
+ '(org-level-4 ((t (:inherit outline-4 :height 1.10))))
+ '(org-level-5 ((t (:inherit outline-5 :height 1.00)))))
+
+;;; Org Agenda
+(require 'org)
+(require 'org-agenda)
 
 (setq org-directory "~/org/")
-(setq org-default-notes-file (expand-file-name "inbox.org" org-directory))
+(setq org-agenda-files
+      '("~/org/inbox.org"
+        "~/org/rel103.org"))
 
-(setq org-todo-keywords '((sequence "TODO(t)" "|" "DONE(d)")))
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "|" "DONE(d)")))
+
 (setq org-log-done 'time)
 
 (setq org-capture-templates
       '(("t" "Todo" entry
-         (file+headline org-default-notes-file "Inbox")
-         "* TODO %?\n  %U\n")
-        ("n" "Note" entry
-         (file+headline org-default-notes-file "Inbox")
-         "* %?\n  %U\n")))
+         (file "~/org/inbox.org")
+         "* TODO %?\n")
 
-(use-package org-appear
-  :commands org-appear-mode
-  :hook (org-mode . org-appear-mode))
+        ("n" "Note" entry
+         (file "~/org/inbox.org")
+         "* %?\n")))
+
+(defun my/org-today ()
+  "Show today's and upcoming scheduled/deadline items plus inbox TODOs."
+  (interactive)
+  (org-agenda nil "f"))
+
+(setq org-agenda-custom-commands
+      '(("f" "Today + Inbox"
+         ((agenda ""
+                  ((org-agenda-span 7)
+                   (org-agenda-start-day "0d")))
+          (todo ""
+                ((org-agenda-files '("~/org/inbox.org"))))))))
 
 ;; Manage buffer states
 (use-package bufferfile
@@ -654,14 +681,6 @@
   ;; Specifies the action taken after deleting a file and killing its buffer.
   (setq bufferfile-delete-switch-to 'parent-directory))
 
-;; Jump navigation
-(use-package avy
-  :commands (avy-goto-char
-             avy-goto-char-2
-             avy-next)
-  :init
-  (global-set-key (kbd "C-'") 'avy-goto-char-2))
-
 ;;; Elisp development helper
 ;; Highlights function and variable definitions in Emacs Lisp mode
 (use-package highlight-defined
@@ -669,13 +688,14 @@
   :hook
   (emacs-lisp-mode . highlight-defined-mode))
 
-;; Set the default font
+;; Default fonts
 (set-face-attribute 'default nil
-                    :height 120
-                    :weight 'normal
-                    :family "JetBrains Mono Nerd Font")
+                    :family "IBM Plex Mono"
+                    :height 120)
+
+;; Proportional/document font
 (set-face-attribute 'variable-pitch nil
-                    :family "Noto Sans"
+                    :family "IBM Plex Sans"
                     :height 1.0)
 
 ;; Text scale stays through every buffer
@@ -696,6 +716,10 @@
 ;; Set the fringes to match the pixel height of a character. This ensures the
 ;; fringe is wide enough, scaling dynamically with the current font size.
 (fringe-mode (frame-char-width))
+
+;; General indentation defaults
+(setq-default tab-width 4)
+(setq-default indent-tabs-mode nil)
 
 ;; When Delete Selection mode is enabled, typed text replaces the selection
 ;; if the selection is active.
