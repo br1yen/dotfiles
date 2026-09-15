@@ -383,7 +383,7 @@
   (evil-define-key 'normal org-mode-map
     (kbd "za") #'org-cycle
     (kbd "zo") #'org-show-subtree
-    (kbd "zc") #'org-hide-subtree
+    (kbd "zc") #'outline-hide-subtree
     (kbd "zR") #'org-show-all
     (kbd "zM") #'org-overview))
 
@@ -448,6 +448,7 @@
     "no" #'org-clock-in
     "ni" #'org-clock-out
     "nt" #'org-todo
+    "nl" #'org-toggle-checkbox
     "np" #'org-set-property
     "ng" #'org-set-tags-command
 
@@ -637,7 +638,10 @@
 (setq org-directory "~/org/")
 (setq org-agenda-files
       '("~/org/inbox.org"
-        "~/org/rel103.org"))
+        "~/org/rel103.org"
+        "~/org/csc301.org"
+        "~/org/snc185.org"
+        "~/org/csc373.org"))
 
 (setq org-todo-keywords
       '((sequence "TODO(t)" "|" "DONE(d)")))
