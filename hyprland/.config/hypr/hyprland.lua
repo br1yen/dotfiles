@@ -4,14 +4,14 @@ hl.monitor({
     output   = "DP-3",
     mode     = "1920x1080@179.998",
     position = "auto",
-    scale    = "auto",
+    scale    = "1.0",
 })
 
 hl.monitor({
     output   = "eDP-1",
     mode     = "preferred@60",
     position = "auto",
-    scale    = "auto",
+    scale    = "1.0",
 })
 
 ---- MY PROGRAMS ----
@@ -167,8 +167,8 @@ for i = 1, 10 do
 end
 
 -- Example special workspace (scratchpad)
-hl.bind(mainMod .. " + S",         hl.dsp.workspace.toggle_special("magic"))
-hl.bind(mainMod .. " + SHIFT + S", hl.dsp.window.move({ workspace = "special:magic" }))
+hl.bind(mainMod .. " + M",         hl.dsp.workspace.toggle_special("magic"))
+hl.bind(mainMod .. " + SHIFT + M", hl.dsp.window.move({ workspace = "special:magic" }))
 
 -- Scroll through existing workspaces with mainMod + scroll
 hl.bind(mainMod .. " + mouse_down", hl.dsp.focus({ workspace = "e+1" }))
