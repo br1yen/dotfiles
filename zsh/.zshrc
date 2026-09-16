@@ -37,6 +37,5 @@ function zvm_after_init() {
 
 # Zsh Behavior
 PROMPT='%m %~ $ '
-setopt AUTO_CD
 setopt EXTENDED_GLOB
 setopt CORRECT
