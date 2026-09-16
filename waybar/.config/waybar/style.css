@@ -75,22 +75,36 @@ window#waybar {
     border-radius: 0;
     padding: 0 8px;
     margin: 0;
+
+    box-shadow: none;
+    text-shadow: none;
+    transition: none;
 }
 
-#workspaces button:hover {
-    color: @base1;
+#workspaces button:hover,
+#workspaces button.workspace-hover {
+    color: @base01;
     background: transparent;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    text-shadow: none;
+    transition: none;
 }
 
 #workspaces button.active {
     color: @base3;
     background: transparent;
+    box-shadow: none;
+    text-shadow: none;
 }
 
 #workspaces button.urgent {
     color: @red;
+    background: transparent;
+    box-shadow: none;
+    text-shadow: none;
 }
-
 
 /* ─────────────────────────────
    Clock
@@ -148,4 +162,3 @@ window#waybar {
 #tray {
     color: @base1;
 }
-
