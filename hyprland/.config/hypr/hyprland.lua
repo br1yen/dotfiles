@@ -24,6 +24,9 @@ local browser     = "librewolf"
 hl.on("hyprland.start", function ()
         hl.exec_cmd("waybar")
         hl.exec_cmd("nm-applet")
+        hl.exec_cmd(browser)
+        hl.exec_cmd(terminal)
+        hl.exec_cmd("nm-applet")
         hl.exec_cmd("wl-paste --type text --watch cliphist store")
         hl.exec_cmd("wl-paste --type image --watch cliphist store")
 end)
@@ -111,7 +114,7 @@ hl.config({
         kb_layout  = "us",
         kb_variant = "",
         kb_model   = "",
-        kb_options = "",
+        kb_options = "ctrl:nocaps",
         kb_rules   = "",
 
         follow_mouse = 1,

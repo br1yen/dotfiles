@@ -265,7 +265,7 @@
   ;; Disable all active themes
   (mapc #'disable-theme custom-enabled-themes)
   ;; Load the built-in theme
-  (load-theme 'modus-operandi t))
+  (load-theme 'modus-vivendi t))
 
 ;; Uncomment the following if you are using undo-fu
 (setq evil-undo-system 'undo-fu)
@@ -862,3 +862,5 @@
   (doom-modeline-buffer-encoding nil)
   (doom-modeline-indent-info nil)
   (doom-modeline-height 25))
+
+(setq gc-cons-threshold (* 50 1000 1000))
