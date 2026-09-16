@@ -177,14 +177,22 @@ hl.bind(mainMod .. " + SHIFT + L", hl.dsp.layout("removemaster"))
 
 hl.bind(mainMod .. " + N", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mainMod .. " + P",   hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + SHIFT + N", function()
+    local ws = hl.get_active_workspace()
+    hl.dispatch(hl.dsp.window.move({
+        workspace = tostring(ws.id + 1),
+        follow = true
+    }))
+end)
+hl.bind(mainMod .. " + SHIFT + P", function()
+    local ws = hl.get_active_workspace()
+    hl.dispatch(hl.dsp.window.move({
+        workspace = tostring(ws.id - 1),
+        follow = true
+    }))
+end)
 
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
-
-for i = 1, 10 do
-    local key = i % 10 -- 10 maps to key 0
-    hl.bind(mainMod .. " + " .. key,             hl.dsp.focus({ workspace = i}))
-    hl.bind(mainMod .. " + SHIFT + " .. key,     hl.dsp.window.move({ workspace = i }))
-end
 
 -- Example special workspace (scratchpad)
 hl.bind(mainMod .. " + M",         hl.dsp.workspace.toggle_special("magic"))
