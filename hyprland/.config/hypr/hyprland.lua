@@ -49,8 +49,8 @@ hl.env("HYPRCURSOR_SIZE", "24")
 -- Refer to https://wiki.hypr.land/configuring/core/config-options/
 hl.config({
     general = {
+        gaps_out = 12,
         gaps_in  = 6,
-        gaps_out = 6,
 
         border_size = 2,
 
@@ -97,6 +97,7 @@ hl.config({
 hl.config({
     misc = {
         force_default_wallpaper = 0,
+        disable_splash_rendering = true,
         disable_hyprland_logo   = true,
     },
 })

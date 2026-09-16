@@ -657,15 +657,10 @@
          (file "~/org/inbox.org")
          "* %?\n")))
 
-(defun my/org-today ()
-  "Show today's and upcoming scheduled/deadline items plus inbox TODOs."
-  (interactive)
-  (org-agenda nil "f"))
-
 (setq org-agenda-custom-commands
-      '(("f" "Today + Inbox"
+      '(("f" "Today + Upcoming + Inbox"
          ((agenda ""
-                  ((org-agenda-span 7)
+                  ((org-agenda-span 1)
                    (org-agenda-start-day "0d")))
           (todo ""
                 ((org-agenda-files '("~/org/inbox.org"))))))))
