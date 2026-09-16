@@ -61,14 +61,14 @@ window#waybar {
 
 
 /* ─────────────────────────────
-   River tags
+   Hyprland workspaces
    ───────────────────────────── */
 
-#tags {
+#workspaces {
     padding: 0;
 }
 
-#tags button {
+#workspaces button {
     color: @base01;
     background: transparent;
     border: none;
@@ -77,19 +77,18 @@ window#waybar {
     margin: 0;
 }
 
-#tags button:hover {
+#workspaces button:hover {
     color: @base1;
     background: transparent;
 }
 
-#tags button.focused {
+#workspaces button.active {
     color: @base3;
     background: transparent;
 }
 
-#tags button.urgent {
+#workspaces button.urgent {
     color: @red;
-    background: transparent;
 }
 
 
