@@ -137,13 +137,6 @@ window#waybar {
     color: @cyan;
 }
 
-
-/* Network */
-#network {
-    color: @blue;
-}
-
-
 /* Battery */
 #battery {
     color: @green;
