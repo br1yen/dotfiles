@@ -1,6 +1,6 @@
 # Plugins
-source ~/.zsh/zsh-vi-mode/zsh-vi-mode.zsh
-source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/zsh/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source <(fzf --zsh)
 
 # History
@@ -34,8 +34,11 @@ function zvm_after_init() {
   bindkey -M viins '^R' fzf-history-widget
 }
 
-
 # Zsh Behavior
 PROMPT='%m %~ $ '
 setopt EXTENDED_GLOB
 setopt CORRECT
+
+# Zoxide
+eval "$(zoxide init zsh)"
+eval "$(zoxide init zsh --cmd cd)"
