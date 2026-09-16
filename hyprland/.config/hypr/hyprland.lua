@@ -14,11 +14,6 @@ hl.monitor({
     scale    = "1.0",
 })
 
----- MY PROGRAMS ----
-local terminal    = "kitty"
-local menu        = "fuzzel"
-local browser     = "librewolf"
-
 ---- AUTOSTART ----
 -- See https://wiki.hypr.land/configuring/core/autostart/
 hl.on("hyprland.start", function ()
@@ -144,10 +139,26 @@ hl.device({
 ---- KEYBINDINGS ----
 local mainMod = "SUPER"
 
--- Example binds, see https://wiki.hypr.land/configuring/core/binds/ for more
-hl.bind(mainMod .. " + T", hl.dsp.exec_cmd(terminal))
-hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
-hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(menu))
+hl.bind(mainMod .. " + T", function()
+    local windows = hl.get_windows({ class = "kitty" })
+
+    if #windows > 0 then
+        hl.dispatch(hl.dsp.focus({ window = windows[1] }))
+    else
+        hl.exec_cmd("kitty")
+    end
+end)
+
+hl.bind(mainMod .. " + B", function()
+    local windows = hl.get_windows({ class = "librewolf" })
+
+    if #windows > 0 then
+        hl.dispatch(hl.dsp.focus({ window = windows[1] }))
+    else
+        hl.exec_cmd("librewolf")
+    end
+end)
+hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("fuzzel"))
 local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + SPACE", hl.dsp.window.float({ action = "toggle" }))
@@ -155,17 +166,19 @@ hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 
 hl.bind(mainMod .. " + J", hl.dsp.window.cycle_next())
 hl.bind(mainMod .. " + K", hl.dsp.window.cycle_next({ next = false }))
-hl.bind(mainMod .. " + SHIFT + J",
-    hl.dsp.window.swap({ next = true }))
+hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.swap({ next = true }))
 
-hl.bind(mainMod .. " + SHIFT + K",
-    hl.dsp.window.swap({ prev = true }))
+hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.swap({ prev = true }))
 
 hl.bind(mainMod .. " + H", hl.dsp.layout("mfact -0.05"))
 hl.bind(mainMod .. " + L", hl.dsp.layout("mfact +0.05"))
 hl.bind(mainMod .. " + SHIFT + H", hl.dsp.layout("addmaster"))
 hl.bind(mainMod .. " + SHIFT + L", hl.dsp.layout("removemaster"))
-hl.bind(mainMod .. " + RETURN", hl.dsp.layout("swapwithmaster"))
+
+hl.bind(mainMod .. " + N", hl.dsp.focus({ workspace = "e+1" }))
+hl.bind(mainMod .. " + P",   hl.dsp.focus({ workspace = "e-1" }))
+
+hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 
 for i = 1, 10 do
     local key = i % 10 -- 10 maps to key 0
@@ -261,4 +274,16 @@ hl.window_rule({
 
     move  = "20 monitor_h-120",
     float = true,
+})
+
+hl.window_rule({
+    name = "librewolf-workspace",
+    match = { class = "^librewolf$" },
+    workspace = "2",
+})
+
+hl.window_rule({
+    name = "kitty-workspace",
+    match = { class = "^kitty$" },
+    workspace = "1",
 })
