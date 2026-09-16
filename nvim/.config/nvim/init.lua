@@ -71,6 +71,23 @@ vim.pack.add({
 vim.opt.background = dark
 vim.opt.termguicolors = true
 vim.cmd.colorscheme("solarized")
+vim.api.nvim_set_hl(0, "LineNr", {
+    fg = "#888888",
+    bg = "NONE",
+})
+
+vim.api.nvim_set_hl(0, "CursorLineNr", {
+    fg = "#ffffff",
+    bg = "NONE",
+})
+
+vim.api.nvim_set_hl(0, "SignColumn", {
+    bg = "NONE",
+})
+
+vim.api.nvim_set_hl(0, "FoldColumn", {
+    bg = "NONE",
+})
 
 -- Jump
 require('mini.jump').setup()
@@ -95,7 +112,7 @@ oil.setup({
   default_file_explorer = true,
   delete_to_trash = true, -- find with ':Oil --trash'
   columns = {
-    "icon", -- shows the file/folder icons from mini.icons
+    "icon",
   },
   view_options = {
     show_hidden = true,

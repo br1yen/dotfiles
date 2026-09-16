@@ -23,6 +23,9 @@ local browser     = "librewolf"
 -- See https://wiki.hypr.land/configuring/core/autostart/
 hl.on("hyprland.start", function ()
         hl.exec_cmd("waybar")
+        hl.exec_cmd("nm-applet")
+        hl.exec_cmd("wl-paste --type text --watch cliphist store")
+        hl.exec_cmd("wl-paste --type image --watch cliphist store")
 end)
 
 ---- ENVIRONMENT VARIABLES ----
@@ -205,6 +208,12 @@ hl.bind(
     hl.dsp.exec_cmd(
         'grim -g "$(slurp)" ~/pictures/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png'
     )
+)
+
+-- Clipboard history
+hl.bind(
+    mainMod .. " + C",
+    hl.dsp.exec_cmd("sh -c 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'")
 )
 
 ---- WINDOWS AND WORKSPACES ----

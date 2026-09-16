@@ -322,6 +322,20 @@
   (setq evil-search-module 'evil-search)
   (evil-select-search-module 'evil-search-module 'evil-search))
 
+(add-hook 'org-mode-hook
+          (lambda ()
+            (define-key evil-normal-state-local-map
+                        (kbd "j") #'evil-next-visual-line)
+            (define-key evil-normal-state-local-map
+                        (kbd "k") #'evil-previous-visual-line)))
+
+(add-hook 'text-mode-hook
+          (lambda ()
+            (define-key evil-normal-state-local-map
+                        (kbd "j") #'evil-next-visual-line)
+            (define-key evil-normal-state-local-map
+                        (kbd "k") #'evil-previous-visual-line)))
+
 (use-package evil-collection
   :after evil
   :init
@@ -587,25 +601,26 @@
   :config
   (require 'org-tempo)
 
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (setq-local line-spacing 0.15)
+(add-hook 'org-mode-hook
+          (lambda ()
+            (setq-local line-spacing 0.15)
 
-              (dolist (face '(org-meta-line
-                              org-document-title
-                              org-code
-                              org-block
-                              org-block-begin-line
-                              org-block-end-line
-                              org-table
-                              org-formula
-                              org-special-keyword
-                              org-property-value
-                              org-drawer
-                              org-date
-                              org-tag))
-                (set-face-attribute face nil
-                                    :family "IBM Plex Mono")))))
+            (dolist (face '(org-meta-line
+                            org-document-title
+                            org-document-info-keyword
+                            org-code
+                            org-block
+                            org-block-begin-line
+                            org-block-end-line
+                            org-table
+                            org-formula
+                            org-special-keyword
+                            org-property-value
+                            org-drawer
+                            org-date
+                            org-tag))
+              (set-face-attribute face nil
+                                  :family "IBM Plex Mono")))))
 
 (use-package org-superstar
   :after org

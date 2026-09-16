@@ -15,7 +15,6 @@
 
   "modules-right": [
     "pulseaudio",
-    "network",
     "battery",
     "tray"
   ],
@@ -42,13 +41,6 @@
     "format-icons": {
       "default": ["", " ", " "]
     }
-  },
-
-  "network": {
-    "format-wifi": "  {signalStrength}%",
-    "format-ethernet": "󰈀",
-    "format-disconnected": "󰖪",
-    "tooltip-format": "{ifname}: {ipaddr}"
   },
 
   "battery": {
