@@ -51,14 +51,14 @@ hl.env("HYPRCURSOR_SIZE", "24")
 -- Refer to https://wiki.hypr.land/configuring/core/config-options/
 hl.config({
     general = {
-        gaps_out = 12,
+        gaps_out = 6,
         gaps_in  = 6,
 
         border_size = 2,
 
         col = {
-            active_border   = "rgba(93a1a1ff)",
-            inactive_border = "rgba(586e75ff)",
+            active_border   = "rgba(87879aff)",  
+            inactive_border = "rgba(282830ff)", 
         },
 
         resize_on_border = true,

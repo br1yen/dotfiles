@@ -53,7 +53,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- Packages
 vim.pack.add({
-  'https://github.com/maxmx03/solarized.nvim',
   'https://github.com/kylechui/nvim-surround',
   'https://github.com/ibhagwan/fzf-lua',
   'https://github.com/stevearc/oil.nvim',
@@ -62,31 +61,35 @@ vim.pack.add({
   { src = "https://github.com/saghen/blink.cmp", 
     version = vim.version.range("^1") },
   'https://github.com/mfussenegger/nvim-jdtls',
-  'https://github.com/nvim-mini/mini.icons',
   'https://github.com/chomosuke/typst-preview.nvim',
+  'https://github.com/vague-theme/vague.nvim'
 })
 
 -- Colors
-vim.opt.background = dark
-vim.opt.termguicolors = true
-vim.cmd.colorscheme("solarized")
-vim.api.nvim_set_hl(0, "LineNr", {
-    fg = "#888888",
-    bg = "NONE",
+vim.cmd.colorscheme("vague")
+
+local hl = vim.api.nvim_set_hl
+
+hl(0, "Normal", {
+    bg = "#000000",
 })
 
-vim.api.nvim_set_hl(0, "CursorLineNr", {
-    fg = "#ffffff",
-    bg = "NONE",
+hl(0, "NormalNC", {
+    bg = "#000000",
 })
 
-vim.api.nvim_set_hl(0, "SignColumn", {
-    bg = "NONE",
+hl(0, "NormalFloat", {
+    bg = "#000000",
 })
 
-vim.api.nvim_set_hl(0, "FoldColumn", {
-    bg = "NONE",
+hl(0, "SignColumn", {
+    bg = "#000000",
 })
+
+hl(0, "EndOfBuffer", {
+    bg = "#000000",
+})
+
 
 -- Surround
 require('nvim-surround').setup()
@@ -98,9 +101,6 @@ vim.keymap.set("n", "<leader>g", fzf.live_grep, { desc = "Live grep" })
 vim.keymap.set("n", "<leader>b", fzf.buffers, { desc = "Find buffers" })
 vim.keymap.set("n", "<leader>h", fzf.help_tags, { desc = "Help" })
 vim.keymap.set("n", "<leader>d", fzf.diagnostics_document, { desc = "Diagnostics" })
-
--- Icons
-require("mini.icons").setup()
 
 -- Oil
 local oil = require("oil")
