@@ -19,6 +19,7 @@ hl.monitor({
 hl.on("hyprland.start", function ()
         hl.exec_cmd("waybar")
         hl.exec_cmd("nm-applet")
+        hl.exec_cmd("swaybg -i ~/sync/pictures/night.png")
         hl.exec_cmd("librewolf")
         hl.exec_cmd("foot")
         hl.exec_cmd("nm-applet")

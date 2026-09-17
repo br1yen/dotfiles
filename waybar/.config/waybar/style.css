@@ -22,14 +22,15 @@
    ───────────────────────────── */
 
 * {
-    font-family: "Blex Mono Nerd Font";
+    font-family: "CaskaydiaCove Nerd Font";
     font-size: 13px;
-    font-weight: 600;
+    font-weight: 500;
+    font-style: italic;
 }
 
 window#waybar {
     background: transparent;
-    color: @base1;
+    color: @base0;
 }
 
 
@@ -61,7 +62,7 @@ window#waybar {
 
 
 /* ─────────────────────────────
-   Hyprland workspaces
+   Workspaces
    ───────────────────────────── */
 
 #workspaces {
@@ -83,13 +84,11 @@ window#waybar {
 
 #workspaces button:hover,
 #workspaces button.workspace-hover {
-    color: @base01;
+    color: @base1;
     background: transparent;
     border: none;
-    border-radius: 0;
     box-shadow: none;
     text-shadow: none;
-    transition: none;
 }
 
 #workspaces button.active {
@@ -105,6 +104,7 @@ window#waybar {
     box-shadow: none;
     text-shadow: none;
 }
+
 
 /* ─────────────────────────────
    Clock
@@ -126,20 +126,20 @@ window#waybar {
 #tray {
     background: transparent;
     border: none;
-    color: @base1;
+    color: @base0;
     padding: 0 7px;
     margin: 0;
 }
 
 
-/* Audio */
+/* Only use color for state/meaning */
+
 #pulseaudio {
-    color: @cyan;
+    color: @base0;
 }
 
-/* Battery */
 #battery {
-    color: @green;
+    color: @base0;
 }
 
 #battery.warning {
@@ -150,8 +150,6 @@ window#waybar {
     color: @red;
 }
 
-
-/* Tray */
 #tray {
-    color: @base1;
+    color: @base0;
 }
