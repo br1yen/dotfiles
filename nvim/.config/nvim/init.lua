@@ -64,7 +64,6 @@ vim.pack.add({
   'https://github.com/mfussenegger/nvim-jdtls',
   'https://github.com/nvim-mini/mini.icons',
   'https://github.com/chomosuke/typst-preview.nvim',
-  'https://github.com/nvim-orgmode/orgmode' 
 })
 
 -- Colors
