@@ -38,7 +38,3 @@ function zvm_after_init() {
 PROMPT='%m %~ $ '
 setopt EXTENDED_GLOB
 setopt CORRECT
-
-# Zoxide
-eval "$(zoxide init zsh)"
-eval "$(zoxide init zsh --cmd cd)"

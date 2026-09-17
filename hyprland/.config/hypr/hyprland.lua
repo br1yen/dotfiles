@@ -11,7 +11,7 @@ hl.monitor({
     output   = "eDP-1",
     mode     = "preferred@60",
     position = "auto",
-    scale    = "1.0",
+    scale    = "auto",
 })
 
 ---- AUTOSTART ----
@@ -20,7 +20,7 @@ hl.on("hyprland.start", function ()
         hl.exec_cmd("waybar")
         hl.exec_cmd("nm-applet")
         hl.exec_cmd("librewolf")
-        hl.exec_cmd("kitty")
+        hl.exec_cmd("foot")
         hl.exec_cmd("nm-applet")
         hl.exec_cmd("wl-paste --type text --watch cliphist store")
         hl.exec_cmd("wl-paste --type image --watch cliphist store")
@@ -288,8 +288,8 @@ hl.window_rule({
 })
 
 hl.window_rule({
-    name = "kitty-workspace",
-    match = { class = "^kitty$" },
+    name = "foot-workspace",
+    match = { class = "^foot$" },
     workspace = "1",
 })
 
