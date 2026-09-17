@@ -145,25 +145,6 @@ hl.device({
 ---- KEYBINDINGS ----
 local mainMod = "SUPER"
 
-hl.bind(mainMod .. " + T", function()
-    local windows = hl.get_windows({ class = "kitty" })
-
-    if #windows > 0 then
-        hl.dispatch(hl.dsp.focus({ window = windows[1] }))
-    else
-        hl.exec_cmd("kitty")
-    end
-end)
-
-hl.bind(mainMod .. " + B", function()
-    local windows = hl.get_windows({ class = "librewolf" })
-
-    if #windows > 0 then
-        hl.dispatch(hl.dsp.focus({ window = windows[1] }))
-    else
-        hl.exec_cmd("librewolf")
-    end
-end)
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("fuzzel"))
 local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
@@ -206,7 +187,7 @@ for i = 1, 10 do
     hl.bind(mainMod .. " + SHIFT + " .. key,     hl.dsp.window.move({ workspace = i }))
 end
 
-hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
+hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen())
 
 -- Example special workspace (scratchpad)
 hl.bind(mainMod .. " + M",         hl.dsp.workspace.toggle_special("magic"))
@@ -253,6 +234,8 @@ hl.bind(
     mainMod .. " + C",
     hl.dsp.exec_cmd("sh -c 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'")
 )
+
+hl.bind(mainMod .. " + F", hl.dsp.exec_cmd("selected=$(hyprctl clients | awk '/^Window / {addr=$2} /^[[:space:]]*class:/ {class=$2} /^[[:space:]]*title:/ {title=$0; sub(/^[[:space:]]*title: /, \"\", title); print addr \"\\t\" class \" — \" title}' | fuzzel --dmenu --prompt 'Window: '); [ -z \"$selected\" ] || hyprctl dispatch \"hl.dsp.focus({ window = 'address:$((printf '%s' \"$selected\" | cut -f1))' })\""))
 
 ---- WINDOWS AND WORKSPACES ----
 -- See https://wiki.hypr.land/configuring/core/rules/
@@ -309,3 +292,4 @@ hl.window_rule({
     match = { class = "^kitty$" },
     workspace = "1",
 })
+
