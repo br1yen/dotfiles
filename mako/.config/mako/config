@@ -1,0 +1,37 @@
+# Typography
+font=Courier Prime Italic 12
+
+# Layout & Geometry
+anchor=bottom-center
+layer=overlay
+width=340
+height=110
+padding=12,16
+border-size=2
+border-radius=0
+default-timeout=4000
+
+# Base Colors (Pitch black background, Vague slate text)
+background-color=#000000ff
+text-color=#cdcdcdff
+border-color=#3c3c4aff
+
+# Urgency: Low
+[urgency=low]
+background-color=#000000ff
+text-color=#646477ff
+border-color=#282830ff
+default-timeout=2500
+
+# Urgency: Normal
+[urgency=normal]
+background-color=#000000ff
+text-color=#dedee6ff
+border-color=#545464ff
+
+# Urgency: Critical
+[urgency=critical]
+background-color=#000000ff
+text-color=#dedee6ff
+border-color=#c07870ff
+default-timeout=0
