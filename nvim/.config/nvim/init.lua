@@ -54,7 +54,6 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 -- Packages
 vim.pack.add({
   'https://github.com/maxmx03/solarized.nvim',
-  'https://github.com/nvim-mini/mini.jump',
   'https://github.com/kylechui/nvim-surround',
   'https://github.com/ibhagwan/fzf-lua',
   'https://github.com/stevearc/oil.nvim',
@@ -64,7 +63,8 @@ vim.pack.add({
     version = vim.version.range("^1") },
   'https://github.com/mfussenegger/nvim-jdtls',
   'https://github.com/nvim-mini/mini.icons',
-  'https://github.com/chomosuke/typst-preview.nvim'
+  'https://github.com/chomosuke/typst-preview.nvim',
+  'https://github.com/nvim-orgmode/orgmode' 
 })
 
 -- Colors
@@ -88,9 +88,6 @@ vim.api.nvim_set_hl(0, "SignColumn", {
 vim.api.nvim_set_hl(0, "FoldColumn", {
     bg = "NONE",
 })
-
--- Jump
-require('mini.jump').setup()
 
 -- Surround
 require('nvim-surround').setup()
@@ -132,18 +129,31 @@ vim.api.nvim_create_autocmd("FileType", {
 
 -- Blink
 require("blink.cmp").setup({
-  keymap = { preset = "default" },
+  keymap = {
+    preset = "default",
+  },
+
   appearance = {
     nerd_font_variant = "mono",
   },
+
   completion = {
-    documentation = { auto_show = true },
-    ghost_text = { enabled = true },
+    trigger = {
+      show_on_keyword = false,
+      show_on_trigger_character = false,
+    },
+    documentation = {
+      auto_show = true,
+    },
   },
+
   sources = {
     default = { "lsp", "path", "snippets", "buffer" },
   },
-  fuzzy = { implementation = "prefer_rust_with_warning" },
+
+  fuzzy = {
+    implementation = "prefer_rust_with_warning",
+  },
 })
 
 -- Typst
@@ -155,3 +165,10 @@ vim.lsp.config("tinymist", {
 })
 vim.lsp.enable("tinymist")
 require("typst-preview").setup({})
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "typst",
+  callback = function()
+    vim.opt_local.wrap = true
+    vim.opt_local.linebreak = true
+  end,
+})

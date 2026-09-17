@@ -64,6 +64,11 @@ hl.config({
         allow_tearing = true,
 
         layout = "master",
+
+    },
+
+    cursor = {
+        no_warps = true,
     },
 
     decoration = {
@@ -85,6 +90,7 @@ hl.config({
     animations = {
         enabled = false,
     },
+
 })
 
 -- See https://wiki.hypr.land/configuring/layouts/master-layout/ for more
@@ -162,7 +168,7 @@ hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("fuzzel"))
 local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + SPACE", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
+hl.bind(mainMod .. " + R", hl.dsp.window.pseudo())
 
 hl.bind(mainMod .. " + J", hl.dsp.window.cycle_next())
 hl.bind(mainMod .. " + K", hl.dsp.window.cycle_next({ next = false }))
@@ -191,6 +197,14 @@ hl.bind(mainMod .. " + SHIFT + P", function()
         follow = true
     }))
 end)
+
+-- Switch workspaces with mainMod + [0-9]
+-- Move active window to a workspace with mainMod + SHIFT + [0-9]
+for i = 1, 10 do
+    local key = i % 10 -- 10 maps to key 0
+    hl.bind(mainMod .. " + " .. key,             hl.dsp.focus({ workspace = i}))
+    hl.bind(mainMod .. " + SHIFT + " .. key,     hl.dsp.window.move({ workspace = i }))
+end
 
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 
