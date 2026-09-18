@@ -31,8 +31,7 @@ vim.opt.laststatus = 3
 vim.keymap.set("n", "<leader>w", "<cmd>write<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>quit<cr>")
 
-local jump_keys = { ";", ",", "*", 
-                    "#", "{", "}", 
+local jump_keys = { "*", "#", "{", "}", 
                     "<C-d>", "<C-u>", 
                     "<C-o>", "<C-i>",
                     "<C-f>", "<C-b>", "G" }
