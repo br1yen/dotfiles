@@ -1,0 +1,52 @@
+# UI
+set recolor true
+set recolor-keephue true
+
+set guioptions none
+set window-title-basename true
+
+set statusbar-h-padding 8
+set statusbar-v-padding 6
+
+# Colors
+set default-bg "#000000"
+set default-fg "#cdcdcd"
+
+set recolor-lightcolor "#000000"
+set recolor-darkcolor "#cdcdcd"
+
+set statusbar-bg "#000000"
+set statusbar-fg "#cdcdcd"
+
+set inputbar-bg "#000000"
+set inputbar-fg "#cdcdcd"
+
+set notification-bg "#000000"
+set notification-fg "#cdcdcd"
+
+set notification-error-bg "#000000"
+set notification-error-fg "#d8647e"
+
+set notification-warning-bg "#000000"
+set notification-warning-fg "#f3be7c"
+
+set highlight-color "#c48282"
+set highlight-active-color "#d8647e"
+
+set font "Courier Prime Code 12"
+
+# Behavior
+set selection-clipboard clipboard
+set adjust-open width
+set scroll-step 100
+
+# Open PDFs at the last position
+set database sqlite
+
+# Keybindings
+map J scroll half-down
+map K scroll half-up
+map H navigate previous
+map L navigate next
+map r reload
+map q quit
