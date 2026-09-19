@@ -7,12 +7,6 @@ popover.background {
     border-radius: 0;
 }
 
-menu,
-popover.background {
-    border: 2px solid #545464;
-    box-shadow: none;
-}
-
 menuitem {
     font-family: "Courier Prime Code";
     font-size: 14px;
