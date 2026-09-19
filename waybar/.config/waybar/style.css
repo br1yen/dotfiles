@@ -95,6 +95,10 @@ window#waybar {
     margin: 0;
 }
 
+#tray menu {
+    font-family: "Courier Prime Code";
+}
+
 #pulseaudio {
     color: @fg_dim;
 }
