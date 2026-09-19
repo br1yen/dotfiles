@@ -87,17 +87,6 @@ window#waybar {
 #pulseaudio,
 #network,
 #battery,
-#tray {
-    background: transparent;
-    border: none;
-    color: @fg_dim;
-    padding: 0 7px;
-    margin: 0;
-}
-
-#tray menu {
-    font-family: "Courier Prime Code";
-}
 
 #pulseaudio {
     color: @fg_dim;
@@ -115,6 +104,19 @@ window#waybar {
     color: @red;
 }
 
+
 #tray {
+    background: transparent;
+    border: none;
     color: @fg_dim;
+    padding: 0 7px;
+    margin: 0;
+}
+#tray menu,
+#tray menu menuitem,
+#tray menu menuitem label {
+    font-family: "Courier Prime Code";
+    font-size: 14px;
+    font-weight: 400;
+    font-style: normal;
 }

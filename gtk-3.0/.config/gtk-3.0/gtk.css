@@ -1,0 +1,38 @@
+menu,
+menuitem,
+popover,
+popover.background {
+    background-color: #000000;
+    color: #cdcdcd;
+    border-radius: 0;
+}
+
+menu,
+popover.background {
+    border: 2px solid #545464;
+    box-shadow: none;
+}
+
+menuitem {
+    font-family: "Courier Prime Code";
+    font-size: 14px;
+    font-weight: 400;
+    font-style: normal;
+    padding: 6px 10px;
+    margin: 0;
+}
+
+menuitem:hover {
+    background-color: #18191a;
+    color: #dedee6;
+}
+
+menuitem:disabled {
+    color: #50505e;
+}
+
+separator {
+    background-color: #282830;
+    min-height: 1px;
+    margin: 4px 0;
+}
