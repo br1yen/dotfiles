@@ -1,3 +1,15 @@
+export MANPAGER='nvim +Man!'
+export EDITOR=nvim
+export VISUAL=nvim
+
+function y() {
+	local tmp cwd; tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd" || builtin true
+	command rm -f -- "$tmp"
+}
+
 # --- 1. History ---
 HISTFILE=~/.zsh_history
 HISTSIZE=50000
@@ -49,3 +61,4 @@ function zvm_after_init() {
 
 # --- 5. Syntax Highlighting (MUST BE DEAD LAST) ---
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+

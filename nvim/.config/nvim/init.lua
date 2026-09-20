@@ -54,18 +54,38 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end,
 })
 
+-- Netrw
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "netrw",
+    callback = function()
+        local opts = { buffer = true, remap = true, silent = true }
+
+        vim.opt_local.number = true
+        vim.opt_local.relativenumber = true
+
+        vim.keymap.set("n", "h", "-", opts)
+        vim.keymap.set("n", "l", "<CR>", opts)
+        vim.keymap.set("n", "f", "%", opts)
+    end,
+})
+
+vim.keymap.set("n", "<leader>e", function()
+    vim.cmd("Explore " .. vim.fn.expand("%:p:h"))
+end, {
+    desc = "Open Netrw in current file directory",
+})
+
 -- Packages
 vim.pack.add({
     'https://github.com/kylechui/nvim-surround',
     'https://github.com/ibhagwan/fzf-lua',
-    'https://github.com/stevearc/oil.nvim',
     'https://github.com/nvim-treesitter/nvim-treesitter',
     'https://github.com/neovim/nvim-lspconfig',
     { src = "https://github.com/saghen/blink.cmp", 
     version = vim.version.range("^1") },
     'https://github.com/mfussenegger/nvim-jdtls',
     'https://github.com/chomosuke/typst-preview.nvim',
-    'https://github.com/vague-theme/vague.nvim'
+    'https://github.com/vague-theme/vague.nvim',
 })
 
 -- Colors
@@ -104,20 +124,6 @@ vim.keymap.set("n", "<leader>g", fzf.live_grep, { desc = "Live grep" })
 vim.keymap.set("n", "<leader>b", fzf.buffers, { desc = "Find buffers" })
 vim.keymap.set("n", "<leader>h", fzf.help_tags, { desc = "Help" })
 vim.keymap.set("n", "<leader>d", fzf.diagnostics_document, { desc = "Diagnostics" })
-
--- Oil
-local oil = require("oil")
-oil.setup({
-    default_file_explorer = true,
-    delete_to_trash = true, -- find with ':Oil --trash'
-    columns = {
-        "icon",
-    },
-    view_options = {
-        show_hidden = true,
-    },
-})
-vim.keymap.set("n", "<leader>e", oil.open, { desc = "File explorer" })
 
 -- Treesitter
 require("nvim-treesitter").setup({

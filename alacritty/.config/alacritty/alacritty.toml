@@ -1,0 +1,51 @@
+[font]
+size = 14.0
+
+[font.normal]
+family = "Drafting* Mono"
+
+[font.italic]
+family = "Drafting* Mono"
+style = "Italic"
+
+[font.bold]
+family = "Drafting* Mono"
+style = "Bold"
+
+[font.bold_italic]
+family = "Drafting* Mono"
+style = "Bold Italic"
+
+[window]
+padding = { x = 8, y = 8 }
+opacity = 1.0
+
+[scrolling]
+history = 10000
+
+[cursor]
+style = { shape = "Block", blinking = "Off" }
+
+[colors.primary]
+background = "#000000"
+foreground = "#cdcdcd"
+
+[colors.normal]
+black   = "#000000"
+red     = "#d8647e"
+green   = "#7fa563"
+yellow  = "#f3be7c"
+blue    = "#6e94b2"
+magenta = "#bb9dbd"
+cyan    = "#aeaed1"
+white   = "#cdcdcd"
+
+[colors.bright]
+black   = "#606079"
+red     = "#e68e9d"
+green   = "#a8c98a"
+yellow  = "#f6d6a8"
+blue    = "#7e98e8"
+magenta = "#c9afd0"
+cyan    = "#b4d4cf"
+white   = "#eeeeee"
