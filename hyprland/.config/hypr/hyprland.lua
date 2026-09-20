@@ -147,6 +147,8 @@ hl.device({
 local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("fuzzel"))
+hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("librewolf"))
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("alacritty"))
 local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
 hl.bind(mainMod .. " + SPACE", hl.dsp.window.float({ action = "toggle" }))
