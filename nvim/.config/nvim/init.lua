@@ -35,6 +35,9 @@ vim.opt.showmode = false
 vim.opt.showcmd = false
 vim.opt.laststatus = 3
 
+vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
+vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
+
 local jump_keys = { "*", "#", "{", "}", 
 "<C-d>", "<C-u>", 
 "<C-o>", "<C-i>",
@@ -55,14 +58,17 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- Netrw
+vim.g.netrw_sort_by = "name"
+vim.g.netrw_sort_direction = "normal"
+vim.g.netrw_sort_sequence = "[\\/]$,*"
+vim.g.netrw_list_hide = [[^\.\.\=/\=$]]
+vim.g.netrw_hide = 1
+
 vim.api.nvim_create_autocmd("FileType", {
     pattern = "netrw",
     callback = function()
         local opts = { buffer = true, remap = true, silent = true }
-
-        vim.opt_local.number = true
-        vim.opt_local.relativenumber = true
-
+        vim.g.netrw_bufsettings = "noma nomod nu rnu nobl nowrap ro"
         vim.keymap.set("n", "h", "-", opts)
         vim.keymap.set("n", "l", "<CR>", opts)
         vim.keymap.set("n", "f", "%", opts)
@@ -121,6 +127,7 @@ require('nvim-surround').setup()
 local fzf = require("fzf-lua")
 vim.keymap.set("n", "<leader>f", fzf.files, { desc = "Find files" })
 vim.keymap.set("n", "<leader>g", fzf.live_grep, { desc = "Live grep" })
+vim.keymap.set("n", "<leader>r", fzf.history, { desc = "Recent files" })
 vim.keymap.set("n", "<leader>b", fzf.buffers, { desc = "Find buffers" })
 vim.keymap.set("n", "<leader>h", fzf.help_tags, { desc = "Help" })
 vim.keymap.set("n", "<leader>d", fzf.diagnostics_document, { desc = "Diagnostics" })
