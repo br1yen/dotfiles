@@ -1,0 +1,30 @@
+#!/bin/sh
+
+choice=$(
+    printf '%s\n' \
+        'Lock' \
+        'Suspend' \
+        'Log out' \
+        'Reboot' \
+        'Shut down' |
+        /usr/bin/fuzzel --dmenu --prompt 'Power: '
+)
+
+case "$choice" in
+    Lock)
+        /usr/bin/loginctl lock-session
+        ;;
+    Suspend)
+        /usr/bin/loginctl lock-session
+        /usr/bin/systemctl suspend
+        ;;
+    'Log out')
+        /usr/bin/uwsm stop
+        ;;
+    Reboot)
+        /usr/bin/systemctl reboot
+        ;;
+    'Shut down')
+        /usr/bin/systemctl poweroff
+        ;;
+esac

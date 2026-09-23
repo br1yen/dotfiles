@@ -17,14 +17,12 @@ hl.monitor({
 ---- AUTOSTART ----
 -- See https://wiki.hypr.land/configuring/core/autostart/
 hl.on("hyprland.start", function ()
-        hl.exec_cmd("waybar")
-        hl.exec_cmd("nm-applet")
-        hl.exec_cmd("swaybg -i ~/sync/pictures/night.png")
-        hl.exec_cmd("librewolf")
-        hl.exec_cmd("neovide")
-        hl.exec_cmd("nm-applet")
-        hl.exec_cmd("wl-paste --type text --watch cliphist store")
-        hl.exec_cmd("wl-paste --type image --watch cliphist store")
+    hl.exec_cmd("nm-applet")
+    hl.exec_cmd("librewolf")
+    hl.exec_cmd("waybar")
+    hl.exec_cmd("swaybg -i ~/sync/pictures/night.png")
+    hl.exec_cmd("wl-paste --type text --watch cliphist store")
+    hl.exec_cmd("wl-paste --type image --watch cliphist store")
 end)
 
 ---- ENVIRONMENT VARIABLES ----
@@ -148,9 +146,9 @@ local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("fuzzel"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("librewolf"))
-hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("alacritty"))
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("ghostty"))
 local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
-hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("command -v hyprshutdown >/dev/null 2>&1 && hyprshutdown || hyprctl dispatch 'hl.dsp.exit()'"))
+hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("/home/br1yen/.local/bin/powermenu"))
 hl.bind(mainMod .. " + SPACE", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + R", hl.dsp.window.pseudo())
 
@@ -238,11 +236,11 @@ hl.bind(
     hl.dsp.exec_cmd("sh -c 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'")
 )
 
-hl.bind(mainMod .. " + F", hl.dsp.exec_cmd("selected=$(hyprctl clients -j | jq -r '.[] | [.address, (.class + \" — \" + .title)] | @tsv' | fuzzel --dmenu --prompt 'Window: '); [ -z \"$selected\" ] || hyprctl dispatch \"hl.dsp.focus({ window = 'address:$(printf '%s' \"$selected\" | cut -f1)' })\""))
+-- Focus windows
+hl.bind(mainMod .. " + F", hl.dsp.exec_cmd("/home/br1yen/.local/bin/windows-switcher"))
 
 ---- WINDOWS AND WORKSPACES ----
 -- See https://wiki.hypr.land/configuring/core/rules/
-
 local suppressMaximizeRule = hl.window_rule({
     -- Ignore maximize requests from all apps. You'll probably like this.
     name  = "suppress-maximize-events",
@@ -284,15 +282,9 @@ hl.window_rule({
     float = true,
 })
 
+-- Librewolf windorule
 hl.window_rule({
     name = "librewolf-workspace",
     match = { class = "^librewolf$" },
     workspace = "2",
 })
-
-hl.window_rule({
-    name = "foot-workspace",
-    match = { class = "^foot$" },
-    workspace = "1",
-})
-

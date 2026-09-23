@@ -35,11 +35,13 @@ vim.opt.showmode = false
 vim.opt.showcmd = false
 vim.opt.laststatus = 3
 vim.opt.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkon0"
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { desc = 'Exit terminal mode' })
-vim.keymap.set('t', 'C-[', [[<C-\><C-n>]], { desc = 'Exit terminal mode' })
+vim.keymap.set('t', '<C-[>', [[<C-\><C-n>]], { desc = 'Exit terminal mode' })
 
 local jump_keys = { "*", "#", "{", "}", 
 "<C-d>", "<C-u>", 
@@ -61,28 +63,28 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 })
 
 -- Netrw
-vim.g.netrw_sort_by = "name"
-vim.g.netrw_sort_direction = "normal"
-vim.g.netrw_sort_sequence = "[\\/]$,*"
-vim.g.netrw_list_hide = [[^\.\.\=/\=$]]
-vim.g.netrw_hide = 1
-
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "netrw",
-    callback = function()
-        local opts = { buffer = true, remap = true, silent = true }
-        vim.g.netrw_bufsettings = "noma nomod nu rnu nobl nowrap ro"
-        vim.keymap.set("n", "h", "-", opts)
-        vim.keymap.set("n", "l", "<CR>", opts)
-        vim.keymap.set("n", "f", "%", opts)
-    end,
-})
-
-vim.keymap.set("n", "<leader>e", function()
-    vim.cmd("Explore " .. vim.fn.expand("%:p:h"))
-end, {
-desc = "Open Netrw in current file directory",
-})
+-- vim.g.netrw_sort_by = "name"
+-- vim.g.netrw_sort_direction = "normal"
+-- vim.g.netrw_sort_sequence = "[\\/]$,*"
+-- vim.g.netrw_list_hide = [[^\.\.\=/\=$]]
+-- vim.g.netrw_hide = 1
+--
+-- vim.api.nvim_create_autocmd("FileType", {
+--     pattern = "netrw",
+--     callback = function()
+--         local opts = { buffer = true, remap = true, silent = true }
+--         vim.g.netrw_bufsettings = "noma nomod nu rnu nobl nowrap ro"
+--         vim.keymap.set("n", "h", "-", opts)
+--         vim.keymap.set("n", "l", "<CR>", opts)
+--         vim.keymap.set("n", "f", "%", opts)
+--     end,
+-- })
+--
+-- vim.keymap.set("n", "<leader>e", function()
+--     vim.cmd("Explore " .. vim.fn.expand("%:p:h"))
+-- end, {
+-- desc = "Open Netrw in current file directory",
+-- })
 
 -- Packages
 vim.pack.add({
@@ -95,6 +97,17 @@ vim.pack.add({
     'https://github.com/mfussenegger/nvim-jdtls',
     'https://github.com/chomosuke/typst-preview.nvim',
     'https://github.com/vague-theme/vague.nvim',
+    'https://github.com/mikavilpas/yazi.nvim',
+    'https://github.com/nvim-lua/plenary.nvim',
+})
+
+-- Yazi
+require("yazi").setup({
+  open_for_directories = true,
+})
+
+vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", {
+  desc = "Open Yazi",
 })
 
 -- Colors

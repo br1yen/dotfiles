@@ -1,0 +1,13 @@
+#!/bin/sh
+
+selected=$(
+    hyprctl clients -j |
+        jq -r '.[] | [.address, (.class + " — " + .title)] | @tsv' |
+        fuzzel --dmenu --prompt 'Window: '
+)
+
+[ -z "$selected" ] && exit 0
+
+address=$(printf '%s' "$selected" | cut -f1)
+
+hyprctl dispatch focuswindow "address:$address"

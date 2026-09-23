@@ -1,6 +1,16 @@
 export MANPAGER='nvim +Man!'
 export EDITOR=nvim
 export VISUAL=nvim
+export PATH="$PATH:$HOME/.local/bin"
+
+# Yazi change directory helper
+function y() {
+	local tmp cwd; tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+	command yazi "$@" --cwd-file="$tmp"
+	IFS= read -r -d '' cwd < "$tmp"
+	[ "$cwd" != "$PWD" ] && [ -d "$cwd" ] && builtin cd -- "$cwd" || builtin true
+	command rm -f -- "$tmp"
+}
 
 # --- 1. History ---
 HISTFILE=~/.zsh_history
