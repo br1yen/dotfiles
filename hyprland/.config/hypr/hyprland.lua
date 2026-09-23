@@ -238,7 +238,7 @@ hl.bind(
     hl.dsp.exec_cmd("sh -c 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'")
 )
 
-hl.bind(mainMod .. " + F", hl.dsp.exec_cmd("selected=$(hyprctl clients | awk '/^Window / {addr=$2} /^[[:space:]]*class:/ {class=$2} /^[[:space:]]*title:/ {title=$0; sub(/^[[:space:]]*title: /, \"\", title); print addr \"\\t\" class \" — \" title}' | fuzzel --dmenu --prompt 'Window: '); [ -z \"$selected\" ] || hyprctl dispatch \"hl.dsp.focus({ window = 'address:$((printf '%s' \"$selected\" | cut -f1))' })\""))
+hl.bind(mainMod .. " + F", hl.dsp.exec_cmd("selected=$(hyprctl clients -j | jq -r '.[] | [.address, (.class + \" — \" + .title)] | @tsv' | fuzzel --dmenu --prompt 'Window: '); [ -z \"$selected\" ] || hyprctl dispatch \"hl.dsp.focus({ window = 'address:$(printf '%s' \"$selected\" | cut -f1)' })\""))
 
 ---- WINDOWS AND WORKSPACES ----
 -- See https://wiki.hypr.land/configuring/core/rules/
