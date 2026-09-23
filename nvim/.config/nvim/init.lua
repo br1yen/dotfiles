@@ -34,9 +34,11 @@ vim.opt.updatetime = 250
 vim.opt.showmode = false
 vim.opt.showcmd = false
 vim.opt.laststatus = 3
+vim.opt.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkon0"
 
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
+vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { desc = 'Exit terminal mode' })
 
 local jump_keys = { "*", "#", "{", "}", 
 "<C-d>", "<C-u>", 
@@ -125,12 +127,33 @@ require('nvim-surround').setup()
 
 -- Fzf
 local fzf = require("fzf-lua")
+fzf.setup({
+  files = {
+    cmd = "fd --type f --follow --exclude '.*' " ..
+          "--exclude '*.png' --exclude '*.jpg' --exclude '*.jpeg' --exclude '*.gif' --exclude '*.webp'"
+  },
+  grep = {
+    rg_opts = "--column --line-number --no-heading --color=always --smart-case " ..
+              "--glob '!.*' --glob '!.*/*' " ..
+              "--glob '!*.png' --glob '!*.jpg' --glob '!*.jpeg' --glob '!*.gif' --glob '!*.webp'"
+  }
+})
 vim.keymap.set("n", "<leader>f", fzf.files, { desc = "Find files" })
 vim.keymap.set("n", "<leader>g", fzf.live_grep, { desc = "Live grep" })
 vim.keymap.set("n", "<leader>r", fzf.history, { desc = "Recent files" })
 vim.keymap.set("n", "<leader>b", fzf.buffers, { desc = "Find buffers" })
 vim.keymap.set("n", "<leader>h", fzf.help_tags, { desc = "Help" })
-vim.keymap.set("n", "<leader>d", fzf.diagnostics_document, { desc = "Diagnostics" })
+vim.keymap.set('n', '<leader>F', function()
+  fzf.files({
+    cmd = "fd --type f --hidden --follow" 
+  })
+end, { desc = 'Find Files (Include Dotfiles & System)' })
+
+vim.keymap.set('n', '<leader>G', function()
+  fzf.live_grep({
+    rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden"
+  })
+end, { desc = 'Live Grep (Include Dotfiles & System)' })
 
 -- Treesitter
 require("nvim-treesitter").setup({
@@ -210,3 +233,13 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.opt_local.linebreak = true
     end,
 })
+
+-- Notes
+vim.keymap.set("n", "<leader>nf", "<cmd>FzfLua files cwd=~/sync/notes<cr>")
+vim.keymap.set("n", "<leader>ng", "<cmd>FzfLua live_grep cwd=~/sync/notes<cr>")
+
+if vim.g.neovide then
+    vim.o.guifont = "Drafting* Mono:h14"
+    vim.g.neovide_progress_bar_enabled = false
+end
+
