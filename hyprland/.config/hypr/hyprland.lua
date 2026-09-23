@@ -62,7 +62,7 @@ hl.config({
         resize_on_border = true,
         allow_tearing = true,
 
-        layout = "master",
+        layout = "monocle",
 
     },
 
@@ -154,6 +154,8 @@ hl.bind(mainMod .. " + R", hl.dsp.window.pseudo())
 
 hl.bind(mainMod .. " + J", hl.dsp.window.cycle_next())
 hl.bind(mainMod .. " + K", hl.dsp.window.cycle_next({ next = false }))
+hl.bind(mainMod .. " + J", hl.dsp.layout("cyclenext"))
+hl.bind(mainMod .. " + K", hl.dsp.layout("cycleprev"))
 hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.swap({ next = true }))
 
 hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.swap({ prev = true }))

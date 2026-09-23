@@ -34,7 +34,7 @@ window#waybar {
 .modules-right {
     background: transparent;
     border: none;
-    margin: 4px 8px;
+    margin: 6px 8px;
     padding: 0;
 }
 
@@ -108,7 +108,7 @@ window#waybar {
     background: transparent;
     border: none;
     color: @fg_dim;
-    padding: 0 4px;
+    padding: 0 7px;
     margin: 0;
 }
 #tray menu,

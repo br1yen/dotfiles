@@ -1,13 +1,14 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 selected=$(
     hyprctl clients -j |
-        jq -r '.[] | [.address, (.class + " — " + .title)] | @tsv' |
-        fuzzel --dmenu --prompt 'Window: '
+        jq -r '.[] | "\(.address)\t\(.class // "") — \(.title // "")"' |
+        fuzzel --dmenu \
+            --prompt 'Window: ' \
+            --with-nth 2 \
+            --accept-nth 1
 )
 
 [ -z "$selected" ] && exit 0
 
-address=$(printf '%s' "$selected" | cut -f1)
-
-hyprctl dispatch focuswindow "address:$address"
+hyprctl dispatch "hl.dsp.focus({ window = \"address:$selected\" })"
