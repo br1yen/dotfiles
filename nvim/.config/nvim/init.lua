@@ -34,7 +34,6 @@ vim.opt.updatetime = 250
 vim.opt.showmode = false
 vim.opt.showcmd = false
 vim.opt.laststatus = 3
-vim.opt.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkon0"
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 
@@ -253,9 +252,3 @@ vim.api.nvim_create_autocmd("FileType", {
 -- Notes
 vim.keymap.set("n", "<leader>nf", "<cmd>FzfLua files cwd=~/sync/notes<cr>")
 vim.keymap.set("n", "<leader>ng", "<cmd>FzfLua live_grep cwd=~/sync/notes<cr>")
-
-if vim.g.neovide then
-    vim.o.guifont = "Drafting* Mono:h14"
-    vim.g.neovide_progress_bar_enabled = false
-end
-
