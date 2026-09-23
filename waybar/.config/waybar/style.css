@@ -17,9 +17,9 @@
 @define-color green        #8ba4b0;
 
 * {
-    font-family: "Drafting* Mono";
+    font-family: "Hack";
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 400;
     min-height: 0;
 }
 
@@ -34,7 +34,7 @@ window#waybar {
 .modules-right {
     background: transparent;
     border: none;
-    margin: 6px 8px;
+    margin: 4px 8px;
     padding: 0;
 }
 
@@ -108,7 +108,7 @@ window#waybar {
     background: transparent;
     border: none;
     color: @fg_dim;
-    padding: 0 7px;
+    padding: 0 4px;
     margin: 0;
 }
 #tray menu,

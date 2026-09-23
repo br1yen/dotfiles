@@ -5,8 +5,7 @@
   "height": 22,
 
   "modules-left": [
-    "hyprland/workspaces",
-    "hyprland/window"
+    "hyprland/workspaces"
   ],
 
   "modules-center": [

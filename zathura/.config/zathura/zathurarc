@@ -33,7 +33,7 @@ set notification-warning-fg "#f3be7c"
 set highlight-color "#c48282"
 set highlight-active-color "#d8647e"
 
-set font "Courier Prime Code 12"
+set font "Hack 12"
 
 # Behavior
 set selection-clipboard clipboard
