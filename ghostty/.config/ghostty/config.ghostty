@@ -38,3 +38,5 @@ bell-features = false
 app-notifications = no-clipboard-copy
 copy-on-select = true
 resize-overlay = never
+mouse-scroll-multiplier = precision:1
+mouse-hide-while-typing = true
