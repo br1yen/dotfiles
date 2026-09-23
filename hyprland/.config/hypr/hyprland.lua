@@ -226,7 +226,7 @@ hl.bind(
 hl.bind(
     mainMod .. " + SHIFT + S",
     hl.dsp.exec_cmd(
-        'grim -g "$(slurp)" ~/pictures/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png'
+        'grim -g "$(slurp)" ~/Pictures/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png'
     )
 )
 
