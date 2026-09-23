@@ -39,6 +39,7 @@ vim.opt.guicursor = "n-v-c:block,i-ci-ve:ver25,r-cr:hor20,o:hor50,a:blinkon0"
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
 vim.keymap.set('t', '<Esc>', [[<C-\><C-n>]], { desc = 'Exit terminal mode' })
+vim.keymap.set('t', 'C-[', [[<C-\><C-n>]], { desc = 'Exit terminal mode' })
 
 local jump_keys = { "*", "#", "{", "}", 
 "<C-d>", "<C-u>", 
@@ -128,17 +129,17 @@ require('nvim-surround').setup()
 -- Fzf
 local fzf = require("fzf-lua")
 fzf.setup({
-    files = {
-        cmd = "fd --type f --follow --exclude '.*' " ..
-        "--exclude '*.png' --exclude '*.jpg' --exclude '*.jpeg' --exclude '*.gif' --exclude '*.webp'",
-        "--exclude '~/paru'",
-    },
-    grep = {
-        rg_opts = "--column --line-number --no-heading --color=always --smart-case " ..
-        "--glob '!.*' --glob '!.*/*' " ..
-        "--glob '!*.png' --glob '!*.jpg' --glob '!*.jpeg' --glob '!*.gif' --glob '!*.webp'",
-        "--exclude '~/paru'",
-    }
+  files = {
+    cmd = "fd --type f --follow --exclude '.*' " ..
+          "--exclude '*.png' --exclude '*.jpg' --exclude '*.jpeg' --exclude '*.gif' --exclude '*.webp' " ..
+          "--exclude 'paru' --exclude 'sync/documents'"
+  },
+  grep = {
+    rg_opts = "--column --line-number --no-heading --color=always --smart-case " ..
+              "--glob '!.*' --glob '!.*/*' " ..
+              "--glob '!*.png' --glob '!*.jpg' --glob '!*.jpeg' --glob '!*.gif' --glob '!*.webp' " ..
+              "--glob '!**/paru/**' --glob '!**/sync/documents/**'"
+  }
 })
 vim.keymap.set("n", "<leader>f", fzf.files, { desc = "Find files" })
 vim.keymap.set("n", "<leader>g", fzf.live_grep, { desc = "Live grep" })
