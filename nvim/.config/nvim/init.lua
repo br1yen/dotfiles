@@ -80,7 +80,7 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.keymap.set("n", "<leader>e", function()
     vim.cmd("Explore " .. vim.fn.expand("%:p:h"))
 end, {
-    desc = "Open Netrw in current file directory",
+desc = "Open Netrw in current file directory",
 })
 
 -- Packages
@@ -128,15 +128,17 @@ require('nvim-surround').setup()
 -- Fzf
 local fzf = require("fzf-lua")
 fzf.setup({
-  files = {
-    cmd = "fd --type f --follow --exclude '.*' " ..
-          "--exclude '*.png' --exclude '*.jpg' --exclude '*.jpeg' --exclude '*.gif' --exclude '*.webp'"
-  },
-  grep = {
-    rg_opts = "--column --line-number --no-heading --color=always --smart-case " ..
-              "--glob '!.*' --glob '!.*/*' " ..
-              "--glob '!*.png' --glob '!*.jpg' --glob '!*.jpeg' --glob '!*.gif' --glob '!*.webp'"
-  }
+    files = {
+        cmd = "fd --type f --follow --exclude '.*' " ..
+        "--exclude '*.png' --exclude '*.jpg' --exclude '*.jpeg' --exclude '*.gif' --exclude '*.webp'",
+        "--exclude '~/paru'",
+    },
+    grep = {
+        rg_opts = "--column --line-number --no-heading --color=always --smart-case " ..
+        "--glob '!.*' --glob '!.*/*' " ..
+        "--glob '!*.png' --glob '!*.jpg' --glob '!*.jpeg' --glob '!*.gif' --glob '!*.webp'",
+        "--exclude '~/paru'",
+    }
 })
 vim.keymap.set("n", "<leader>f", fzf.files, { desc = "Find files" })
 vim.keymap.set("n", "<leader>g", fzf.live_grep, { desc = "Live grep" })
@@ -144,15 +146,15 @@ vim.keymap.set("n", "<leader>r", fzf.history, { desc = "Recent files" })
 vim.keymap.set("n", "<leader>b", fzf.buffers, { desc = "Find buffers" })
 vim.keymap.set("n", "<leader>h", fzf.help_tags, { desc = "Help" })
 vim.keymap.set('n', '<leader>F', function()
-  fzf.files({
-    cmd = "fd --type f --hidden --follow" 
-  })
+    fzf.files({
+        cmd = "fd --type f --hidden --follow" 
+    })
 end, { desc = 'Find Files (Include Dotfiles & System)' })
 
 vim.keymap.set('n', '<leader>G', function()
-  fzf.live_grep({
-    rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden"
-  })
+    fzf.live_grep({
+        rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden"
+    })
 end, { desc = 'Live Grep (Include Dotfiles & System)' })
 
 -- Treesitter
@@ -167,8 +169,8 @@ vim.api.nvim_create_autocmd("FileType", {
 
 
 vim.api.nvim_set_hl(0, "BlinkCmpKind", {
-  fg = "#ffffff",
-  bg = "#000000",
+    fg = "#ffffff",
+    bg = "#000000",
 })
 vim.api.nvim_set_hl(0, "BlinkCmpMenu", { bg = "#000000" })
 vim.api.nvim_set_hl(0, "BlinkCmpMenuSelection", { bg = "#222222" })
