@@ -1,0 +1,10 @@
+[icon]
+globs = []
+dirs = []
+files = []
+exts = []
+conds = []
+
+[mgr]
+border_symbol = " "
+border_style.hidden = true
