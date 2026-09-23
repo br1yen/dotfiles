@@ -12,7 +12,7 @@ function y() {
 	command rm -f -- "$tmp"
 }
 
-# --- 1. History ---
+## History
 HISTFILE=~/.zsh_history
 HISTSIZE=50000
 SAVEHIST=50000
@@ -22,7 +22,7 @@ setopt HIST_IGNORE_SPACE
 setopt SHARE_HISTORY
 setopt INC_APPEND_HISTORY
 
-# --- 2. Completion System ---
+## Completions
 autoload -Uz compinit
 # Cache compdump to avoid slow startup latency
 if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.m+1) ]]; then
@@ -43,16 +43,14 @@ zstyle ':completion:*' cache-path ~/.zsh/cache
 bindkey '^I' menu-complete
 bindkey '^[[Z' reverse-menu-complete
 
-# --- 3. Shell Behavior & Prompt ---
+## Prompt
 PROMPT='%m %~ $ '
 setopt EXTENDED_GLOB
 unsetopt CORRECT  # Prevents annoying "correct 'cmd' to 'c' [nyae]?" checks
 
-# --- 4. Plugins & Vi Mode Hooks ---
-# Source vi-mode first so its lifecycle hooks work
+## Plugins
 source /usr/share/zsh/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
 
-# Wire FZF properly inside zsh-vi-mode hooks so bindings survive
 function zvm_after_init() {
   source <(fzf --zsh)
   
@@ -60,7 +58,13 @@ function zvm_after_init() {
   bindkey -M viins '^I' menu-complete
   bindkey -M viins '^[[Z' reverse-menu-complete
 }
-
-# --- 5. Syntax Highlighting (MUST BE DEAD LAST) ---
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+## Alisases
+alias 'ta'='tmux attach'
+
+alias 'gs'='git status'
+alias 'ga'='git add'
+alias 'gc'='git commit'
+alias 'gps'='git push'
+alias 'gpl'='git pull'
