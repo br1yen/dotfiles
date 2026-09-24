@@ -96,6 +96,7 @@ vim.pack.add({
     'https://github.com/mfussenegger/nvim-jdtls',
     'https://github.com/chomosuke/typst-preview.nvim',
     'https://github.com/vague-theme/vague.nvim',
+    'https://github.com/savq/melange-nvim',
     'https://github.com/mikavilpas/yazi.nvim',
     'https://github.com/nvim-lua/plenary.nvim',
 })
@@ -110,7 +111,7 @@ vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", {
 })
 
 -- Colors
-vim.cmd.colorscheme("vague")
+vim.cmd.colorscheme("melange")
 
 local hl = vim.api.nvim_set_hl
 
@@ -133,7 +134,6 @@ hl(0, "SignColumn", {
 hl(0, "EndOfBuffer", {
     bg = "#000000",
 })
-
 
 -- Surround
 require('nvim-surround').setup()

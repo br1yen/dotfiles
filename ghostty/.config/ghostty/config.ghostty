@@ -3,7 +3,7 @@ font-size = 14
 
 window-padding-x = 4
 window-padding-y = 4
-background-opacity = 1
+background-opacity = 1.0
 
 scrollback-limit = 10000
 
@@ -11,25 +11,26 @@ cursor-style = block
 cursor-style-blink = false
 
 background = #000000
-foreground = #cdcdcd
-
-palette = 0=#000000
-palette = 1=#d8647e
-palette = 2=#7fa563
-palette = 3=#f3be7c
-palette = 4=#6e94b2
-palette = 5=#bb9dbd
-palette = 6=#aeaed1
-palette = 7=#cdcdcd
-
-palette = 8=#606079
-palette = 9=#e68e9d
-palette = 10=#a8c98a
-palette = 11=#f6d6a8
-palette = 12=#7e98e8
-palette = 13=#c9afd0
-palette = 14=#b4d4cf
-palette = 15=#eeeeee
+foreground = #ECE1D7
+cursor-color = #ECE1D7
+selection-background = #403A36
+selection-foreground = #ECE1D7
+palette = 0=#34302C
+palette = 1=#BD8183
+palette = 2=#78997A
+palette = 3=#E49B5D
+palette = 4=#7F91B2
+palette = 5=#B380B0
+palette = 6=#7B9695
+palette = 7=#C1A78E
+palette = 8=#867462
+palette = 9=#D47766
+palette = 10=#85B695
+palette = 11=#EBC06D
+palette = 12=#A3A9CE
+palette = 13=#CF9BC2
+palette = 14=#89B3B6
+palette = 15=#ECE1D7
 
 confirm-close-surface = false
 bell-features = false

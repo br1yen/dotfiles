@@ -2,7 +2,7 @@
 -- See https://wiki.hypr.land/configuring/core/monitors/
 hl.monitor({
     output   = "DP-3",
-    mode     = "1920x1080@180",
+    mode     = "1920x1080@144",
     position = "auto",
     scale    = "1.0",
 })
@@ -20,7 +20,7 @@ hl.on("hyprland.start", function ()
     hl.exec_cmd("nm-applet")
     hl.exec_cmd("librewolf")
     hl.exec_cmd("waybar")
-    hl.exec_cmd("swaybg -i ~/sync/pictures/night.png")
+    hl.exec_cmd("swaybg -i ~/sync/pictures/pine.jpg")
     hl.exec_cmd("wl-paste --type text --watch cliphist store")
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
 end)
