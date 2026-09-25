@@ -3,18 +3,18 @@
 @define-color bg_light     #282830;
 @define-color line         #3c3c4a;
 @define-color comment      #50505e;
-@define-color fg_dim       #646477;
-@define-color fg           #cdcdcd;
-@define-color fg_bright    #dedee6;
+@define-color fg_dim       #ECE1D7;
+@define-color fg           #ECE1D7;
+@define-color fg_bright    #ECE1D7;
 
-@define-color yellow       #e0af68;
-@define-color orange       #ea999c;
-@define-color red          #c07870;
-@define-color magenta      #d4847a;
-@define-color purple       #9f84cc;
-@define-color blue         #7aa2f7;
-@define-color cyan         #7dcfff;
-@define-color green        #8ba4b0;
+@define-color yellow       #EBC06D;
+@define-color orange       #E49B5D;
+@define-color red          #D47766;
+@define-color magenta      #CF9BC2;
+@define-color purple       #A3A9CE;
+@define-color blue         #7F91B2;
+@define-color cyan         #89B3B6;
+@define-color green        #85B695;
 
 * {
     font-family: "Hack";
@@ -43,7 +43,7 @@ window#waybar {
 }
 
 #workspaces button {
-    color: @comment;
+    color: @fg_dim;
     background: transparent;
     border: none;
     border-radius: 0;
@@ -57,7 +57,7 @@ window#waybar {
 
 #workspaces button:hover,
 #workspaces button.workspace-hover {
-    color: @comment;
+    color: @fg_bright;
     background: transparent;
     border: none;
     box-shadow: none;
@@ -65,7 +65,14 @@ window#waybar {
 }
 
 #workspaces button.active {
-    color: @fg_bright;
+    color: #FFFFFF;
+    background: transparent;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+#workspaces button.urgent {
+    color: @red;
     background: transparent;
     box-shadow: none;
     text-shadow: none;
