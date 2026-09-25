@@ -49,8 +49,6 @@ setopt EXTENDED_GLOB
 unsetopt CORRECT  # Prevents annoying "correct 'cmd' to 'c' [nyae]?" checks
 
 ## Plugins
-source /usr/share/zsh/plugins/zsh-vi-mode/zsh-vi-mode.plugin.zsh
-
 function zvm_after_init() {
   source <(fzf --zsh)
   
