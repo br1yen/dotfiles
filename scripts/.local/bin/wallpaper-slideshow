@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+
+WALLPAPER_DIR="$HOME/Pictures/wallpapers"
+INTERVAL=300
+
+while true; do
+    find "$WALLPAPER_DIR" -type f \
+        \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) |
+        shuf |
+        while read -r img; do
+            awww img "$img" --transition-type fade
+            sleep "$INTERVAL"
+        done
+done
