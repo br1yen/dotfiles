@@ -2,7 +2,6 @@
   "layer": "top",
   "position": "top",
   "spacing": 4,
-  "height": 22,
 
   "modules-left": [
     "hyprland/workspaces"
@@ -20,8 +19,6 @@
 
   "hyprland/workspaces": {
     "format": "{icon}",
-    "on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({workspace=\"e+1\"})' ",
-    "on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({workspace=\"e-1\"})' "
   },
 
   "hyprland/window": {
@@ -31,7 +28,7 @@
   },
 
   "clock": {
-    "format": "{:%a %b %d  •  %I:%M %p}",
+    "format": "{:%a %b %d   %I:%M %p}",
     "tooltip": false
   },
 

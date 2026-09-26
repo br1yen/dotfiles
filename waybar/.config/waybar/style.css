@@ -1,55 +1,32 @@
-@define-color bg_dark      #141415;
-@define-color bg           #18191a;
-@define-color bg_light     #282830;
-@define-color line         #3c3c4a;
-@define-color comment      #50505e;
-@define-color fg_dim       #ECE1D7;
-@define-color fg           #ECE1D7;
-@define-color fg_bright    #ECE1D7;
-
-@define-color yellow       #EBC06D;
-@define-color orange       #E49B5D;
-@define-color red          #D47766;
-@define-color magenta      #CF9BC2;
-@define-color purple       #A3A9CE;
-@define-color blue         #7F91B2;
-@define-color cyan         #89B3B6;
-@define-color green        #85B695;
-
 * {
     font-family: "Hack";
-    font-size: 14px;
-    font-weight: 400;
+    font-size: 12px;
+    font-weight: 600;
     min-height: 0;
 }
 
 window#waybar {
-    background: transparent;
-    min-height: 0;
-    color: @fg_dim;
+    color: #D0D0D0;
+    background: #242424;
+    border-bottom: 1px solid #000000;
+    border-top: 1px solid #000000;
 }
 
-.modules-left,
-.modules-center,
-.modules-right {
-    background: transparent;
-    border: none;
-    margin: 6px 8px;
-    padding: 0;
+.modules-center {
+    padding: 4px 8px;
 }
 
 #workspaces {
-    padding: 0;
+    padding: 2px 2px;
 }
 
 #workspaces button {
-    color: @fg_dim;
+    color: #D0D0D0;
     background: transparent;
     border: none;
     border-radius: 0;
     padding: 0 8px;
     margin: 0;
-
     box-shadow: none;
     text-shadow: none;
     transition: none;
@@ -57,7 +34,7 @@ window#waybar {
 
 #workspaces button:hover,
 #workspaces button.workspace-hover {
-    color: @fg_bright;
+    color: #FFFFFF;
     background: transparent;
     border: none;
     box-shadow: none;
@@ -67,62 +44,25 @@ window#waybar {
 #workspaces button.active {
     color: #FFFFFF;
     background: transparent;
+    border: none;
     box-shadow: none;
     text-shadow: none;
 }
 
 #workspaces button.urgent {
-    color: @red;
+    color: #FF5555;
     background: transparent;
+    border: none;
     box-shadow: none;
     text-shadow: none;
 }
 
-#workspaces button.urgent {
-    color: @red;
-    background: transparent;
-    box-shadow: none;
-    text-shadow: none;
-}
-
-#clock {
-    color: @fg_dim;
-    padding: 0 8px;
-}
-
+#clock,
 #pulseaudio,
 #network,
 #battery,
-
-#pulseaudio {
-    color: @fg_dim;
-}
-
-#battery {
-    color: @fg_dim;
-}
-
-#battery.warning {
-    color: @yellow;
-}
-
-#battery.critical {
-    color: @red;
-}
-
-
 #tray {
-    background: transparent;
-    border: none;
-    color: @fg_dim;
-    padding: 0 7px;
-    margin: 0;
+    color: #D0D0D0;
+    margin: 0 5px;
 }
-#tray menu,
-#tray menu menuitem,
-#tray menu menuitem label {
-    font-family: "Sans";
-    font-size: 12px;
-    font-weight: 400;
-    font-style: normal;
-}
+

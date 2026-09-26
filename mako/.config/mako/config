@@ -2,36 +2,36 @@
 font=Hack 12
 
 # Layout & Geometry
-anchor=bottom-center
+anchor=top-right
 layer=overlay
 width=340
 height=110
 padding=12,16
-border-size=2
+border-size=1
 border-radius=0
 default-timeout=4000
 
-# Base Colors (Pitch black background, Vague slate text)
-background-color=#000000ff
+# Base Colors
+background-color=#242424ff
 text-color=#cdcdcdff
-border-color=#3c3c4aff
+border-color=#000000ff
 
 # Urgency: Low
 [urgency=low]
-background-color=#000000ff
+background-color=#242424ff
 text-color=#646477ff
-border-color=#282830ff
+border-color=#000000ff
 default-timeout=2500
 
 # Urgency: Normal
 [urgency=normal]
-background-color=#000000ff
+background-color=#242424ff
 text-color=#dedee6ff
-border-color=#545464ff
+border-color=#000000ff
 
 # Urgency: Critical
 [urgency=critical]
-background-color=#000000ff
+background-color=#242424ff
 text-color=#dedee6ff
-border-color=#c07870ff
+border-color=#000000ff
 default-timeout=0
