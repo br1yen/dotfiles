@@ -11,14 +11,14 @@ border_style.hidden = true
 
 [mode]
 normal_main = { fg = "black", bg = "cyan", bold = true }
-normal_alt  = { fg = "white", bg = "black" }
+normal_alt  = { fg = "black", bg = "cyan" }
 
 select_main = { fg = "black", bg = "cyan", bold = true }
-select_alt  = { fg = "white", bg = "black" }
+select_alt  = { fg = "black", bg = "cyan" }
 
 unset_main  = { fg = "black", bg = "cyan", bold = true }
-unset_alt   = { fg = "white", bg = "black" }
+unset_alt   = { fg = "black", bg = "cyan" }
 
 [tabs]
 active   = { fg = "black", bg = "cyan", bold = true }
-inactive = { fg = "white", bg = "black" }
+inactive = { fg = "black", bg = "cyan" }

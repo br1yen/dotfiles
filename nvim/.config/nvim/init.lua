@@ -13,7 +13,7 @@ vim.opt.incsearch = true
 vim.opt.signcolumn = "yes"
 vim.opt.wrap = false
 vim.opt.scrolloff = 999
-vim.opt.sidescrolloff = 999
+vim.opt.sidescrolloff = 8
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.splitkeep = "screen"
@@ -29,11 +29,15 @@ vim.opt.showmode = false
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.o.timeoutlen = 300
+vim.o.winborder = 'none'
 
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
 vim.keymap.set('n', 'vv', 'V')
 vim.keymap.set('n', 'V', 'v$')
+vim.keymap.set("i", "{<CR>", "{<CR>}<C-o>O", {
+    expr = false,
+})
 
 vim.api.nvim_create_autocmd("TextYankPost", {
         desc = "Highlight yanked text",
@@ -44,23 +48,24 @@ vim.api.nvim_create_autocmd("TextYankPost", {
 
 -- Packages
 vim.pack.add({
-        'https://github.com/kylechui/nvim-surround',
+        'https://github.com/nvim-mini/mini.surround',
         'https://github.com/ibhagwan/fzf-lua',
         'https://github.com/nvim-treesitter/nvim-treesitter',
         'https://github.com/neovim/nvim-lspconfig',
         { src = "https://github.com/saghen/blink.cmp", 
-        version = vim.version.range("^1") },
+                version = vim.version.range("^1") },
         'https://github.com/mfussenegger/nvim-jdtls',
         'https://github.com/chomosuke/typst-preview.nvim',
         'https://github.com/mikavilpas/yazi.nvim',
+        'https://github.com/glacambre/firenvim',
+        'https://github.com/windwp/nvim-autopairs',
         'https://github.com/nvim-lua/plenary.nvim',
 })
 
 -- Yazi
 require("yazi").setup({
         open_for_directories = true,
-        floating_window_scaling_factor = 1.0,
-        yazi_floating_window_zindex = 100,
+        floating_window_scaling_factor = 0.75,
         yazi_floating_window_border = "none",
 })
 vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", {
@@ -72,39 +77,61 @@ vim.o.termguicolors = true
 vim.cmd.colorscheme("default")
 
 -- Surround
-require('nvim-surround').setup()
+require('mini.surround').setup()
+
+-- Autopairs
+require("nvim-autopairs").setup()
 
 -- Fzf
 local fzf = require("fzf-lua")
+
 fzf.setup({
+        winopts = {
+                border = "single",
+                backdrop = 100,
+                preview = {
+                        border = "single",
+                },
+
+        },
+
         files = {
                 cmd = "fd --type f --follow --exclude '.*' " ..
-                "--exclude '*.png' --exclude '*.jpg' --exclude '*.jpeg' --exclude '*.gif' --exclude '*.webp' " ..
-                "--exclude 'paru' --exclude 'sync/documents'"
+                        "--exclude '*.png' --exclude '*.jpg' --exclude '*.jpeg' " ..
+                        "--exclude '*.gif' --exclude '*.webp' " ..
+                        "--exclude 'paru' --exclude 'sync/documents'",
         },
+
         grep = {
                 rg_opts = "--column --line-number --no-heading --color=always --smart-case " ..
-                "--glob '!.*' --glob '!.*/*' " ..
-                "--glob '!*.png' --glob '!*.jpg' --glob '!*.jpeg' --glob '!*.gif' --glob '!*.webp' " ..
-                "--glob '!**/paru/**' --glob '!**/sync/documents/**'"
-        }
+                        "--glob '!.*' --glob '!.*/*' " ..
+                        "--glob '!*.png' --glob '!*.jpg' --glob '!*.jpeg' " ..
+                        "--glob '!*.gif' --glob '!*.webp' " ..
+                        "--glob '!**/paru/**' --glob '!**/sync/documents/**'",
+        },
 })
-vim.keymap.set("n", "<leader>f", fzf.files, { desc = "Find files" })
-vim.keymap.set("n", "<leader>g", fzf.live_grep, { desc = "Live grep" })
-vim.keymap.set("n", "<leader>r", fzf.history, { desc = "Recent files" })
-vim.keymap.set("n", "<leader>b", fzf.buffers, { desc = "Find buffers" })
-vim.keymap.set("n", "<leader>h", fzf.help_tags, { desc = "Help" })
-vim.keymap.set('n', '<leader>F', function()
-        fzf.files({
-                cmd = "fd --type f --hidden --follow" 
-        })
-end, { desc = 'Find Files (Include Dotfiles & System)' })
 
-vim.keymap.set('n', '<leader>G', function()
-        fzf.live_grep({
-                rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden"
+vim.keymap.set("n", "<leader>f", fzf.files)
+
+vim.keymap.set("n", "<leader>g", fzf.live_grep) 
+
+vim.keymap.set("n", "<leader>r", fzf.history)
+
+vim.keymap.set("n", "<leader>b", fzf.buffers)
+
+vim.keymap.set("n", "<leader>h", fzf.help_tags)
+
+vim.keymap.set("n", "<leader>F", function() 
+        fzf.files({
+                cmd = "fd --type f --hidden --follow",
         })
-end, { desc = 'Live Grep (Include Dotfiles & System)' })
+end)
+
+vim.keymap.set("n", "<leader>G", function()
+        fzf.live_grep({
+                rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden",
+        })
+end)
 
 -- Treesitter
 require("nvim-treesitter").setup({
