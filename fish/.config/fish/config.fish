@@ -1,6 +1,13 @@
 # Vi mode
 fish_vi_key_bindings
 
+# Default editor
+set -Ux EDITOR nvim
+set -Ux VISUAL nvim
+
+# nvim as man pager
+set -Ux MANPAGER 'nvim +Man!'
+
 # Cursor shapes
 set fish_cursor_default block
 set fish_cursor_insert line

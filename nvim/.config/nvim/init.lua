@@ -12,8 +12,8 @@ vim.opt.hlsearch = false
 vim.opt.incsearch = true
 vim.opt.signcolumn = "yes"
 vim.opt.wrap = false
-vim.opt.scrolloff = 18
-vim.opt.sidescrolloff = 4
+vim.opt.scrolloff = 999
+vim.opt.sidescrolloff = 999
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.splitkeep = "screen"
@@ -28,21 +28,12 @@ vim.opt.wildmenu = true
 vim.opt.showmode = false
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
+vim.o.timeoutlen = 300
 
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
-
-local jump_keys = { "*", "#", "{", "}", 
-"<C-d>", "<C-u>", 
-"<C-o>", "<C-i>",
-"<C-f>", "<C-b>", "G" }
-
-for _, key in ipairs(jump_keys) do
-        vim.keymap.set("n", key, key .. "zz", { desc = key .. " (centered)" })
-end
-
-vim.keymap.set("n", "n", "nzzzv", { desc = "Next search result (centered)" })
-vim.keymap.set("n", "N", "Nzzzv", { desc = "Previous search result (centered)" })
+vim.keymap.set('n', 'vv', 'V')
+vim.keymap.set('n', 'V', 'v$')
 
 vim.api.nvim_create_autocmd("TextYankPost", {
         desc = "Highlight yanked text",
@@ -68,8 +59,10 @@ vim.pack.add({
 -- Yazi
 require("yazi").setup({
         open_for_directories = true,
+        floating_window_scaling_factor = 1.0,
+        yazi_floating_window_zindex = 100,
+        yazi_floating_window_border = "none",
 })
-
 vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", {
         desc = "Open Yazi",
 })
@@ -120,7 +113,10 @@ require("nvim-treesitter").setup({
 require('nvim-treesitter').install { 'markdown', 'typst', 'lua', 'java' }
 vim.api.nvim_create_autocmd("FileType", {
         pattern = { 'lua', 'java', 'markdown', 'typst' },
-        callback = function() vim.treesitter.start() end,
+        callback = function() 
+                vim.treesitter.start()
+                vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end,
 })
 
 
