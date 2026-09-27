@@ -8,6 +8,16 @@ set -Ux VISUAL nvim
 # nvim as man pager
 set -Ux MANPAGER 'nvim +Man!'
 
+# yazi autocd
+function y
+	set tmp (mktemp -t "yazi-cwd.XXXXXX")
+	command yazi $argv --cwd-file="$tmp"
+	if read -z cwd < "$tmp"; and [ "$cwd" != "$PWD" ]; and test -d "$cwd"
+		builtin cd -- "$cwd"
+	end
+	command rm -f -- "$tmp"
+end
+
 # Cursor shapes
 set fish_cursor_default block
 set fish_cursor_insert line

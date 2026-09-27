@@ -1,5 +1,5 @@
 # Typography
-font=Hack 12
+font=Sans 12
 
 # Layout & Geometry
 anchor=top-right
@@ -12,8 +12,8 @@ border-radius=0
 default-timeout=4000
 
 # Base Colors
-background-color=#242424ff
-text-color=#cdcdcdff
+background-color=#303030ff
+text-color=#d0d0d0ff
 border-color=#000000ff
 
 # Urgency: Low
