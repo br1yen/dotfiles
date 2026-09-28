@@ -57,7 +57,6 @@ vim.pack.add({
         'https://github.com/mfussenegger/nvim-jdtls',
         'https://github.com/chomosuke/typst-preview.nvim',
         'https://github.com/mikavilpas/yazi.nvim',
-        'https://github.com/glacambre/firenvim',
         'https://github.com/windwp/nvim-autopairs',
         'https://github.com/nvim-lua/plenary.nvim',
 })
