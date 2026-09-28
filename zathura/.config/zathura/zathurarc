@@ -33,7 +33,7 @@ set notification-warning-fg "#ffcc66"
 set highlight-color "#3d3d3d"
 set highlight-active-color "#3584e4"
 
-set font "Hack 12"
+set font "Adwaita Sans 11"
 
 # Behavior
 set selection-clipboard clipboard
