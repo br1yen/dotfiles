@@ -2,7 +2,7 @@
 -- See https://wiki.hypr.land/configuring/core/monitors/
 hl.monitor({
         output   = "DP-3",
-        mode     = "1920x1080@144",
+        mode     = "1920x1080@180",
         position = "auto",
         scale    = "1.0",
 })

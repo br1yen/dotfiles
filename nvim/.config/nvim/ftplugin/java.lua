@@ -33,14 +33,4 @@ vim.keymap.set("n", "crv", jdtls.extract_variable, { buffer = 0, desc = "Extract
 vim.keymap.set("v", "crv", function() jdtls.extract_variable(true) end, { buffer = 0 })
 vim.keymap.set("n", "crm", jdtls.extract_method, { buffer = 0, desc = "Extract method" })
 
-vim.keymap.set("n", "<leader>jr", function()
-  vim.cmd("write")
-  local dir = vim.fn.expand("%:p:h")
-  local file = vim.fn.expand("%:t")
-  local class = vim.fn.expand("%:t:r")
-  vim.cmd("botright split | terminal cd " .. vim.fn.shellescape(dir)
-    .. " && javac " .. vim.fn.shellescape(file)
-    .. " && java " .. class)
-end, { desc = "Compile and run current Java file" })
-
 jdtls.start_or_attach(config)
