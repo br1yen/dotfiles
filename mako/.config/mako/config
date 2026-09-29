@@ -11,6 +11,10 @@ border-size=1
 border-radius=0
 default-timeout=4000
 
+# Icons
+icons=1
+icon-path=/usr/share/icons/Colloid-Dark/
+
 # Base Colors
 background-color=#303030ff
 text-color=#d0d0d0ff
