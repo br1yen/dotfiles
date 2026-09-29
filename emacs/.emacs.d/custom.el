@@ -7,8 +7,8 @@
  '(package-selected-packages
    '(denote diminish ef-themes evil-collection evil-commentary
             evil-leader evil-org helpful lambda-themes marginalia
-            orderless pdf-tools smartparens undo-fu undo-fu-session
-            vertico)))
+            orderless org-noter pdf-tools smartparens undo-fu
+            undo-fu-session vertico)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

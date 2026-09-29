@@ -40,6 +40,7 @@
 ;; UI
 (tool-bar-mode -1)
 (blink-cursor-mode -1)
+(transient-mark-mode 1)
 
 ;; Behavior
 
@@ -168,15 +169,6 @@
       undo-strong-limit 12000000
       undo-outer-limit 120000000)
 
-;; Evil org mode
-(use-package evil-org
-  :demand t
-  :after org
-  :hook (org-mode . evil-org-mode)
-  :config
-  (require 'evil-org-agenda)
-  (evil-org-agenda-set-keys))
-
 ;; Evil commentary
 (use-package evil-commentary
   :demand t
@@ -189,6 +181,7 @@
 (diminish 'which-key-mode)
 (diminish 'evil-commentary-mode)
 (diminish 'evil-collection-unimpaired-mode)
+(diminish 'evil-org-mode)
 
 ;; Vertico
 (use-package vertico
@@ -242,6 +235,7 @@
    ("C-h k" . helpful-key)
    ("C-h x" . helpful-command)))
 
+;; Better pdf viewer -- replaces DocView
 (use-package pdf-tools
   :init
   (pdf-loader-install)
@@ -251,6 +245,72 @@
                      (setq-local cursor-type nil)
                      (setq-local evil-normal-state-cursor '(nil)))))
 
+(defun my-eval-last-sexp ()
+  "Like `eval-last-sexp', but also works when point is on the closing paren in Evil normal state."
+  (interactive)
+  (save-excursion
+    (unless (eobp) (forward-char))
+    (call-interactively #'eval-last-sexp)))
+
+;; Org Mode Configuration
+
+;;; Agenda
+(setq org-todo-keywords
+      '((sequence "TODO(t)" "INPROG(i)" "|" "DONE(d)")))
+(setq org-tag-persistent-alist '((:startgroup)
+                                 ("@school" . ?s)
+                                 ("@home" . ?v)
+                                 ("@errand" . ?e)
+                                 (:endgroup)
+                                 ("hw" . ?h)
+                                 ("read" . ?r)
+                                 ("chore" . ?c)))
+
+(setq org-agenda-files '("~/org/agenda/"))
+(setq org-agenda-span 'week)
+(setq org-agenda-start-on-weekday nil)
+(setq org-deadline-warning-days 7)
+(setq org-agenda-skip-scheduled-if-done t)
+(setq org-agenda-skip-deadline-if-done t)
+
+;;; Capture
+(setq org-default-notes-file "~/org/agenda/inbox.org")
+(setq org-capture-templates
+      '(("t" "Task" entry
+         (file+headline "~/org/agenda/inbox.org" "Inbox")
+         "* TODO %?\n  %U\n"
+         :empty-lines 1)
+
+        ("h" "Homework" entry
+         (file+headline "~/org/agenda/inbox.org" "Inbox")
+         "* TODO %? :@school:hw:\n  DEADLINE: %^{Due}t\n"
+         :empty-lines 1)
+
+        ("n" "Quick note" entry
+         (file "~/org/agenda/inbox.org" "Inbox")
+         "* %?\n  %U\n")))
+
+;;; Refile
+(setq org-refile-targets
+      '((org-agenda-files :maxlevel . 2)))
+
+(setq org-refile-use-outline-path 'file)
+(setq org-outline-path-complete-in-steps nil)
+
+;; Org Mode Packages
+;;; Evil org mode
+(use-package evil-org
+  :demand t
+  :after org
+  :hook (org-mode . evil-org-mode)
+  :config
+  (require 'evil-org-agenda)
+  (evil-org-agenda-set-keys))
+
+;;; Org-noter -- PDF note taking with org
+(use-package org-noter)
+
+;;; Denote for note taking
 (use-package denote
   :demand t
   :hook (dired-mode . denote-dired-mode)
@@ -274,17 +334,10 @@
   ;; stop vertico from auto selecting first entry
   (setq denote-prompts '(title keywords))
   (setq denote-date-prompt-use-org-read-date t)
-  (setq denote-directory (expand-file-name "~/sync/notes/"))
+  (setq denote-directory (expand-file-name "~/org/notes/"))
 
   ;; Automatically rename Denote buffers when visiting them
   (denote-rename-buffer-mode 1))
-
-(defun my-eval-last-sexp ()
-  "Like `eval-last-sexp', but also works when point is on the closing paren in Evil normal state."
-  (interactive)
-  (save-excursion
-    (unless (eobp) (forward-char))
-    (call-interactively #'eval-last-sexp)))
 
 ;;; Leader key execute
 (defvar-keymap my-execute-map
@@ -333,6 +386,8 @@
   "e" #'dired-jump
   "b" #'switch-to-buffer
   "w" #'save-buffer
+  "a" #'org-agenda
+  "c" #'org-capture
   "x" my-execute-map
   "h" my-help-map
   "n" my-notes-map)
