@@ -1,6 +1,6 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-vim.opt.relativenumber = true
+vim.opt.relativenumber = false
 vim.opt.expandtab = true
 vim.opt.shiftwidth = 4
 vim.opt.tabstop = 4
@@ -54,13 +54,15 @@ vim.pack.add({
     'https://github.com/windwp/nvim-autopairs',
     'https://github.com/MeanderingProgrammer/render-markdown.nvim',
     'https://github.com/nvim-lua/plenary.nvim',
+    'https://github.com/HakonHarnes/img-clip.nvim',
+    'https://github.com/3rd/image.nvim',
 })
 
 -- Yazi
 require("yazi").setup({
     open_for_directories = true,
     floating_window_scaling_factor = 0.75,
-    yazi_floating_window_border = "none",
+    yazi_floating_window_border = "single",
 })
 vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", {
     desc = "Open Yazi",
@@ -232,132 +234,173 @@ vim.keymap.set("n", "<leader>d", fzf.diagnostics_document)
 
 -- Notes
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = "markdown",
-  callback = function()
-    vim.opt_local.wrap = true
-    vim.opt_local.linebreak = true
-  end,
+    pattern = "markdown",
+    callback = function()
+        vim.opt_local.wrap = true
+        vim.opt_local.linebreak = true
+    end,
 })
 vim.api.nvim_create_user_command("Notes", function()
-  vim.cmd("edit ~/sync/notes")
+    vim.cmd("edit ~/sync/notes")
 end, {})
 
 vim.api.nvim_create_user_command("NewNote", function(opts)
-  local title = opts.args
-  if title == "" then
-    title = "untitled"
-  end
+    local title = opts.args
+    if title == "" then
+        title = "untitled"
+    end
 
-  title = title:gsub("%s+", "-"):gsub("[^%w%-]", ""):lower()
+    title = title:gsub("%s+", "-"):gsub("[^%w%-]", ""):lower()
 
-  local date = os.date("%Y-%m-%d")
-  local path = vim.fn.expand("~/sync/notes/" .. date .. "-" .. title .. ".md")
+    local date = os.date("%Y-%m-%d")
+    local path = vim.fn.expand("~/sync/notes/" .. date .. "-" .. title .. ".md")
 
-  vim.cmd("edit " .. vim.fn.fnameescape(path))
+    vim.cmd("edit " .. vim.fn.fnameescape(path))
 
-  if vim.fn.line("$") == 1 and vim.fn.getline(1) == "" then
-    vim.api.nvim_buf_set_lines(0, 0, -1, false, {
-      "# " .. title:gsub("-", " "),
-      "",
-    })
-  end
+    if vim.fn.line("$") == 1 and vim.fn.getline(1) == "" then
+        vim.api.nvim_buf_set_lines(0, 0, -1, false, {
+            "# " .. title:gsub("-", " "),
+            "",
+        })
+    end
 end, { nargs = "*" })
 
 vim.keymap.set("n", "<leader>t", "<cmd>e ~/sync/notes/todo.md<cr>")
 vim.keymap.set("n", "<leader>nf", "<cmd>FzfLua files cwd=~/sync/notes<cr>")
 vim.keymap.set("n", "<leader>ng", "<cmd>FzfLua live_grep cwd=~/sync/notes<cr>")
 vim.keymap.set("n", "<leader>nn", function()
-  vim.ui.input({ prompt = "Note: " }, function(title)
-    if title and title ~= "" then
-      vim.cmd("NewNote " .. title)
-    end
-  end)
+    vim.ui.input({ prompt = "Note: " }, function(title)
+        if title and title ~= "" then
+            vim.cmd("NewNote " .. title)
+        end
+    end)
 end, { desc = "New note" })
 
 -- Render markdown pretty
 require("render-markdown").setup({
-  heading = {
-    enabled = true,
-    sign = false,
-    position = "inline",
+    heading = {
+        enabled = true,
+        sign = false,
+        position = "inline",
 
-    icons = {
-      "H1 ",
-      "H2 ",
-      "H3 ",
-      "H4 ",
-      "H5 ",
-      "H6 ",
+        icons = {
+            "H1 ",
+            "H2 ",
+            "H3 ",
+            "H4 ",
+            "H5 ",
+            "H6 ",
+        },
+
+        width = "block",
+        left_margin = { 0, 1, 2, 3, 4, 5 },
+        left_pad = 0,
+        right_pad = 0,
+
+        backgrounds = {
+            "Normal",
+            "Normal",
+            "Normal",
+            "Normal",
+            "Normal",
+            "Normal",
+        },
+
+        border = false,
     },
 
-    width = "block",
-    left_margin = { 0, 1, 2, 3, 4, 5 },
-    left_pad = 0,
-    right_pad = 0,
+    code = {
+        enabled = true,
+        sign = false,
 
-    backgrounds = {
-      "Normal",
-      "Normal",
-      "Normal",
-      "Normal",
-      "Normal",
-      "Normal",
+        style = "language",
+
+        language = true,
+        language_icon = false,
+        language_name = true,
+        language_info = false,
+
+        disable_background = true,
+
+        left_margin = 4,
+        left_pad = 1,
+        right_pad = 1,
+
+        border = "none",
+        highlight_border = false,
+
+        highlight_language = "Normal",
+        highlight_info = "Normal",
+        highlight_fallback = "Normal",
     },
 
-    border = false,
-  },
+    bullet = {
+        enabled = true,
+        icons = { "•", "‣", "◦", "⁃" },
+        left_pad = 0,
+        right_pad = 0,
+    },
 
-  code = {
-    enabled = true,
-    sign = false,
+    quote = {
+        icon = "│",
+        repeat_linebreak = false,
+    },
 
-    style = "language",
+    checkbox = {
+        enabled = true,
+    },
 
-    language = true,
-    language_icon = false,
-    language_name = true,
-    language_info = false,
+    pipe_table = {
+        enabled = true,
+        preset = "round",
+    },
 
-    disable_background = true,
+    link = {
+        enabled = true,
+    },
 
-    left_margin = 4,
-    left_pad = 1,
-    right_pad = 1,
+    anti_conceal = {
+        enabled = true,
+    },
+})
 
-    border = "none",
-    highlight_border = false,
+require("img-clip").setup({
+    default = {
+        dir_path = "images",
+        relative_to_current_file = true,
+        use_absolute_path = false,
+        prompt_for_file_name = false,
+        file_name = function()
+            return os.date("%Y-%m-%d-%H-%M-%S")
+        end,
+    },
+})
 
-    highlight_language = "Normal",
-    highlight_info = "Normal",
-    highlight_fallback = "Normal",
-  },
+require("image").setup({
+    backend = "kitty",
+    processor = "magick_cli",
 
-  bullet = {
-    enabled = true,
-    icons = { "•", "◦", "▪", "▫" },
-    left_pad = 0,
-    right_pad = 0,
-  },
+    integrations = {
+        markdown = {
+            enabled = true,
+            clear_in_insert_mode = true,
+            download_remote_images = true,
+            only_render_image_at_cursor = true,
+            only_render_image_at_cursor_mode = "popup",
+            floating_windows = false,
+        },
+    },
+    window_overlap_clear_enabled = true,
+})
 
-  quote = {
-    icon = "│",
-    repeat_linebreak = false,
-  },
+vim.keymap.set("n", "<leader>p", "<cmd>PasteImage<cr>", {
+    desc = "Paste image from clipboard",
+})
+vim.api.nvim_set_hl(0, "NormalFloat", {
+  bg = "NONE",
+})
 
-  checkbox = {
-    enabled = true,
-  },
-
-  pipe_table = {
-    enabled = true,
-    preset = "round",
-  },
-
-  link = {
-    enabled = true,
-  },
-
-  anti_conceal = {
-    enabled = true,
-  },
+vim.api.nvim_set_hl(0, "FloatBorder", {
+  bg = "NONE",
+  fg = "NONE",
 })
