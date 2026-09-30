@@ -1,29 +1,29 @@
 ---- MONITORS ----
 -- See https://wiki.hypr.land/configuring/core/monitors/
 hl.monitor({
-        output   = "DP-3",
-        mode     = "1920x1080@180",
-        position = "auto",
-        scale    = "1.0",
+    output   = "DP-3",
+    mode     = "1920x1080@180",
+    position = "auto",
+    scale    = "1.0",
 })
 
 hl.monitor({
-        output   = "eDP-1",
-        mode     = "1920x1080@60",
-        position = "auto",
-        scale    = "1.0",
+    output   = "eDP-1",
+    mode     = "1920x1080@60",
+    position = "auto",
+    scale    = "1.0",
 })
 
 ---- AUTOSTART ----
 -- See https://wiki.hypr.land/configuring/core/autostart/
 hl.on("hyprland.start", function ()
-        hl.exec_cmd("nm-applet")
-        hl.exec_cmd("librewolf")
-        hl.exec_cmd("waybar")
-        hl.exec_cmd("awww-daemon")
-        hl.exec_cmd("wl-paste --type text --watch cliphist store")
-        hl.exec_cmd("sleep 1 && ~/.local/bin/wallpaper-slideshow")
-        hl.exec_cmd("wl-paste --type image --watch cliphist store")
+    hl.exec_cmd("nm-applet")
+    hl.exec_cmd("librewolf")
+    hl.exec_cmd("waybar")
+    hl.exec_cmd("awww-daemon")
+    hl.exec_cmd("wl-paste --type text --watch cliphist store")
+    hl.exec_cmd("sleep 1 && ~/.local/bin/wallpaper-slideshow")
+    hl.exec_cmd("wl-paste --type image --watch cliphist store")
 end)
 
 ---- ENVIRONMENT VARIABLES ----
@@ -32,97 +32,97 @@ hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
 
 hl.config({
-        general = {
-                gaps_out = 4,
-                gaps_in  = 2,
+    general = {
+        gaps_out = 4,
+        gaps_in  = 2,
 
-                border_size = 1,
+        border_size = 1,
 
-                col = {
-                        active_border   = "#000000",
-                        inactive_border = "#4F5258",
-                },
-
-                resize_on_border = true,
-                allow_tearing = true,
-
-                layout = "master",
-
+        col = {
+            active_border   = "#000000",
+            inactive_border = "#4F5258",
         },
 
-        cursor = {
-                no_warps = true,
+        resize_on_border = true,
+        allow_tearing = true,
+
+        layout = "master",
+
+    },
+
+    cursor = {
+        no_warps = true,
+    },
+
+    decoration = {
+        rounding       = 0,
+        rounding_power = 0,
+
+        active_opacity   = 1.0,
+        inactive_opacity = 1.0,
+
+        shadow = {
+            enabled = false,
         },
 
-        decoration = {
-                rounding       = 0,
-                rounding_power = 0,
-
-                active_opacity   = 1.0,
-                inactive_opacity = 1.0,
-
-                shadow = {
-                        enabled = false,
-                },
-
-                blur = {
-                        enabled = false,
-                },
+        blur = {
+            enabled = false,
         },
+    },
 
-        animations = {
-                enabled = false,
-        },
+    animations = {
+        enabled = false,
+    },
 
 })
 
 -- See https://wiki.hypr.land/configuring/layouts/master-layout/ for more
 hl.config({
-        master = {
-                new_status = "master",
-                mfact = 0.5,
-        },
+    master = {
+        new_status = "master",
+        mfact = 0.5,
+    },
 })
 
 ----  MISC  ----
 hl.config({
-        misc = {
-                force_default_wallpaper = 0,
-                disable_splash_rendering = true,
-                disable_hyprland_logo   = true,
-        },
+    misc = {
+        force_default_wallpaper = 0,
+        disable_splash_rendering = true,
+        disable_hyprland_logo   = true,
+    },
 })
 
 ---- INPUT ----
 hl.config({
-        input = {
-                kb_layout  = "us",
-                kb_variant = "",
-                kb_model   = "",
-                kb_options = "ctrl:nocaps",
-                kb_rules   = "",
+    input = {
+        kb_layout  = "us",
+        kb_variant = "",
+        kb_model   = "",
+        kb_options = "ctrl:nocaps",
+        kb_rules   = "",
 
-                follow_mouse = 1,
+        follow_mouse = 1,
 
-                sensitivity = 0,
+        sensitivity = 0,
 
-                touchpad = {
-                        natural_scroll = false,
-                },
+        touchpad = {
+            natural_scroll = false,
         },
+    },
 })
 
 hl.gesture({
-        fingers = 3,
-        direction = "horizontal",
-        action = "workspace"
+    fingers = 3,
+    direction = "horizontal",
+    action = "workspace"
 })
 
 -- Example per-device config
 -- See https://wiki.hypr.land/configuring/core/devices/ for more
 hl.device({
-        name        = "epic-mouse-v1",
-        sensitivity = -0.5,
+    name        = "epic-mouse-v1",
+    sensitivity = -0.5,
 })
 
 
@@ -151,26 +151,26 @@ hl.bind(mainMod .. " + SHIFT + L", hl.dsp.layout("removemaster"))
 hl.bind(mainMod .. " + N", hl.dsp.focus({ workspace = "e+1" }))
 hl.bind(mainMod .. " + P",   hl.dsp.focus({ workspace = "e-1" }))
 hl.bind(mainMod .. " + SHIFT + N", function()
-        local ws = hl.get_active_workspace()
-        hl.dispatch(hl.dsp.window.move({
-                workspace = tostring(ws.id + 1),
-                follow = true
-        }))
+    local ws = hl.get_active_workspace()
+    hl.dispatch(hl.dsp.window.move({
+        workspace = tostring(ws.id + 1),
+        follow = true
+    }))
 end)
 hl.bind(mainMod .. " + SHIFT + P", function()
-        local ws = hl.get_active_workspace()
-        hl.dispatch(hl.dsp.window.move({
-                workspace = tostring(ws.id - 1),
-                follow = true
-        }))
+    local ws = hl.get_active_workspace()
+    hl.dispatch(hl.dsp.window.move({
+        workspace = tostring(ws.id - 1),
+        follow = true
+    }))
 end)
 
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
 for i = 1, 10 do
-        local key = i % 10 -- 10 maps to key 0
-        hl.bind(mainMod .. " + " .. key,             hl.dsp.focus({ workspace = i}))
-        hl.bind(mainMod .. " + SHIFT + " .. key,     hl.dsp.window.move({ workspace = i }))
+    local key = i % 10 -- 10 maps to key 0
+    hl.bind(mainMod .. " + " .. key,             hl.dsp.focus({ workspace = i}))
+    hl.bind(mainMod .. " + SHIFT + " .. key,     hl.dsp.window.move({ workspace = i }))
 end
 
 hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen())
@@ -203,22 +203,22 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 
 -- Screenshot to clipboard
 hl.bind(
-        mainMod .. " + S",
-        hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy')
+    mainMod .. " + S",
+    hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy')
 )
 
 -- Screenshot to file
 hl.bind(
-        mainMod .. " + SHIFT + S",
-        hl.dsp.exec_cmd(
-                'grim -g "$(slurp)" ~/Pictures/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png'
-        )
+    mainMod .. " + SHIFT + S",
+    hl.dsp.exec_cmd(
+        'grim -g "$(slurp)" ~/Pictures/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png'
+    )
 )
 
 -- Clipboard history
 hl.bind(
-        mainMod .. " + C",
-        hl.dsp.exec_cmd("sh -c 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'")
+    mainMod .. " + C",
+    hl.dsp.exec_cmd("sh -c 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'")
 )
 
 -- Focus windows
@@ -227,49 +227,56 @@ hl.bind(mainMod .. " + F", hl.dsp.exec_cmd("/home/br1yen/.local/bin/windows-swit
 ---- WINDOWS AND WORKSPACES ----
 -- See https://wiki.hypr.land/configuring/core/rules/
 local suppressMaximizeRule = hl.window_rule({
-        -- Ignore maximize requests from all apps. You'll probably like this.
-        name  = "suppress-maximize-events",
-        match = { class = ".*" },
+    -- Ignore maximize requests from all apps. You'll probably like this.
+    name  = "suppress-maximize-events",
+    match = { class = ".*" },
 
-        suppress_event = "maximize",
+    suppress_event = "maximize",
 })
 -- suppressMaximizeRule:set_enabled(false)
 
 hl.window_rule({
-        -- Fix some dragging issues with XWayland
-        name  = "fix-xwayland-drags",
-        match = {
-                class      = "^$",
-                title      = "^$",
-                xwayland   = true,
-                float      = true,
-                fullscreen = false,
-                pin        = false,
-        },
+    -- Fix some dragging issues with XWayland
+    name  = "fix-xwayland-drags",
+    match = {
+        class      = "^$",
+        title      = "^$",
+        xwayland   = true,
+        float      = true,
+        fullscreen = false,
+        pin        = false,
+    },
 
-        no_focus = true,
+    no_focus = true,
 })
 
 -- Layer rules also return a handle.
 -- local overlayLayerRule = hl.layer_rule({
-        --     name  = "no-anim-overlay",
-        --     match = { namespace = "^my-overlay$" },
-        --     no_anim = true,
-        -- })
-        -- overlayLayerRule:set_enabled(false)
+--     name  = "no-anim-overlay",
+--     match = { namespace = "^my-overlay$" },
+--     no_anim = true,
+-- })
+-- overlayLayerRule:set_enabled(false)
 
-        -- Hyprland-run windowrule
-        hl.window_rule({
-                name  = "move-hyprland-run",
-                match = { class = "hyprland-run" },
+-- Hyprland-run windowrule
+hl.window_rule({
+    name  = "move-hyprland-run",
+    match = { class = "hyprland-run" },
 
-                move  = "20 monitor_h-120",
-                float = true,
-        })
+    move  = "20 monitor_h-120",
+    float = true,
+})
 
-        -- Librewolf windorule
-        hl.window_rule({
-                name = "librewolf-workspace",
-                match = { class = "^librewolf$" },
-                workspace = "2",
-        })
+-- Librewolf windorule
+hl.window_rule({
+    name = "librewolf-workspace",
+    match = { class = "^librewolf$" },
+    workspace = "2",
+})
+
+hl.window_rule ({
+    name = "pavucontrol",
+    match = { class = "^(org.pulseaudio.pavucontrol)$" },
+    float = true,
+    center = true
+})

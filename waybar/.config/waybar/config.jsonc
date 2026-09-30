@@ -4,7 +4,8 @@
   "spacing": 4,
 
   "modules-left": [
-    "hyprland/workspaces"
+    "hyprland/workspaces",
+    "hyprland/window"
   ],
 
   "modules-center": [
@@ -18,7 +19,7 @@
   ],
 
   "hyprland/workspaces": {
-    "format": "{icon}",
+    "format": "{icon}"
   },
 
   "hyprland/window": {
@@ -37,7 +38,8 @@
     "format-muted": "󰝟 muted",
     "format-icons": {
       "default": ["", "", ""]
-    }
+    },
+    "on-click": "pavucontrol"
   },
 
 "battery": {

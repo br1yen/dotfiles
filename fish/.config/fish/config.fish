@@ -17,11 +17,9 @@ end
 
 # Cursor shapes
 set fish_cursor_default block
-set fish_cursor_insert line
-set fish_cursor_replace_one underscore
 
 # Binds
-bind -M insert \cy accept-autosuggestion
+bind \cy accept-autosuggestion
 
 # Prompt
 function fish_prompt

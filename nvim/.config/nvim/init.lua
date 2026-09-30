@@ -1,4 +1,3 @@
-
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.opt.relativenumber = true
@@ -136,20 +135,10 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
-
 -- Blink completion
 require("blink.cmp").setup({
     keymap = {
         preset = "default",
-        ["<C-n>"] = {
-            function(cmp)
-                if cmp.is_visible() then
-                    cmp.select_next()
-                else
-                    cmp.show()
-                end
-            end,
-        },
     },
 
     appearance = {
@@ -190,6 +179,13 @@ require("blink.cmp").setup({
     },
 })
 
+-- LSP navigation via fzf-lua
+vim.keymap.set("n", "gd", fzf.lsp_definitions)
+vim.keymap.set("n", "gr", fzf.lsp_references)
+vim.keymap.set("n", "<leader>s", fzf.lsp_document_symbols)
+vim.keymap.set("n", "<leader>S", fzf.lsp_live_workspace_symbols)
+vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help)
+
 -- Typst
 vim.lsp.config("tinymist", {
     settings = {
@@ -206,6 +202,22 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.opt_local.linebreak = true
     end,
 })
+
+-- Lua LSP
+vim.lsp.config("lua_ls", {
+    settings = {
+        Lua = {
+            runtime = { version = "LuaJIT" },
+            diagnostics = { globals = { "vim" } },
+            workspace = {
+                library = vim.api.nvim_get_runtime_file("", true),
+                checkThirdParty = false,
+            },
+            telemetry = { enable = false },
+        },
+    },
+})
+vim.lsp.enable("lua_ls")
 
 -- Notes
 vim.keymap.set("n", "<leader>nf", "<cmd>FzfLua files cwd=~/sync/notes<cr>")
