@@ -28,13 +28,13 @@ vim.opt.wildmenu = true
 vim.opt.showmode = false
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
-vim.o.timeoutlen = 300
 vim.o.winborder = 'none'
 
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
-vim.keymap.set('n', 'vv', 'V')
-vim.keymap.set('n', 'V', 'v$')
+vim.keymap.set({ "n", "x" }, "gl", "$")
+vim.keymap.set({ "n", "x" }, "gh", "0")
+vim.keymap.set({ "n", "x" }, "gs", "^")
 
 vim.api.nvim_create_autocmd("TextYankPost", {
         desc = "Highlight yanked text",
