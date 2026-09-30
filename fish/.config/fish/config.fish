@@ -1,3 +1,5 @@
+fish_add_path ~/.local/bin
+
 # Default editor
 set -Ux EDITOR nvim
 set -Ux VISUAL nvim

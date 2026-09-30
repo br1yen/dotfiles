@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+TODO="$HOME/sync/notes/todo.md"
+
+case "$1" in
+    "")
+        cat -b "$TODO"
+        ;;
+
+    -o)
+        nvim "$TODO"
+        ;;
+
+    -d)
+        if [[ -z "$2" || ! "$2" =~ ^[0-9]+$ ]]; then
+            echo "Usage: todo -d LINE"
+            exit 1
+        fi
+
+        line=$(sed -n "${2}p" "$TODO")
+
+        if [[ -z "$line" ]]; then
+            echo "Line $2 does not exist."
+            exit 1
+        fi
+
+        echo "Delete line $2?"
+        echo "  $line"
+        read -rp "Confirm [y/N]: " confirm
+
+        if [[ "$confirm" =~ ^[Yy]$ ]]; then
+            sed -i "${2}d" "$TODO"
+            echo "Deleted line $2."
+        else
+            echo "Cancelled."
+        fi
+        ;;
+
+    *)
+        echo "Usage:"
+        echo "  todo           Show todo list"
+        echo "  todo -o        Open todo list in nvim"
+        echo "  todo -d LINE   Delete line LINE"
+        exit 1
+        ;;
+esac

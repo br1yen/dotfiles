@@ -263,6 +263,7 @@ vim.api.nvim_create_user_command("NewNote", function(opts)
   end
 end, { nargs = "*" })
 
+vim.keymap.set("n", "<leader>t", "<cmd>e ~/sync/notes/todo.md<cr>")
 vim.keymap.set("n", "<leader>nf", "<cmd>FzfLua files cwd=~/sync/notes<cr>")
 vim.keymap.set("n", "<leader>ng", "<cmd>FzfLua live_grep cwd=~/sync/notes<cr>")
 vim.keymap.set("n", "<leader>nn", function()
