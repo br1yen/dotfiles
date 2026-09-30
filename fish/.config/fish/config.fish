@@ -1,6 +1,3 @@
-# Vi mode
-fish_vi_key_bindings
-
 # Default editor
 set -Ux EDITOR nvim
 set -Ux VISUAL nvim

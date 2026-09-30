@@ -10,8 +10,8 @@
   (last-modified 27323 56771 477533 931000))
 ("org-capture-last-stored"
  (filename . "~/org/agenda/inbox.org")
- (front-context-string . "** TODO test    ")
- (rear-context-string)
- (position . 10)
- (last-modified 27323 56631 683115 825000))
+ (front-context-string . "** How low can I")
+ (rear-context-string . "9-29 Tue 11:06]\n")
+ (position . 277)
+ (last-modified 27324 10686 107410 770000))
 )

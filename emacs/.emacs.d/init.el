@@ -253,6 +253,8 @@
     (call-interactively #'eval-last-sexp)))
 
 ;; Org Mode Configuration
+(setq org-startup-truncated nil)
+(add-hook 'org-mode-hook #'visual-line-mode)
 
 ;;; Agenda
 (setq org-todo-keywords
@@ -287,7 +289,7 @@
          :empty-lines 1)
 
         ("n" "Quick note" entry
-         (file "~/org/agenda/inbox.org" "Inbox")
+         (file+headline "~/org/agenda/inbox.org" "Inbox")
          "* %?\n  %U\n")))
 
 ;;; Refile

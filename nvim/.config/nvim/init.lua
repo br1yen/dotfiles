@@ -35,9 +35,6 @@ vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
 vim.keymap.set('n', 'vv', 'V')
 vim.keymap.set('n', 'V', 'v$')
-vim.keymap.set("i", "{<CR>", "{<CR>}<C-o>O", {
-    expr = false,
-})
 
 vim.api.nvim_create_autocmd("TextYankPost", {
         desc = "Highlight yanked text",
