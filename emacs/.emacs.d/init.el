@@ -112,23 +112,6 @@
   (kbd "gl") #'evil-end-of-line
   (kbd "gs") #'evil-first-non-blank)
 
-(defun my-visual-v ()
-  "In charwise visual, switch to linewise (like `vv'). Otherwise toggle as usual."
-  (interactive)
-  (if (eq evil-visual-selection 'char)
-      (evil-visual-line)
-    (evil-visual-char)))
-
-(defun my-visual-to-eol ()
-  "Start charwise visual and select to end of line (like `v$')."
-  (interactive)
-  (evil-visual-char)
-  (evil-end-of-line))
-
-(with-eval-after-load 'evil
-  (define-key evil-visual-state-map (kbd "v") #'my-visual-v)
-  (evil-define-key 'normal 'global (kbd "V") #'my-visual-to-eol))
-
 ;; Predictable minibuffer with evil mode
 (evil-set-initial-state 'minibuffer-mode 'insert)
 (defun my-minibuffer-evil-setup ()
