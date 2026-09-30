@@ -1,4 +1,4 @@
--- General
+
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
 vim.opt.relativenumber = true
@@ -37,35 +37,35 @@ vim.keymap.set({ "n", "x" }, "gh", "0")
 vim.keymap.set({ "n", "x" }, "gs", "^")
 
 vim.api.nvim_create_autocmd("TextYankPost", {
-        desc = "Highlight yanked text",
-        callback = function()
-                vim.highlight.on_yank()
-        end,
+    desc = "Highlight yanked text",
+    callback = function()
+        vim.highlight.on_yank()
+    end,
 })
 
 -- Packages
 vim.pack.add({
-        'https://github.com/nvim-mini/mini.surround',
-        'https://github.com/ibhagwan/fzf-lua',
-        'https://github.com/nvim-treesitter/nvim-treesitter',
-        'https://github.com/neovim/nvim-lspconfig',
-        { src = "https://github.com/saghen/blink.cmp", 
-                version = vim.version.range("^1") },
-        'https://github.com/mfussenegger/nvim-jdtls',
-        'https://github.com/chomosuke/typst-preview.nvim',
-        'https://github.com/mikavilpas/yazi.nvim',
-        'https://github.com/windwp/nvim-autopairs',
-        'https://github.com/nvim-lua/plenary.nvim',
+    'https://github.com/nvim-mini/mini.surround',
+    'https://github.com/ibhagwan/fzf-lua',
+    'https://github.com/nvim-treesitter/nvim-treesitter',
+    'https://github.com/neovim/nvim-lspconfig',
+    { src = "https://github.com/saghen/blink.cmp", 
+        version = vim.version.range("^1") },
+    'https://github.com/mfussenegger/nvim-jdtls',
+    'https://github.com/chomosuke/typst-preview.nvim',
+    'https://github.com/mikavilpas/yazi.nvim',
+    'https://github.com/windwp/nvim-autopairs',
+    'https://github.com/nvim-lua/plenary.nvim',
 })
 
 -- Yazi
 require("yazi").setup({
-        open_for_directories = true,
-        floating_window_scaling_factor = 0.75,
-        yazi_floating_window_border = "none",
+    open_for_directories = true,
+    floating_window_scaling_factor = 0.75,
+    yazi_floating_window_border = "none",
 })
 vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", {
-        desc = "Open Yazi",
+    desc = "Open Yazi",
 })
 
 -- Colors
@@ -82,135 +82,129 @@ require("nvim-autopairs").setup()
 local fzf = require("fzf-lua")
 
 fzf.setup({
-        winopts = {
-                border = "single",
-                backdrop = 100,
-                preview = {
-                        border = "single",
-                },
-
+    winopts = {
+        border = "single",
+        backdrop = 100,
+        preview = {
+            border = "single",
         },
 
-        files = {
-                cmd = "fd --type f --follow --exclude '.*' " ..
-                        "--exclude '*.png' --exclude '*.jpg' --exclude '*.jpeg' " ..
-                        "--exclude '*.gif' --exclude '*.webp' " ..
-                        "--exclude 'paru' --exclude 'sync/documents'",
-        },
+    },
 
-        grep = {
-                rg_opts = "--column --line-number --no-heading --color=always --smart-case " ..
-                        "--glob '!.*' --glob '!.*/*' " ..
-                        "--glob '!*.png' --glob '!*.jpg' --glob '!*.jpeg' " ..
-                        "--glob '!*.gif' --glob '!*.webp' " ..
-                        "--glob '!**/paru/**' --glob '!**/sync/documents/**'",
-        },
+    files = {
+        cmd = "fd --type f --follow --exclude '.*' " ..
+            "--exclude '*.png' --exclude '*.jpg' --exclude '*.jpeg' " ..
+            "--exclude '*.gif' --exclude '*.webp' " ..
+            "--exclude 'paru' --exclude 'sync/documents'",
+    },
+
+    grep = {
+        rg_opts = "--column --line-number --no-heading --color=always --smart-case " ..
+            "--glob '!.*' --glob '!.*/*' " ..
+            "--glob '!*.png' --glob '!*.jpg' --glob '!*.jpeg' " ..
+            "--glob '!*.gif' --glob '!*.webp' " ..
+            "--glob '!**/paru/**' --glob '!**/sync/documents/**'",
+    },
 })
 
 vim.keymap.set("n", "<leader>f", fzf.files)
-
 vim.keymap.set("n", "<leader>g", fzf.live_grep) 
-
 vim.keymap.set("n", "<leader>r", fzf.history)
-
 vim.keymap.set("n", "<leader>b", fzf.buffers)
-
 vim.keymap.set("n", "<leader>h", fzf.help_tags)
-
 vim.keymap.set("n", "<leader>F", function() 
-        fzf.files({
-                cmd = "fd --type f --hidden --follow",
-        })
+    fzf.files({
+        cmd = "fd --type f --hidden --follow",
+    })
 end)
-
 vim.keymap.set("n", "<leader>G", function()
-        fzf.live_grep({
-                rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden",
-        })
+    fzf.live_grep({
+        rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden",
+    })
 end)
 
 -- Treesitter
 require("nvim-treesitter").setup({
-        install_dir = vim.fn.stdpath("data") .. "/site",
+    install_dir = vim.fn.stdpath("data") .. "/site",
 })
 require('nvim-treesitter').install { 'markdown', 'typst', 'lua', 'java' }
 vim.api.nvim_create_autocmd("FileType", {
-        pattern = { 'lua', 'java', 'markdown', 'typst' },
-        callback = function() 
-                vim.treesitter.start()
-                vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-        end,
+    pattern = { 'lua', 'java', 'markdown', 'typst' },
+    callback = function() 
+        vim.treesitter.start()
+        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+    end,
 })
 
 
 -- Blink completion
 require("blink.cmp").setup({
-        keymap = {
-                preset = "default",
-                ["<C-n>"] = {
-                        function(cmp)
-                                if cmp.is_visible() then
-                                        cmp.select_next()
-                                else
-                                        cmp.show()
-                                end
+    keymap = {
+        preset = "default",
+        ["<C-n>"] = {
+            function(cmp)
+                if cmp.is_visible() then
+                    cmp.select_next()
+                else
+                    cmp.show()
+                end
+            end,
+        },
+    },
+
+    appearance = {
+        nerd_font_variant = "mono",
+    },
+
+    completion = {
+        trigger = {
+            show_on_keyword = false,
+            show_on_trigger_character = false,
+        },
+
+        documentation = {
+            auto_show = true,
+        },
+
+        menu = {
+            draw = {
+                components = {
+                    kind_icon = {
+                        text = function(ctx)
+                            return "[" .. ctx.kind .. "]"
                         end,
+
+                        highlight = "BlinkCmpKind",
+                    },
                 },
+            },
         },
+    },
 
-        appearance = {
-                nerd_font_variant = "mono",
-        },
+    sources = {
+        default = { "lsp", "path", "snippets", "buffer" },
+    },
 
-        completion = {
-                trigger = {
-                        show_on_keyword = false,
-                        show_on_trigger_character = false,
-                },
-
-                documentation = {
-                        auto_show = true,
-                },
-
-                menu = {
-                        draw = {
-                                components = {
-                                        kind_icon = {
-                                                text = function(ctx)
-                                                        return "[" .. ctx.kind .. "]"
-                                                end,
-
-                                                highlight = "BlinkCmpKind",
-                                        },
-                                },
-                        },
-                },
-        },
-
-        sources = {
-                default = { "lsp", "path", "snippets", "buffer" },
-        },
-
-        fuzzy = {
-                implementation = "prefer_rust_with_warning",
-        },
+    fuzzy = {
+        implementation = "prefer_rust_with_warning",
+    },
 })
 
 -- Typst
 vim.lsp.config("tinymist", {
-        settings = {
-                formatterMode = "typstyle", -- lets you gq / format-on-save with typstyle
-                exportPdf = "onType",       -- keeps a .pdf next to your .typ, updated as you type
-        },
+    settings = {
+        formatterMode = "typstyle", -- lets you gq / format-on-save with typstyle
+        exportPdf = "onType",       -- keeps a .pdf next to your .typ, updated as you type
+    },
 })
 vim.lsp.enable("tinymist")
 require("typst-preview").setup({})
 vim.api.nvim_create_autocmd("FileType", {
-        pattern = "typst",
-        callback = function()
-                vim.opt_local.wrap = true
-                vim.opt_local.linebreak = true
-        end,
+    pattern = "typst",
+    callback = function()
+        vim.opt_local.wrap = true
+        vim.opt_local.linebreak = true
+    end,
 })
 
 -- Notes
