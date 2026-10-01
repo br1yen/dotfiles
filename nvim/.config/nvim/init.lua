@@ -60,7 +60,7 @@ vim.pack.add({
 -- Yazi
 require("yazi").setup({
     open_for_directories = true,
-    floating_window_scaling_factor = 0.75,
+    floating_window_scaling_factor = 0.80,
     yazi_floating_window_border = "single",
 })
 vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", {

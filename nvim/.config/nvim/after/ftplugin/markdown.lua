@@ -4,6 +4,10 @@ vim.opt_local.linebreak = true
 local headings = require("markdown_headings")
 local opts = { buffer = true, silent = true }
 
+local tags = require("markdown_tags")
+tags.setup()
+tags.attach()
+
 vim.keymap.set("n", ">>", function() headings.change(1, ">>") end,
     vim.tbl_extend("force", opts, { desc = "Demote heading" }))
 vim.keymap.set("n", "<<", function() headings.change(-1, "<<") end,
