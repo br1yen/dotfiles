@@ -1,30 +1,29 @@
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
-vim.opt.relativenumber = false
-vim.opt.expandtab = true
-vim.opt.shiftwidth = 4
-vim.opt.tabstop = 4
-vim.opt.smartindent = true
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
-vim.opt.hlsearch = false
-vim.opt.incsearch = true
-vim.opt.signcolumn = "yes"
-vim.opt.wrap = false
-vim.opt.scrolloff = 20
-vim.opt.sidescrolloff = 8
-vim.opt.splitright = true
-vim.opt.splitbelow = true
-vim.opt.splitkeep = "screen"
-vim.opt.mouse = "a"
-vim.opt.clipboard = "unnamedplus"
-vim.opt.undofile = true
-vim.opt.swapfile = false
-vim.opt.confirm = true
-vim.opt.showmode = false
+vim.o.relativenumber = true
+vim.o.expandtab = true
+vim.o.shiftwidth = 4
+vim.o.tabstop = 4
+vim.o.ignorecase = true
+vim.o.smartcase = true
+vim.o.hlsearch = false
+vim.o.incsearch = true
+vim.o.signcolumn = "no"
+vim.o.wrap = false
+vim.o.scrolloff = 20
+vim.o.sidescrolloff = 8
+vim.o.splitright = true
+vim.o.splitbelow = true
+vim.o.splitkeep = "screen"
+vim.o.mouse = "a"
+vim.o.clipboard = "unnamedplus"
+vim.o.undofile = true
+vim.o.swapfile = false
+vim.o.confirm = true
+vim.o.showmode = false
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
-vim.o.winborder = 'none'
+vim.o.winborder = "none"
 
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
@@ -71,9 +70,11 @@ vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", {
 -- Colors
 vim.o.termguicolors = true
 vim.cmd.colorscheme("default")
+vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
+vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE", fg = "NONE" })
 
 -- Surround
-require('mini.surround').setup()
+require("mini.surround").setup()
 
 -- Autopairs
 require("nvim-autopairs").setup()
@@ -127,9 +128,23 @@ end)
 require("nvim-treesitter").setup({
     install_dir = vim.fn.stdpath("data") .. "/site",
 })
-require('nvim-treesitter').install { 'markdown', 'typst', 'lua', 'java' }
+require('nvim-treesitter').install {
+    'markdown',
+    'markdown_inline',
+    'typst',
+    'lua',
+    'java',
+    'c'
+}
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = { 'lua', 'java', 'markdown', 'typst' },
+    pattern = {
+        'lua',
+        'java',
+        'markdown',
+        'markdown_inline',
+        'typst',
+        'c'
+    },
     callback = function()
         vim.treesitter.start()
         vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
@@ -187,7 +202,7 @@ require("blink.cmp").setup({
     },
 })
 
--- Set Blink capabilities or LSPs
+-- Set Blink capabilities for LSPs
 vim.lsp.config("*", {
     capabilities = require("blink.cmp").get_lsp_capabilities(),
 })
@@ -201,13 +216,6 @@ vim.lsp.config("tinymist", {
 })
 vim.lsp.enable("tinymist")
 require("typst-preview").setup({})
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "typst",
-    callback = function()
-        vim.opt_local.wrap = true
-        vim.opt_local.linebreak = true
-    end,
-})
 
 -- Lua LSP
 vim.lsp.config("lua_ls", {
@@ -216,7 +224,7 @@ vim.lsp.config("lua_ls", {
             runtime = { version = "LuaJIT" },
             diagnostics = { globals = { "vim" } },
             workspace = {
-                library = vim.api.nvim_get_runtime_file("", true),
+                library = { vim.env.VIMRUNTIME },
                 checkThirdParty = false,
             },
             telemetry = { enable = false },
@@ -233,34 +241,22 @@ vim.keymap.set("n", "<leader>S", fzf.lsp_live_workspace_symbols)
 vim.keymap.set("n", "<leader>d", fzf.diagnostics_document)
 
 -- Notes
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "markdown",
-    callback = function()
-        vim.opt_local.wrap = true
-        vim.opt_local.linebreak = true
-    end,
-})
 vim.api.nvim_create_user_command("Notes", function()
     vim.cmd("edit ~/sync/notes")
 end, {})
 
 vim.api.nvim_create_user_command("NewNote", function(opts)
-    local title = opts.args
-    if title == "" then
-        title = "untitled"
-    end
+    local title = vim.trim(opts.args)
+    local slug = title:lower():gsub("%s+", "-"):gsub("[^%w%-]", "")
+    if slug == "" then slug = "untitled" end
 
-    title = title:gsub("%s+", "-"):gsub("[^%w%-]", ""):lower()
-
-    local date = os.date("%Y-%m-%d")
-    local path = vim.fn.expand("~/sync/notes/" .. date .. "-" .. title .. ".md")
-
+    local path = vim.fn.expand("~/sync/notes/" .. os.date("%Y-%m-%d") .. "-" .. slug .. ".md")
     vim.cmd("edit " .. vim.fn.fnameescape(path))
 
     if vim.fn.line("$") == 1 and vim.fn.getline(1) == "" then
         vim.api.nvim_buf_set_lines(0, 0, -1, false, {
-            "# " .. title:gsub("-", " "),
-            "",
+            "# " .. (title ~= "" and title or "untitled"),
+            "---",
         })
     end
 end, { nargs = "*" })
@@ -276,100 +272,55 @@ vim.keymap.set("n", "<leader>nn", function()
     end)
 end, { desc = "New note" })
 
--- Render markdown pretty
+-- Render markdown to be pretty
 require("render-markdown").setup({
     heading = {
-        enabled = true,
         sign = false,
         position = "inline",
-
-        icons = {
-            "H1 ",
-            "H2 ",
-            "H3 ",
-            "H4 ",
-            "H5 ",
-            "H6 ",
-        },
-
+        icons = { "H1 ", "H2 ", "H3 ", "H4 ", "H5 ", "H6 " },
         width = "block",
         left_margin = { 0, 1, 2, 3, 4, 5 },
-        left_pad = 0,
-        right_pad = 0,
-
-        backgrounds = {
-            "Normal",
-            "Normal",
-            "Normal",
-            "Normal",
-            "Normal",
-            "Normal",
-        },
-
-        border = false,
+        backgrounds = { "Normal", "Normal", "Normal", "Normal", "Normal", "Normal" },
     },
 
     code = {
-        enabled = true,
         sign = false,
-
         style = "language",
-
-        language = true,
         language_icon = false,
-        language_name = true,
         language_info = false,
-
         disable_background = true,
-
         left_margin = 4,
         left_pad = 1,
         right_pad = 1,
-
         border = "none",
         highlight_border = false,
-
         highlight_language = "Normal",
         highlight_info = "Normal",
         highlight_fallback = "Normal",
     },
 
     bullet = {
-        enabled = true,
         icons = { "•", "‣", "◦", "⁃" },
-        left_pad = 0,
-        right_pad = 0,
     },
 
     quote = {
         icon = "│",
-        repeat_linebreak = false,
-    },
-
-    checkbox = {
-        enabled = true,
     },
 
     pipe_table = {
-        enabled = true,
-        preset = "round",
-    },
-
-    link = {
-        enabled = true,
-    },
-
-    anti_conceal = {
-        enabled = true,
+        preset = "single",
     },
 })
 
+
+-- Images in notes
 require("img-clip").setup({
     default = {
         dir_path = "images",
         relative_to_current_file = true,
         use_absolute_path = false,
         prompt_for_file_name = false,
+        insert_mode_after_paste = false,
         file_name = function()
             return os.date("%Y-%m-%d-%H-%M-%S")
         end,
@@ -386,21 +337,9 @@ require("image").setup({
             clear_in_insert_mode = true,
             download_remote_images = true,
             only_render_image_at_cursor = true,
-            only_render_image_at_cursor_mode = "popup",
+            only_render_image_at_cursor_mode = "inline",
             floating_windows = false,
         },
     },
     window_overlap_clear_enabled = true,
-})
-
-vim.keymap.set("n", "<leader>p", "<cmd>PasteImage<cr>", {
-    desc = "Paste image from clipboard",
-})
-vim.api.nvim_set_hl(0, "NormalFloat", {
-  bg = "NONE",
-})
-
-vim.api.nvim_set_hl(0, "FloatBorder", {
-  bg = "NONE",
-  fg = "NONE",
 })
