@@ -39,6 +39,18 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     end,
 })
 
+-- MdMath build hook
+vim.api.nvim_create_autocmd('PackChanged', {
+  callback = function(ev)
+    local name, kind = ev.data.spec.name, ev.data.kind
+    if name == 'mdmath.nvim' and (kind == 'install' or kind == 'update') then
+      -- The plugin may not be loaded yet during install, so load it first
+      vim.cmd.packadd('mdmath.nvim')
+      vim.cmd('MdMath build')
+    end
+  end,
+})
+
 -- Packages
 vim.pack.add({
     'https://github.com/nvim-mini/mini.surround',
@@ -55,6 +67,7 @@ vim.pack.add({
     'https://github.com/nvim-lua/plenary.nvim',
     'https://github.com/HakonHarnes/img-clip.nvim',
     'https://github.com/3rd/image.nvim',
+    'https://github.com/Thiago4532/mdmath.nvim',
 })
 
 -- Yazi
@@ -342,4 +355,12 @@ require("image").setup({
         },
     },
     window_overlap_clear_enabled = true,
+})
+
+-- MdMath rendering
+require('mdmath').setup({
+  filetypes = { 'markdown' },
+  -- foreground = 'Normal',
+  -- dynamic = true,
+  -- update_interval = 400,
 })
