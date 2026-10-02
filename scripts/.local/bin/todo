@@ -4,7 +4,7 @@ TODO="$HOME/sync/notes/todo.md"
 
 case "$1" in
     "")
-        cat -b "$TODO"
+        cat -n "$TODO"
         ;;
 
     -o)
@@ -12,25 +12,28 @@ case "$1" in
         ;;
 
     -d)
-        if [[ -z "$2" || ! "$2" =~ ^[0-9]+$ ]]; then
+        if [[ ! "$2" =~ ^[0-9]+$ ]]; then
             echo "Usage: todo -d LINE"
             exit 1
         fi
 
-        line=$(sed -n "${2}p" "$TODO")
+        n=$((10#$2))                  # normalize (handles 08, 007, ...)
+        total=$(grep -c '' "$TODO")   # line count, even without trailing newline
 
-        if [[ -z "$line" ]]; then
-            echo "Line $2 does not exist."
+        if (( n < 1 || n > total )); then
+            echo "Line $n does not exist."
             exit 1
         fi
 
-        echo "Delete line $2?"
+        line=$(sed -n "${n}p" "$TODO")
+
+        echo "Delete line $n?"
         echo "  $line"
         read -rp "Confirm [y/N]: " confirm
 
         if [[ "$confirm" =~ ^[Yy]$ ]]; then
-            sed -i "${2}d" "$TODO"
-            echo "Deleted line $2."
+            sed -i "${n}d" "$TODO"
+            echo "Deleted line $n."
         else
             echo "Cancelled."
         fi

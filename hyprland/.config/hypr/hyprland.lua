@@ -133,8 +133,8 @@ hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("librewolf"))
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("ghostty"))
 local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("/home/br1yen/.local/bin/powermenu"))
-hl.bind(mainMod .. " + W", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + R", hl.dsp.window.pseudo())
+hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("/home/br1yen/.local/bin/fzfpdf"))
+hl.bind(mainMod .. " + F", hl.dsp.window.float({ action = "toggle" }))
 
 hl.bind(mainMod .. " + J", hl.dsp.window.cycle_next())
 hl.bind(mainMod .. " + K", hl.dsp.window.cycle_next({ next = false }))
@@ -172,7 +172,7 @@ for i = 1, 10 do
     hl.bind(mainMod .. " + SHIFT + " .. key,     hl.dsp.window.move({ workspace = i }))
 end
 
-hl.bind(mainMod .. " + SHIFT + W", hl.dsp.window.fullscreen())
+hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen())
 
 -- Example special workspace (scratchpad)
 hl.bind(mainMod .. " + M",         hl.dsp.workspace.toggle_special("magic"))
@@ -219,9 +219,6 @@ hl.bind(
     mainMod .. " + C",
     hl.dsp.exec_cmd("sh -c 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'")
 )
-
--- Focus windows
-hl.bind(mainMod .. " + F", hl.dsp.exec_cmd("/home/br1yen/.local/bin/windows-switcher"))
 
 ---- WINDOWS AND WORKSPACES ----
 -- See https://wiki.hypr.land/configuring/core/rules/
