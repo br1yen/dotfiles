@@ -103,7 +103,11 @@ vim.pack.add({
     'https://github.com/HakonHarnes/img-clip.nvim',
     'https://github.com/3rd/image.nvim',
     'https://github.com/Thiago4532/mdmath.nvim',
+    'https://github.com/nvim-mini/mini.icons',
 })
+
+-- Icons
+require("mini.icons").setup()
 
 -- Yazi
 require("yazi").setup({
@@ -131,13 +135,32 @@ require("nvim-autopairs").setup()
 local fzf = require("fzf-lua")
 
 fzf.setup({
+    defaults = {
+        formatter = "path.filename_first",
+        git_icons = false,
+    },
+
+    fzf_colors = true,
+
     winopts = {
         border = "single",
         backdrop = 100,
         preview = {
             border = "single",
+            layout = "flex",
+            flip_columns = 140,
+            vertical = "down:50%",
+            horizontal = "right:55%",
+            scrollbar = false,
+            title = false,
         },
 
+    },
+
+    fzf_opts = {
+        ["--info"] = "inline-right",  -- match count on the prompt line
+        ["--no-scrollbar"] = true,
+        ["--ellipsis"] = "…",
     },
 
     files = {
@@ -148,6 +171,7 @@ fzf.setup({
     },
 
     grep = {
+        formatter = "path.filename_first",
         rg_opts = "--column --line-number --no-heading --color=always --smart-case " ..
             "--glob '!.*' --glob '!.*/*' " ..
             "--glob '!*.png' --glob '!*.jpg' --glob '!*.jpeg' " ..
@@ -179,23 +203,19 @@ require("nvim-treesitter").setup({
 require('nvim-treesitter').install {
     'markdown',
     'markdown_inline',
+    'yaml',
+    'html',
     'typst',
     'lua',
     'java',
     'c'
 }
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = {
-        'lua',
-        'java',
-        'markdown',
-        'markdown_inline',
-        'typst',
-        'c'
-    },
+    pattern = { "lua", "java", "markdown", "typst", "c" },
     callback = function()
-        vim.treesitter.start()
-        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        if pcall(vim.treesitter.start) then
+            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+        end
     end,
 })
 
@@ -298,14 +318,23 @@ vim.api.nvim_create_user_command("NewNote", function(opts)
     local slug = title:lower():gsub("%s+", "-"):gsub("[^%w%-]", "")
     if slug == "" then slug = "untitled" end
 
-    local path = vim.fn.expand("~/sync/notes/" .. os.date("%Y-%m-%d") .. "-" .. slug .. ".md")
+    local dir = vim.fn.expand("~/sync/notes")
+    vim.fn.mkdir(dir, "p")
+
+    local path = dir .. "/" .. os.date("%Y-%m-%d") .. "-" .. slug .. ".md"
+    local is_new = vim.fn.filereadable(path) == 0
+
     vim.cmd("edit " .. vim.fn.fnameescape(path))
 
-    if vim.fn.line("$") == 1 and vim.fn.getline(1) == "" then
+    if is_new then
         vim.api.nvim_buf_set_lines(0, 0, -1, false, {
-            "# " .. (title ~= "" and title or "untitled"),
             "---",
+            "tags:",
+            "---",
+            "# " .. (title ~= "" and title or "untitled"),
+            ""
         })
+        vim.api.nvim_win_set_cursor(0, { 5, 0 })
     end
 end, { nargs = "*" })
 
@@ -355,8 +384,10 @@ require("render-markdown").setup({
         icon = "│",
     },
 
+    latex = { enabled = false },
+
     pipe_table = {
-        preset = "single",
+        preset = "none",
     },
 })
 
@@ -394,8 +425,8 @@ require("image").setup({
 
 -- MdMath rendering
 require('mdmath').setup({
-  filetypes = { 'markdown' },
-  -- foreground = 'Normal',
-  -- dynamic = true,
-  -- update_interval = 400,
+    filetypes = { 'markdown' },
+    -- foreground = 'Normal',
+    -- dynamic = true,
+    -- update_interval = 400,
 })
