@@ -24,6 +24,8 @@ vim.o.showmode = false
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.o.winborder = "none"
+vim.o.updatetime = 250
+vim.o.timeoutlen = 300
 
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
@@ -37,6 +39,26 @@ vim.api.nvim_create_autocmd("TextYankPost", {
     callback = function()
         vim.hl.on_yank()
     end,
+})
+
+-- Better autoread
+vim.o.autoread = true
+vim.api.nvim_create_autocmd(
+  { "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermLeave" },
+  {
+    group = vim.api.nvim_create_augroup("AutoRead", { clear = true }),
+    callback = function()
+      -- skip command-line mode and special buffers
+      if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then
+        vim.cmd("checktime")
+      end
+    end,
+  }
+)
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+  callback = function()
+    vim.notify("File changed on disk. Buffer reloaded.", vim.log.levels.WARN)
+  end,
 })
 
 -- MdMath build hook
