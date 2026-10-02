@@ -1,6 +1,0 @@
-# This file contains fish universal variable definitions.
-# VERSION: 3.0
-SETUVAR --export EDITOR:nvim
-SETUVAR --export MANPAGER:nvim\x20\x2bMan\x21
-SETUVAR --export VISUAL:nvim
-SETUVAR fish_user_paths:/home/br1yen/\x2elocal/bin
