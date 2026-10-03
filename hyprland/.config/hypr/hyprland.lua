@@ -2,7 +2,7 @@
 -- See https://wiki.hypr.land/configuring/core/monitors/
 hl.monitor({
     output   = "DP-3",
-    mode     = "1920x1080@180",
+    mode     = "1920x1080@144",
     position = "auto",
     scale    = "1.0",
 })
@@ -36,21 +36,22 @@ hl.config({
         gaps_in  = 2,
 
         border_size = 1,
-
         col = {
             active_border   = "#000000",
             inactive_border = "#4F5258",
         },
-
         resize_on_border = true,
+
         allow_tearing = true,
 
-        layout = "master",
-
+        layout = "scrolling",
     },
 
+
+    render = { direct_scanout = 2 },
     cursor = {
         no_warps = true,
+        no_hardware_cursors = false
     },
 
     decoration = {
@@ -69,17 +70,22 @@ hl.config({
         },
     },
 
-    animations = {
-        enabled = false,
-    },
-
+    animations = { enabled = false },
 })
 
--- See https://wiki.hypr.land/configuring/layouts/master-layout/ for more
 hl.config({
     master = {
         new_status = "master",
         mfact = 0.5,
+    },
+})
+
+hl.config({
+    scrolling = {
+        follow_focus = true,
+        fullscreen_on_one_column = false,
+        wrap_focus = true,
+        explicit_column_widths = "0.4, 0.5, 0.6, 1.0",
     },
 })
 
@@ -133,36 +139,33 @@ hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("librewolf"))
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("ghostty"))
 local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("/home/br1yen/.local/bin/powermenu"))
-hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("/home/br1yen/.local/bin/fzfpdf"))
+hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("/home/br1yen/.local/bin/fzfpdf"))
 hl.bind(mainMod .. " + F", hl.dsp.window.float({ action = "toggle" }))
 
-hl.bind(mainMod .. " + J", hl.dsp.window.cycle_next())
-hl.bind(mainMod .. " + K", hl.dsp.window.cycle_next({ next = false }))
-hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.swap({ next = true }))
+local function step(inner, outer)
+    local before = hl.get_active_window()
+    hl.dispatch(hl.dsp.layout("focus " .. inner))
+    local after = hl.get_active_window()
+    -- focus didn't change: we're at the edge of this column, so cross over
+    if before and after and before.address == after.address then
+        hl.dispatch(hl.dsp.layout("focus " .. outer))
+    end
+end
 
-hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.swap({ prev = true }))
+hl.bind(mainMod .. " + L", function() step("d", "r") end)
+hl.bind(mainMod .. " + H", function() step("u", "l") end)
+hl.bind(mainMod .. " + SHIFT + H", hl.dsp.layout("consume_or_expel prev"))
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.layout("consume_or_expel next"))
+hl.bind(mainMod .. " + J", hl.dsp.focus({ workspace = "e+1" }))
+hl.bind(mainMod .. " + K", hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ workspace = "e+1" }))
+hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ workspace = "e-1" }))
+hl.bind(mainMod .. " + E",     hl.dsp.layout("colresize +conf"))
+hl.bind(mainMod .. " + R",     hl.dsp.layout("colresize -conf"))
+hl.bind(mainMod .. " + SHIFT + E", hl.dsp.layout("colresize +0.1"))
+hl.bind(mainMod .. " + SHIFT + R", hl.dsp.layout("colresize -0.1"))
 
-hl.bind(mainMod .. " + H", hl.dsp.layout("mfact -0.05"))
-hl.bind(mainMod .. " + L", hl.dsp.layout("mfact +0.05"))
-hl.bind(mainMod .. " + SHIFT + H", hl.dsp.layout("addmaster"))
-hl.bind(mainMod .. " + SHIFT + L", hl.dsp.layout("removemaster"))
-
-hl.bind(mainMod .. " + N", hl.dsp.focus({ workspace = "e+1" }))
-hl.bind(mainMod .. " + P",   hl.dsp.focus({ workspace = "e-1" }))
-hl.bind(mainMod .. " + SHIFT + N", function()
-    local ws = hl.get_active_workspace()
-    hl.dispatch(hl.dsp.window.move({
-        workspace = tostring(ws.id + 1),
-        follow = true
-    }))
-end)
-hl.bind(mainMod .. " + SHIFT + P", function()
-    local ws = hl.get_active_workspace()
-    hl.dispatch(hl.dsp.window.move({
-        workspace = tostring(ws.id - 1),
-        follow = true
-    }))
-end)
+hl.bind(mainMod .. " + SHIFT + I", hl.dsp.layout("inhibit_scroll"))
 
 -- Switch workspaces with mainMod + [0-9]
 -- Move active window to a workspace with mainMod + SHIFT + [0-9]
@@ -263,7 +266,6 @@ hl.window_rule({
     float = true,
 })
 
--- Librewolf windorule
 hl.window_rule({
     name = "librewolf-workspace",
     match = { class = "^librewolf$" },
@@ -275,4 +277,15 @@ hl.window_rule ({
     match = { class = "^(org.pulseaudio.pavucontrol)$" },
     float = true,
     center = true
+})
+
+hl.window_rule({
+  name = "cs2-gaming",
+  match = { class = "^cs2$" },
+  fullscreen = true,
+  immediate = true,
+  idle_inhibit = "fullscreen",
+  no_anim = true,
+  no_blur = true,
+  no_shadow = true,
 })

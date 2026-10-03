@@ -27,6 +27,7 @@ vim.o.winborder = "none"
 vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 vim.o.autoread = true
+vim.o.background = "dark"
 
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
@@ -114,6 +115,12 @@ require("yazi").setup({
     open_for_directories = true,
     floating_window_scaling_factor = 0.80,
     yazi_floating_window_border = "single",
+    yazi_floating_window_winblend = 0,
+    highlight_hovered_buffers_in_same_directory = false,
+
+    highlight_groups = {
+        hovered_buffer = { bg = "NONE" },
+    },
 })
 vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", {
     desc = "Open Yazi",
@@ -339,45 +346,45 @@ vim.api.nvim_create_user_command("NewNote", function(opts)
 end, { nargs = "*" })
 
 local function notes_live(prompt, make_pattern)
-  local fzf = require("fzf-lua")
+    local fzf = require("fzf-lua")
 
-  fzf.fzf_live(function(args)
-    local q = args[1] or ""
+    fzf.fzf_live(function(args)
+        local q = args[1] or ""
 
-    return table.concat({
-      "rg --column --line-number --no-heading --color=always --smart-case --pcre2",
-      "-g '*.md' -e", vim.fn.shellescape(make_pattern(q)),
-    }, " ")
-  end, {
-    prompt = prompt,
-    cwd = vim.fn.expand("~/sync/notes"),
-    previewer = "builtin",
-    actions = fzf.defaults.actions.files,
-    fn_transform = function(x)
-      return fzf.make_entry.file(x, {
-        file_icons = true,
-        color_icons = true,
-      })
-    end,
-  })
+        return table.concat({
+            "rg --column --line-number --no-heading --color=always --smart-case --pcre2",
+            "-g '*.md' -e", vim.fn.shellescape(make_pattern(q)),
+        }, " ")
+    end, {
+            prompt = prompt,
+            cwd = vim.fn.expand("~/sync/notes"),
+            previewer = "builtin",
+            actions = fzf.defaults.actions.files,
+            fn_transform = function(x)
+                return fzf.make_entry.file(x, {
+                    file_icons = true,
+                    color_icons = true,
+                })
+            end,
+        })
 end
 
 -- Content only:
 --   * excludes `tags:` lines
 --   * doesn't match when the query begins immediately after `#`
 vim.keymap.set("n", "<leader>ng", function()
-  notes_live("Notes> ", function(q)
-    return "^(?!tags:).*?(?<!#)(" .. q .. ")"
-  end)
+    notes_live("Notes> ", function(q)
+        return "^(?!tags:).*?(?<!#)(" .. q .. ")"
+    end)
 end, { desc = "Grep note content" })
 
 -- Tags only:
 --   * inline #tag
 --   * `tags:` lines
 vim.keymap.set("n", "<leader>nt", function()
-  notes_live("Tags> ", function(q)
-    return "(?<![\\w])#[\\w/-]*(" .. q .. ")|^tags:.*(" .. q .. ")"
-  end)
+    notes_live("Tags> ", function(q)
+        return "(?<![\\w])#[\\w/-]*(" .. q .. ")|^tags:.*(" .. q .. ")"
+    end)
 end, { desc = "Grep tags" })
 
 vim.keymap.set("n", "<leader>t", "<cmd>e ~/sync/notes/todo.md<cr>")
