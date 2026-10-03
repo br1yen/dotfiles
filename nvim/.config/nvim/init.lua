@@ -329,7 +329,7 @@ vim.api.nvim_create_user_command("NewNote", function(opts)
     if is_new then
         vim.api.nvim_buf_set_lines(0, 0, -1, false, {
             "---",
-            "tags:",
+            "tags: []",
             "---",
             "# " .. (title ~= "" and title or "untitled"),
             ""
@@ -338,9 +338,50 @@ vim.api.nvim_create_user_command("NewNote", function(opts)
     end
 end, { nargs = "*" })
 
+local function notes_live(prompt, make_pattern)
+  local fzf = require("fzf-lua")
+
+  fzf.fzf_live(function(args)
+    local q = args[1] or ""
+
+    return table.concat({
+      "rg --column --line-number --no-heading --color=always --smart-case --pcre2",
+      "-g '*.md' -e", vim.fn.shellescape(make_pattern(q)),
+    }, " ")
+  end, {
+    prompt = prompt,
+    cwd = vim.fn.expand("~/sync/notes"),
+    previewer = "builtin",
+    actions = fzf.defaults.actions.files,
+    fn_transform = function(x)
+      return fzf.make_entry.file(x, {
+        file_icons = true,
+        color_icons = true,
+      })
+    end,
+  })
+end
+
+-- Content only:
+--   * excludes `tags:` lines
+--   * doesn't match when the query begins immediately after `#`
+vim.keymap.set("n", "<leader>ng", function()
+  notes_live("Notes> ", function(q)
+    return "^(?!tags:).*?(?<!#)(" .. q .. ")"
+  end)
+end, { desc = "Grep note content" })
+
+-- Tags only:
+--   * inline #tag
+--   * `tags:` lines
+vim.keymap.set("n", "<leader>nt", function()
+  notes_live("Tags> ", function(q)
+    return "(?<![\\w])#[\\w/-]*(" .. q .. ")|^tags:.*(" .. q .. ")"
+  end)
+end, { desc = "Grep tags" })
+
 vim.keymap.set("n", "<leader>t", "<cmd>e ~/sync/notes/todo.md<cr>")
 vim.keymap.set("n", "<leader>nf", "<cmd>FzfLua files cwd=~/sync/notes<cr>")
-vim.keymap.set("n", "<leader>ng", "<cmd>FzfLua live_grep cwd=~/sync/notes<cr>")
 vim.keymap.set("n", "<leader>nn", function()
     vim.ui.input({ prompt = "Note: " }, function(title)
         if title and title ~= "" then

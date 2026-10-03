@@ -5,6 +5,8 @@ scrollback-limit = 10000
 
 cursor-style = block
 cursor-style-blink = false
+custom-shader = shaders/cursor/cursor_warp.glsl
+custom-shader-animation = true
 
 background = #14161B
 foreground = #E0E2EA
