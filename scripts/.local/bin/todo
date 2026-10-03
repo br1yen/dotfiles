@@ -35,16 +35,27 @@ function getn(line, kind,   tok, q) {
   return 99999
 }
 
-# wrap every due:/do: token in its color
-function colorize(line,   out, s, len, tok, lead, p, q, n) {
+# tag colors: #tag teal, @context pink
+function tagpaint(tok) {
+  if (substr(tok, 1, 1) == "#") return "\033[38;2;86;182;194m"
+  return "\033[38;2;204;145;190m"
+}
+
+# wrap every due:/do: token and #tag/@context in its color
+function colorize(line,   out, s, len, tok, lead, p, q, n, col) {
   out = ""
-  while (match(line, /(^|[ \t])(due|do):[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/)) {
+  while (match(line, /(^|[ \t])((due|do):[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]|[#@][A-Za-z][A-Za-z0-9_-]*)/)) {
     s = RSTART; len = RLENGTH
     tok = substr(line, s, len); lead = ""
     if (tok ~ /^[ \t]/) { lead = substr(tok, 1, 1); tok = substr(tok, 2) }
-    split(tok, p, ":"); split(p[2], q, "-")
-    n = jd(q[1]+0, q[2]+0, q[3]+0) - t
-    out = out substr(line, 1, s-1) lead paint(p[1], n) tok "\033[0m"
+    if (tok ~ /^(due|do):/) {
+      split(tok, p, ":"); split(p[2], q, "-")
+      n = jd(q[1]+0, q[2]+0, q[3]+0) - t
+      col = paint(p[1], n)
+    } else {
+      col = tagpaint(tok)
+    }
+    out = out substr(line, 1, s-1) lead col tok "\033[0m"
     line = substr(line, s+len)
   }
   return out line
