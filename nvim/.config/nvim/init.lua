@@ -27,7 +27,8 @@ vim.o.winborder = "none"
 vim.o.updatetime = 250
 vim.o.timeoutlen = 300
 vim.o.autoread = true
-vim.o.background = "dark"
+vim.o.cmdheight = 0
+vim.o.laststatus = 3
 
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
@@ -131,6 +132,9 @@ vim.o.termguicolors = true
 vim.cmd.colorscheme("default")
 vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
 vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE", fg = "NONE" })
+vim.api.nvim_set_hl(0, "StatusLine",   { bg = "NONE" })
+vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "NONE" })
+vim.api.nvim_set_hl(0, "MsgArea",      { bg = "NONE" })
 
 -- Surround
 require("mini.surround").setup()
