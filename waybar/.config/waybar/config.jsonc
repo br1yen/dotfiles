@@ -1,55 +1,70 @@
 {
-  "layer": "top",
-  "position": "top",
-  "spacing": 4,
+    "layer": "top",
+    "position": "top",
+    "spacing": 4,
 
-  "modules-left": [
-    "hyprland/workspaces",
-    "hyprland/window"
-  ],
+    "modules-left": [
+        "hyprland/workspaces",
+        "hyprland/window"
+    ],
 
-  "modules-center": [
-    "clock"
-  ],
+    "modules-center": [
+        "clock"
+    ],
 
-  "modules-right": [
-    "pulseaudio",
-    "battery",
-    "tray"
-  ],
+    "modules-right": [
+        "pulseaudio",
+        "battery",
+        "tray"
+    ],
 
-  "hyprland/workspaces": {
-    "format": "{icon}"
-  },
-
-  "hyprland/window": {
-    "format": "{}",
-    "max-length": 40,
-    "separate-outputs": true
-  },
-
-  "clock": {
-    "format": "{:%a %b %d   %I:%M %p}",
-    "tooltip": false
-  },
-
-  "pulseaudio": {
-    "format": "{icon} {volume}% ",
-    "format-muted": "󰝟 muted",
-    "format-icons": {
-      "default": ["", "", ""]
+    "hyprland/workspaces": {
+        "format": "{icon}"
     },
-    "on-click": "pavucontrol"
-  },
 
-"battery": {
-    "format": " {icon} {capacity}%",
-    "format-charging": "󰂄 {capacity}%",
-    "format-plugged": "󰂄 {capacity}%",
-    "format-icons": ["󰁺", "󰁼", "󰁾", "󰂀", "󰂂"]
-},
+    "hyprland/window": {
+        "format": "{}",
+        "max-length": 40,
+        "separate-outputs": true
+    },
 
-  "tray": {
-    "spacing": 8
-  }
+    "clock": {
+        "format": "{:%a %d %b  %H:%M}",
+        "tooltip-format": "<tt>{calendar}</tt>",
+        "calendar": {
+            "mode": "month",
+            "mode-mon-col": 3,
+            "weeks-pos": "right",
+            "on-scroll": 1,
+            "format": {
+                "months":   "<span color='#ffffff'><b>{}</b></span>",
+                "days":     "<span color='#deddda'>{}</span>",
+                "weeks":    "<span color='#77767b'>W{}</span>",
+                "weekdays": "<span color='#9a9996'><b>{}</b></span>",
+                "today":    "<span color='#78aeed'><b><u>{}</u></b></span>"
+            }
+        }
+    },
+    "pulseaudio": {
+        "format": "{icon} {volume}% ",
+        "format-muted": "󰝟 muted",
+        "format-icons": {
+            "default": ["", "", ""]
+        },
+        "on-click": "pavucontrol",
+        "tooltip": false
+    },
+
+    "battery": {
+        "format": " {icon} {capacity}%",
+        "format-charging": "󰂄 {capacity}%",
+        "format-plugged": "󰂄 {capacity}%",
+        "format-icons": ["󰁺", "󰁼", "󰁾", "󰂀", "󰂂"],
+        "tooltip": false
+    },
+
+    "tray": {
+        "spacing": 8,
+        "tooltip": false
+    }
 }

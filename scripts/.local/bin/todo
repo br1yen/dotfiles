@@ -1,14 +1,162 @@
 #!/usr/bin/env bash
 
-TODO="$HOME/sync/notes/todo.md"
+TODO="${TODO:-$HOME/sync/notes/todo.md}"
+ESC=$'\033'
 
+# ---------------------------------------------------------------
+# Shared awk helpers: day math + colors (same palette as nvim)
+# ---------------------------------------------------------------
+AWK_LIB=$(cat <<'EOF'
+function jd(y,m,d) { if (m<=2) { y--; m+=12 } return int(365.25*y)+int(30.6001*(m+1))+d }
+
+function paint(kind, n) {
+  if (kind=="due") {
+    if (n<0)  return "\033[1;4;38;2;224;108;117m"
+    if (n<=1) return "\033[1;38;2;224;108;117m"
+    if (n<=3) return "\033[1;38;2;209;154;102m"
+    if (n<=7) return "\033[38;2;229;192;123m"
+    return "\033[38;2;152;195;121m"
+  }
+  if (n<0)  return "\033[1;38;2;198;120;221m"
+  if (n==0) return "\033[1;38;2;97;175;239m"
+  return "\033[38;2;92;99;112m"
+}
+
+# days from today for due:/do: in a line, or 99999 if absent
+function getn(line, kind,   tok, q) {
+  if (match(line, "(^|[ \t])" kind ":[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]")) {
+    tok = substr(line, RSTART, RLENGTH)
+    sub(/^[ \t]/, "", tok)
+    split(substr(tok, length(kind)+2), q, "-")
+    return jd(q[1]+0, q[2]+0, q[3]+0) - t
+  }
+  return 99999
+}
+
+# wrap every due:/do: token in its color
+function colorize(line,   out, s, len, tok, lead, p, q, n) {
+  out = ""
+  while (match(line, /(^|[ \t])(due|do):[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/)) {
+    s = RSTART; len = RLENGTH
+    tok = substr(line, s, len); lead = ""
+    if (tok ~ /^[ \t]/) { lead = substr(tok, 1, 1); tok = substr(tok, 2) }
+    split(tok, p, ":"); split(p[2], q, "-")
+    n = jd(q[1]+0, q[2]+0, q[3]+0) - t
+    out = out substr(line, 1, s-1) lead paint(p[1], n) tok "\033[0m"
+    line = substr(line, s+len)
+  }
+  return out line
+}
+
+BEGIN { t = jd(ty, tm, td) }
+EOF
+)
+
+awkrun() {
+  awk -v ty="$(date +%Y)" -v tm="$((10#$(date +%m)))" -v td="$((10#$(date +%d)))" \
+    "$AWK_LIB
+$1" "$TODO"
+}
+
+# strip colors when output isn't a terminal (so `todo | grep` stays clean)
+out() { if [[ -t 1 ]]; then cat; else sed "s/${ESC}\[[0-9;]*m//g"; fi; }
+
+# ---------------------------------------------------------------
+# Views
+# ---------------------------------------------------------------
+full_list() {
+  awkrun '{ printf "%6d\t%s\n", NR, colorize($0) }' | out
+}
+
+agenda() {
+  awkrun '
+    $0 !~ /^[ \t]*[-+*] / { next }
+    {
+      d1 = getn($0, "due"); d2 = getn($0, "do")
+      k = (d1 < d2) ? d1 : d2          # earliest of due/do
+      txt = $0; sub(/^[ \t]*[-+*] (\[ \] )?/, "", txt)
+      if (k == 99999) { und++; next }
+      printf "%d\t%d\t%s\n", k, NR, colorize(txt)
+    }
+    END { printf "99999\t0\t%d\n", und+0 }
+  ' | sort -t$'\t' -k1,1n -k2,2n | {
+    last=""
+    while IFS=$'\t' read -r k nr text; do
+      if (( k == 99999 )); then
+        (( text > 0 )) && printf '\n%s[2m%s undated items (todo -f to see all)%s[0m\n' "$ESC" "$text" "$ESC"
+        continue
+      fi
+      if   (( k < 0 ));  then g="Overdue";     c='1;38;2;224;108;117'
+      elif (( k == 0 )); then g="Today";       c='1;38;2;97;175;239'
+      elif (( k <= 7 )); then g="Next 7 days"; c='1;38;2;229;192;123'
+      else                    g="Later";       c='1;38;2;152;195;121'
+      fi
+      if [[ $g != "$last" ]]; then
+        printf '\n%s[%sm%s%s[0m\n' "$ESC" "$c" "$g" "$ESC"
+        last=$g
+      fi
+      printf '  %s[2m%3s%s[0m  %s\n' "$ESC" "$nr" "$ESC" "$text"
+    done
+  } | out
+}
+
+# ---------------------------------------------------------------
+# Quick-add helpers (GNU date; on macOS install coreutils -> gdate)
+# ---------------------------------------------------------------
+expand_date() {
+  local v="$1"
+  case "$v" in
+    [0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]) echo "$v" ;;
+    today|tod)                                  date +%F ;;
+    tom|tomorrow)                               date -d tomorrow +%F ;;
+    +[0-9]*)                                    date -d "${v#+} days" +%F ;;
+    mon|tue|wed|thu|fri|sat|sun)                date -d "next $v" +%F ;;
+    *)                                          date -d "$v" +%F ;;
+  esac 2>/dev/null
+}
+
+usage() {
+  cat <<'EOF'
+Usage:
+  todo            Agenda: dated items grouped by urgency
+  todo -f         Full list with line numbers
+  todo -o         Open in nvim
+  todo -a TEXT    Add item (due:fri, do:tom, due:+3 expand to dates)
+  todo -d LINE    Delete line LINE
+EOF
+}
+
+# ---------------------------------------------------------------
 case "$1" in
     "")
-        cat -n "$TODO"
+        agenda
+        ;;
+
+    -f)
+        full_list
         ;;
 
     -o)
         nvim "$TODO"
+        ;;
+
+    -a)
+        shift
+        [[ -z "$*" ]] && { echo "Usage: todo -a TEXT"; exit 1; }
+        words=()
+        for w in "$@"; do
+            if [[ $w =~ ^(due|do):(.+)$ ]]; then
+                key="${BASH_REMATCH[1]}"; val="${BASH_REMATCH[2]}"
+                d=$(expand_date "$val")
+                [[ -z "$d" ]] && { echo "Can't parse date: $w"; exit 1; }
+                w="$key:$d"
+            fi
+            words+=("$w")
+        done
+        # make sure the file ends with a newline before appending
+        [[ -s "$TODO" && -n "$(tail -c1 "$TODO")" ]] && echo >> "$TODO"
+        printf -- '- %s\n' "${words[*]}" >> "$TODO"
+        echo "Added: ${words[*]}"
         ;;
 
     -d)
@@ -17,8 +165,8 @@ case "$1" in
             exit 1
         fi
 
-        n=$((10#$2))                  # normalize (handles 08, 007, ...)
-        total=$(grep -c '' "$TODO")   # line count, even without trailing newline
+        n=$((10#$2))
+        total=$(grep -c '' "$TODO")
 
         if (( n < 1 || n > total )); then
             echo "Line $n does not exist."
@@ -40,10 +188,7 @@ case "$1" in
         ;;
 
     *)
-        echo "Usage:"
-        echo "  todo           Show todo list"
-        echo "  todo -o        Open todo list in nvim"
-        echo "  todo -d LINE   Delete line LINE"
+        usage
         exit 1
         ;;
 esac
