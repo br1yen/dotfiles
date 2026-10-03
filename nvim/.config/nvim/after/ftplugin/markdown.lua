@@ -22,6 +22,8 @@ local function define_hl()
   set('DueLater',   { fg = '#98c379' })               -- further out
   set('DoOverdue',  { fg = '#c678dd', bold = true })  -- should have started
   set('DoToday',    { fg = '#61afef', bold = true })  -- start today
+  set('DoTomorrow', { fg = '#56b6c2', bold = true })  -- start tomorrow
+  set('DoSoon',     { fg = '#6a9fd0' })               -- within 3 days
   set('DoLater',    { fg = '#5c6370' })               -- not yet
 end
 define_hl()
@@ -48,6 +50,8 @@ end
 local function do_group(n)
   if n < 0 then return 'DoOverdue'
   elseif n == 0 then return 'DoToday'
+  elseif n == 1 then return 'DoTomorrow'
+  elseif n <= 3 then return 'DoSoon'
   else return 'DoLater' end
 end
 
