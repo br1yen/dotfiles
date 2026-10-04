@@ -48,3 +48,19 @@ eval "$(zoxide init zsh)"
 # aliases
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
+alias vi='nvim'
+
+alias gs='git status'
+alias ga='git add'
+alias gc='git commit'
+alias gps='git push'
+alias gpl='git pull'
+
+alias t="tmux"            
+alias tls="tmux ls"        
+alias tn="tmux new -s"      
+alias ta="tmux attach -t"    
+alias td="tmux detach"        
+alias tk="tmux kill-session -t"
+alias tka="tmux kill-server"    
+alias tm="tmux new-session -A -s"

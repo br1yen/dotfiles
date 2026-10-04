@@ -1,484 +1,669 @@
-vim.g.mapleader = " "
-vim.g.maplocalleader = " "
-vim.o.relativenumber = true
-vim.o.expandtab = true
-vim.o.shiftwidth = 4
-vim.o.tabstop = 4
-vim.o.ignorecase = true
-vim.o.smartcase = true
-vim.o.hlsearch = false
-vim.o.incsearch = true
-vim.o.signcolumn = "no"
-vim.o.wrap = false
-vim.o.scrolloff = 20
-vim.o.sidescrolloff = 8
-vim.o.splitright = true
-vim.o.splitbelow = true
-vim.o.splitkeep = "screen"
-vim.o.mouse = "a"
-vim.o.clipboard = "unnamedplus"
-vim.o.undofile = true
-vim.o.swapfile = false
-vim.o.confirm = true
-vim.o.showmode = false
-vim.g.loaded_netrw = 1
-vim.g.loaded_netrwPlugin = 1
-vim.o.winborder = "none"
-vim.o.updatetime = 250
-vim.o.timeoutlen = 300
-vim.o.autoread = true
-vim.o.cmdheight = 0
-vim.o.laststatus = 3
+-- OPTIONS --
+do
+	-- faster startup by caching compile Lua modules
+	vim.loader.enable()
 
-vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
-vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
-vim.keymap.set({ "n", "x" }, "gl", "$")
-vim.keymap.set({ "n", "x" }, "gh", "0")
-vim.keymap.set({ "n", "x" }, "gs", "^")
-vim.keymap.set({ "n", "x" }, "<C-f>", ":<C-f>")
+	vim.g.mapleader = " "
+	vim.g.maplocalleader = " "
+	vim.o.mouse = "a"
 
-vim.api.nvim_create_autocmd("TextYankPost", {
-    desc = "Highlight yanked text",
-    callback = function()
-        vim.hl.on_yank()
-    end,
-})
+	vim.o.termguicolors = true
+	vim.g.have_nerd_font = false
+	vim.o.winborder = "none"
+	vim.o.cmdheight = 0
+	vim.o.laststatus = 3
+	vim.o.number = true
+	vim.o.relativenumber = true
+	vim.o.signcolumn = "no"
+	vim.o.showmode = false
 
--- Better auto read
-local group = vim.api.nvim_create_augroup("AutoRead", { clear = true })
-vim.api.nvim_create_autocmd(
-  { "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermLeave" },
-  {
-    group = group,
-    callback = function()
-      if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then
-        vim.cmd("silent! checktime")
-      end
-    end,
-  }
-)
--- Keep a global reference so the timer isn't garbage collected
-_G.autoread_timer = _G.autoread_timer or (vim.uv or vim.loop).new_timer()
-_G.autoread_timer:stop()
-_G.autoread_timer:start(
-  1000,
-  1000,
-  vim.schedule_wrap(function()
-    if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then
-      vim.cmd("silent! checktime")
-    end
-  end)
-)
-vim.api.nvim_create_autocmd("FileChangedShellPost", {
-  group = group,
-  callback = function()
-    vim.notify("Buffer reloaded: file changed on disk", vim.log.levels.INFO)
-  end,
-})
+	vim.o.expandtab = true
+	vim.o.shiftwidth = 4
+	vim.o.tabstop = 4
+	vim.o.breakindent = true
 
--- MdMath build hook
-vim.api.nvim_create_autocmd('PackChanged', {
-  callback = function(ev)
-    local name, kind = ev.data.spec.name, ev.data.kind
-    if name == 'mdmath.nvim' and (kind == 'install' or kind == 'update') then
-      -- The plugin may not be loaded yet during install, so load it first
-      vim.cmd.packadd('mdmath.nvim')
-      vim.cmd('MdMath build')
-    end
-  end,
-})
+	vim.o.incsearch = true
 
--- Packages
-vim.pack.add({
-    'https://github.com/nvim-mini/mini.surround',
-    'https://github.com/ibhagwan/fzf-lua',
-    'https://github.com/nvim-treesitter/nvim-treesitter',
-    'https://github.com/neovim/nvim-lspconfig',
-    { src = "https://github.com/saghen/blink.cmp",
-        version = vim.version.range("^1") },
-    'https://github.com/mfussenegger/nvim-jdtls',
-    'https://github.com/chomosuke/typst-preview.nvim',
-    'https://github.com/mikavilpas/yazi.nvim',
-    'https://github.com/windwp/nvim-autopairs',
-    'https://github.com/MeanderingProgrammer/render-markdown.nvim',
-    'https://github.com/nvim-lua/plenary.nvim',
-    'https://github.com/HakonHarnes/img-clip.nvim',
-    'https://github.com/3rd/image.nvim',
-    'https://github.com/Thiago4532/mdmath.nvim',
-    'https://github.com/nvim-mini/mini.icons',
-})
+	vim.o.undofile = true
+	vim.o.swapfile = false
 
--- Icons
-require("mini.icons").setup()
+	vim.o.ignorecase = true
+	vim.o.smartcase = true
 
--- Yazi
-require("yazi").setup({
-    open_for_directories = true,
-    floating_window_scaling_factor = 0.80,
-    yazi_floating_window_border = "single",
-    yazi_floating_window_winblend = 0,
-    highlight_hovered_buffers_in_same_directory = false,
+	vim.o.updatetime = 250
+	vim.o.timeoutlen = 300
 
-    highlight_groups = {
-        hovered_buffer = { bg = "NONE" },
-    },
-})
-vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", {
-    desc = "Open Yazi",
-})
+	vim.o.splitright = true
+	vim.o.splitbelow = true
+	vim.o.inccommand = "split"
 
--- Colors
-vim.o.termguicolors = true
-vim.cmd.colorscheme("default")
-vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
-vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE", fg = "NONE" })
-vim.api.nvim_set_hl(0, "StatusLine",   { bg = "NONE" })
-vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "NONE" })
-vim.api.nvim_set_hl(0, "MsgArea",      { bg = "NONE" })
+	vim.o.scrolloff = 16
+	vim.o.sidescrolloff = 4
 
--- Surround
-require("mini.surround").setup()
+	vim.o.confirm = true
 
--- Autopairs
-require("nvim-autopairs").setup()
-
--- Fzf
-local fzf = require("fzf-lua")
-
-fzf.setup({
-    defaults = {
-        formatter = "path.filename_first",
-        git_icons = false,
-    },
-
-    fzf_colors = true,
-
-    winopts = {
-        border = "single",
-        backdrop = 100,
-        preview = {
-            border = "single",
-            layout = "flex",
-            flip_columns = 140,
-            vertical = "down:50%",
-            horizontal = "right:55%",
-            scrollbar = false,
-            title = false,
-        },
-
-    },
-
-    fzf_opts = {
-        ["--info"] = "inline-right",  -- match count on the prompt line
-        ["--no-scrollbar"] = true,
-        ["--ellipsis"] = "…",
-    },
-
-    files = {
-        cmd = "fd --type f --follow --exclude '.*' " ..
-            "--exclude '*.png' --exclude '*.jpg' --exclude '*.jpeg' " ..
-            "--exclude '*.gif' --exclude '*.webp' " ..
-            "--exclude 'paru' --exclude 'sync/documents'",
-    },
-
-    grep = {
-        formatter = "path.filename_first",
-        rg_opts = "--column --line-number --no-heading --color=always --smart-case " ..
-            "--glob '!.*' --glob '!.*/*' " ..
-            "--glob '!*.png' --glob '!*.jpg' --glob '!*.jpeg' " ..
-            "--glob '!*.gif' --glob '!*.webp' " ..
-            "--glob '!**/paru/**' --glob '!**/sync/documents/**'",
-    },
-})
-
-vim.keymap.set("n", "<leader>f", fzf.files)
-vim.keymap.set("n", "<leader>g", fzf.live_grep)
-vim.keymap.set("n", "<leader>r", fzf.history)
-vim.keymap.set("n", "<leader>b", fzf.buffers)
-vim.keymap.set("n", "<leader>h", fzf.help_tags)
-vim.keymap.set("n", "<leader>F", function()
-    fzf.files({
-        cmd = "fd --type f --hidden --follow",
-    })
-end)
-vim.keymap.set("n", "<leader>G", function()
-    fzf.live_grep({
-        rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden",
-    })
-end)
-
--- Treesitter
-require("nvim-treesitter").setup({
-    install_dir = vim.fn.stdpath("data") .. "/site",
-})
-require('nvim-treesitter').install {
-    'markdown',
-    'markdown_inline',
-    'yaml',
-    'html',
-    'typst',
-    'lua',
-    'java',
-    'c'
-}
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "lua", "java", "markdown", "typst", "c" },
-    callback = function()
-        if pcall(vim.treesitter.start) then
-            vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-        end
-    end,
-})
-
--- Blink completion
-require("blink.cmp").setup({
-    keymap = {
-        preset = "default",
-    },
-
-    appearance = {
-        nerd_font_variant = "mono",
-    },
-
-    completion = {
-        trigger = {
-            show_on_keyword = true,
-            show_on_trigger_character = true,
-        },
-
-        list = {
-            selection = { auto_insert = false },
-        },
-
-        documentation = {
-            auto_show = true,
-            auto_show_delay_ms = 0,
-        },
-
-        menu = {
-            draw = {
-                components = {
-                    kind_icon = {
-                        text = function(ctx)
-                            return "[" .. ctx.kind .. "]"
-                        end,
-
-                        highlight = "BlinkCmpKind",
-                    },
-                },
-            },
-        },
-    },
-
-    signature = { enabled = true },
-
-    sources = {
-        default = { "lsp", "path", "snippets", "buffer" },
-    },
-
-    fuzzy = {
-        implementation = "prefer_rust_with_warning",
-    },
-})
-
--- Set Blink capabilities for LSPs
-vim.lsp.config("*", {
-    capabilities = require("blink.cmp").get_lsp_capabilities(),
-})
-
--- Typst
-vim.lsp.config("tinymist", {
-    settings = {
-        formatterMode = "typstyle", -- lets you gq / format-on-save with typstyle
-        exportPdf = "onType",       -- keeps a .pdf next to your .typ, updated as you type
-    },
-})
-vim.lsp.enable("tinymist")
-require("typst-preview").setup({})
-
--- Lua LSP
-vim.lsp.config("lua_ls", {
-    settings = {
-        Lua = {
-            runtime = { version = "LuaJIT" },
-            diagnostics = { globals = { "vim" } },
-            workspace = {
-                library = { vim.env.VIMRUNTIME },
-                checkThirdParty = false,
-            },
-            telemetry = { enable = false },
-        },
-    },
-})
-vim.lsp.enable("lua_ls")
-
--- LSP navigation via fzf-lua
-vim.keymap.set("n", "gd", fzf.lsp_definitions)
-vim.keymap.set("n", "grr", fzf.lsp_references)
-vim.keymap.set("n", "<leader>s", fzf.lsp_document_symbols)
-vim.keymap.set("n", "<leader>S", fzf.lsp_live_workspace_symbols)
-vim.keymap.set("n", "<leader>d", fzf.diagnostics_document)
-
--- Notes
-vim.api.nvim_create_user_command("Notes", function()
-    vim.cmd("edit ~/sync/notes")
-end, {})
-
-vim.api.nvim_create_user_command("NewNote", function(opts)
-    local title = vim.trim(opts.args)
-    local slug = title:lower():gsub("%s+", "-"):gsub("[^%w%-]", "")
-    if slug == "" then slug = "untitled" end
-
-    local dir = vim.fn.expand("~/sync/notes")
-    vim.fn.mkdir(dir, "p")
-
-    local path = dir .. "/" .. os.date("%Y-%m-%d") .. "-" .. slug .. ".md"
-    local is_new = vim.fn.filereadable(path) == 0
-
-    vim.cmd("edit " .. vim.fn.fnameescape(path))
-
-    if is_new then
-        vim.api.nvim_buf_set_lines(0, 0, -1, false, {
-            "---",
-            "tags: []",
-            "---",
-            "# " .. (title ~= "" and title or "untitled"),
-            ""
-        })
-        vim.api.nvim_win_set_cursor(0, { 5, 0 })
-    end
-end, { nargs = "*" })
-
-local function notes_live(prompt, make_pattern)
-    local fzf = require("fzf-lua")
-
-    fzf.fzf_live(function(args)
-        local q = args[1] or ""
-
-        return table.concat({
-            "rg --column --line-number --no-heading --color=always --smart-case --pcre2",
-            "-g '*.md' -e", vim.fn.shellescape(make_pattern(q)),
-        }, " ")
-    end, {
-            prompt = prompt,
-            cwd = vim.fn.expand("~/sync/notes"),
-            previewer = "builtin",
-            actions = fzf.defaults.actions.files,
-            fn_transform = function(x)
-                return fzf.make_entry.file(x, {
-                    file_icons = true,
-                    color_icons = true,
-                })
-            end,
-        })
+	-- sync system clipboard
+	vim.schedule(function()
+		vim.o.clipboard = "unnamedplus"
+	end)
 end
 
--- Content only:
---   * excludes `tags:` lines
---   * doesn't match when the query begins immediately after `#`
-vim.keymap.set("n", "<leader>ng", function()
-    notes_live("Notes> ", function(q)
-        return "^(?!tags:).*?(?<!#)(" .. q .. ")"
-    end)
-end, { desc = "Grep note content" })
+-- BASIC REMAPS + AUTOCOMMANDS --
+do
+	vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
+	vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
 
--- Tags only:
---   * inline #tag
---   * `tags:` lines
-vim.keymap.set("n", "<leader>nt", function()
-    notes_live("Tags> ", function(q)
-        return "(?<![\\w])#[\\w/-]*(" .. q .. ")|^tags:.*(" .. q .. ")"
-    end)
-end, { desc = "Grep tags" })
+	vim.keymap.set({ "n", "x" }, "gl", "$")
+	vim.keymap.set({ "n", "x" }, "gh", "0")
+	vim.keymap.set({ "n", "x" }, "gs", "^")
+	vim.keymap.set({ "n", "x" }, "<C-f>", ":<C-f>")
+	vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
+	vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
+	vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
+	vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
-vim.keymap.set("n", "<leader>t", "<cmd>e ~/sync/notes/todo.md<cr>")
-vim.keymap.set("n", "<leader>nf", "<cmd>FzfLua files cwd=~/sync/notes<cr>")
-vim.keymap.set("n", "<leader>nn", function()
-    vim.ui.input({ prompt = "Note: " }, function(title)
-        if title and title ~= "" then
-            vim.cmd("NewNote " .. title)
-        end
-    end)
-end, { desc = "New note" })
+	vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
+	vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
--- Render markdown to be pretty
-require("render-markdown").setup({
-    heading = {
-        sign = false,
-        position = "inline",
-        icons = { "H1 ", "H2 ", "H3 ", "H4 ", "H5 ", "H6 " },
-        width = "block",
-        left_margin = { 0, 1, 2, 3, 4, 5 },
-        backgrounds = { "Normal", "Normal", "Normal", "Normal", "Normal", "Normal" },
-    },
+	-- diagnostic
+	vim.diagnostic.config({
+		update_in_insert = false,
+		severity_sort = true,
+		float = { border = "single", source = "if_many" },
+		underline = { severity = { min = vim.diagnostic.severity.WARN } },
 
-    code = {
-        sign = false,
-        style = "language",
-        language_icon = false,
-        language_info = false,
-        disable_background = true,
-        left_margin = 4,
-        left_pad = 1,
-        right_pad = 1,
-        border = "none",
-        highlight_border = false,
-        highlight_language = "Normal",
-        highlight_info = "Normal",
-        highlight_fallback = "Normal",
-    },
+		virtual_text = true, -- end of line warning
+		virtual_lines = false, -- under the line warning
 
-    bullet = {
-        icons = { "•", "‣", "◦", "⁃" },
-    },
+		-- auto open diagnostic warning
+		jump = {
+			on_jump = function(_, bufnr)
+				vim.diagnostic.open_float({
+					bufnr = bufnr,
+					scope = "cursor",
+					focus = false,
+				})
+			end,
+		},
+	})
 
-    quote = {
-        icon = "│",
-    },
+	vim.keymap.set("n", "<leader>D", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
 
-    latex = { enabled = false },
+	vim.api.nvim_create_autocmd("TextYankPost", {
+		desc = "Highlight when yanking text",
+		group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
+		callback = function()
+			vim.hl.on_yank()
+		end,
+	})
 
-    pipe_table = {
-        preset = "none",
-    },
-})
+	local group = vim.api.nvim_create_augroup("AutoRead", { clear = true })
+	vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermLeave" }, {
+		desc = "Update buffer when file changes",
+		group = group,
+		callback = function()
+			if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then
+				vim.cmd("silent! checktime")
+			end
+		end,
+	})
+	vim.api.nvim_create_autocmd("FileChangedShellPost", {
+		group = group,
+		callback = function()
+			vim.notify("Buffer reloaded: file changed on disk", vim.log.levels.INFO)
+		end,
+	})
+end
 
+-- VIM PACK BUILD STEPS --
+do
+	local function run_build(name, cmd, cwd)
+		local result = vim.system(cmd, { cwd = cwd }):wait()
 
--- Images in notes
-require("img-clip").setup({
-    default = {
-        dir_path = "images",
-        relative_to_current_file = true,
-        use_absolute_path = false,
-        prompt_for_file_name = false,
-        insert_mode_after_paste = false,
-        file_name = function()
-            return os.date("%Y-%m-%d-%H-%M-%S")
-        end,
-    },
-})
+		if result.code ~= 0 then
+			local stderr = result.stderr or ""
+			local stdout = result.stdout or ""
+			local output = stderr ~= "" and stderr or stdout
 
-require("image").setup({
-    backend = "kitty",
-    processor = "magick_cli",
+			if output == "" then
+				output = "No output from build command."
+			end
 
-    integrations = {
-        markdown = {
-            enabled = true,
-            clear_in_insert_mode = true,
-            download_remote_images = true,
-            only_render_image_at_cursor = true,
-            only_render_image_at_cursor_mode = "inline",
-            floating_windows = false,
-        },
-    },
-    window_overlap_clear_enabled = true,
-})
+			vim.notify(("Build failed for %s:\n%s"):format(name, output), vim.log.levels.ERROR)
+		end
+	end
 
--- MdMath rendering
-require('mdmath').setup({
-    filetypes = { 'markdown' },
-    -- foreground = 'Normal',
-    -- dynamic = true,
-    -- update_interval = 400,
-})
+	-- Run the appropriate build/update command after a plugin is installed/updated.
+	vim.api.nvim_create_autocmd("PackChanged", {
+		callback = function(ev)
+			local name = ev.data.spec.name
+			local kind = ev.data.kind
+
+			if kind ~= "install" and kind ~= "update" then
+				return
+			end
+
+			if name == "LuaSnip" then
+				if vim.fn.has("win32") ~= 1 and vim.fn.executable("make") == 1 then
+					run_build(name, { "make", "install_jsregexp" }, ev.data.path)
+				end
+				return
+			end
+
+			if name == "nvim-treesitter" then
+				if not ev.data.active then
+					vim.cmd.packadd("nvim-treesitter")
+				end
+				vim.cmd("TSUpdate")
+				return
+			end
+
+			if name == "mdmath.nvim" then
+				if not ev.data.active then
+					vim.cmd.packadd("mdmath.nvim")
+				end
+				vim.cmd("MdMath build")
+				return
+			end
+		end,
+	})
+end
+
+-- PLUGINS --
+---@param repo string
+---@return string
+local function gh(repo)
+	return "https://github.com/" .. repo
+end
+
+-- Appearance
+do
+	vim.cmd.colorscheme("default")
+	vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
+	vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE", fg = "NONE" })
+	vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE" })
+	vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "NONE" })
+	vim.api.nvim_set_hl(0, "MsgArea", { bg = "NONE" })
+
+	vim.pack.add({ gh("nvim-mini/mini.nvim") })
+	require("mini.icons").setup()
+	require("mini.ai").setup({
+		-- avoid conflicts with the built-in incremental selection mappings
+		mappings = {
+			around_next = "aa",
+			inside_next = "ii",
+		},
+		n_lines = 500,
+	})
+	require("mini.surround").setup()
+	local statusline = require("mini.statusline")
+	---@diagnostic disable-next-line: duplicate-set-field
+	statusline.section_location = function()
+		return "%2l:%-2v"
+	end
+	statusline.setup({ use_icons = vim.g.have_nerd_font })
+	require("mini.pairs").setup()
+end
+
+-- Files and navigation
+do
+	vim.pack.add({ gh("nvim-lua/plenary.nvim") })
+
+	vim.pack.add({ gh("mikavilpas/yazi.nvim") })
+	require("yazi").setup({
+		open_for_directories = true,
+		floating_window_scaling_factor = 0.80,
+		yazi_floating_window_border = "single",
+		yazi_floating_window_winblend = 0,
+		highlight_hovered_buffers_in_same_directory = false,
+
+		highlight_groups = {
+			hovered_buffer = { bg = "NONE" },
+		},
+	})
+
+	vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>")
+
+	vim.pack.add({ gh("ibhagwan/fzf-lua") })
+	local fzf = require("fzf-lua")
+	fzf.setup({
+		defaults = { formatter = "path.filename_first", git_icons = false },
+		fzf_colors = true,
+		winopts = {
+			border = "single",
+			backdrop = 100,
+			preview = {
+				border = "single",
+				layout = "flex",
+				scrollbar = false,
+				title = false,
+			},
+		},
+		fzf_opts = {
+			["--info"] = "inline-right", -- match count on the prompt line
+			["--no-scrollbar"] = true,
+			["--ellipsis"] = "…",
+		},
+		files = {
+			cmd = "fd --type f --follow --exclude '.*' "
+				.. "--exclude '*.png' --exclude '*.jpg' --exclude '*.jpeg' "
+				.. "--exclude '*.gif' --exclude '*.webp' "
+				.. "--exclude 'paru' --exclude 'sync/documents'",
+		},
+		grep = {
+			formatter = "path.filename_first",
+			rg_opts = "--column --line-number --no-heading --color=always --smart-case "
+				.. "--glob '!.*' --glob '!.*/*' "
+				.. "--glob '!*.png' --glob '!*.jpg' --glob '!*.jpeg' "
+				.. "--glob '!*.gif' --glob '!*.webp' "
+				.. "--glob '!**/paru/**' --glob '!**/sync/documents/**'",
+		},
+	})
+
+	vim.keymap.set("n", "<leader>f", fzf.files)
+	vim.keymap.set("n", "<leader>g", fzf.live_grep)
+	vim.keymap.set("n", "<leader>r", fzf.history)
+	vim.keymap.set("n", "<leader>b", fzf.buffers)
+	vim.keymap.set("n", "<leader>h", fzf.help_tags)
+	vim.keymap.set("n", "<leader>a", fzf.resume)
+	vim.keymap.set("n", "<leader>/", fzf.lgrep_curbuf)
+	vim.keymap.set("n", "<leader>F", function()
+		fzf.files({ cmd = "fd --type f --hidden --follow" })
+	end)
+	vim.keymap.set("n", "<leader>G", function()
+		fzf.live_grep({ rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden" })
+	end)
+	vim.keymap.set("n", "grr", fzf.lsp_references)
+	vim.keymap.set("n", "gri", fzf.lsp_implementations)
+	vim.keymap.set("n", "grd", fzf.lsp_definitions)
+	vim.keymap.set("n", "grt", fzf.lsp_typedefs)
+	vim.keymap.set("n", "gsd", fzf.lsp_document_symbols)
+	vim.keymap.set("n", "gsw", fzf.lsp_live_workspace_symbols)
+	vim.keymap.set("n", "<leader>d", fzf.diagnostics_document)
+end
+
+-- LSP
+do
+	vim.pack.add({ gh("j-hui/fidget.nvim") })
+	require("fidget").setup({})
+
+	vim.api.nvim_create_autocmd("LspAttach", {
+		group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
+
+		callback = function(event)
+			local map = function(keys, func, desc, mode)
+				mode = mode or "n"
+
+				vim.keymap.set(mode, keys, func, {
+					buffer = event.buf,
+					desc = "LSP: " .. desc,
+				})
+			end
+
+			map("grn", vim.lsp.buf.rename, "Rename")
+			map("gra", vim.lsp.buf.code_action, "Code action", { "n", "x" })
+			map("grD", vim.lsp.buf.declaration, "Declaration")
+
+			local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+			if client and client:supports_method("textDocument/documentHighlight", event.buf) then
+				local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
+
+				vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+					buffer = event.buf,
+					group = highlight_augroup,
+					callback = vim.lsp.buf.document_highlight,
+				})
+
+				vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+					buffer = event.buf,
+					group = highlight_augroup,
+					callback = vim.lsp.buf.clear_references,
+				})
+
+				vim.api.nvim_create_autocmd("LspDetach", {
+					buffer = event.buf,
+					group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
+					callback = function(event2)
+						vim.lsp.buf.clear_references()
+						vim.api.nvim_clear_autocmds({
+							group = highlight_augroup,
+							buffer = event2.buf,
+						})
+					end,
+				})
+			end
+		end,
+	})
+
+	---@type table<string, vim.lsp.Config>
+	local servers = {
+		typstyle = {}, -- format typst documents
+		tinymist = {
+			settings = {
+				formatterMode = "typstyle",
+				exportPdf = "onType",
+			},
+		},
+
+		stylua = {}, -- format lua
+		lua_ls = { -- recommended lua language server config
+			on_init = function(client)
+				client.server_capabilities.documentFormattingProvider = false -- Disable formatting (formatting is done by stylua)
+
+				if client.workspace_folders then
+					local path = client.workspace_folders[1].name
+					if
+						path ~= vim.fn.stdpath("config")
+						and (vim.uv.fs_stat(path .. "/.luarc.json") or vim.uv.fs_stat(path .. "/.luarc.jsonc"))
+					then
+						return
+					end
+				end
+
+				local current_settings = client.config.settings --[[@as lspconfig.settings.lua_ls]]
+				client.config.settings.Lua = vim.tbl_deep_extend("force", current_settings.Lua, {
+					runtime = {
+						version = "LuaJIT",
+						path = { "lua/?.lua", "lua/?/init.lua" },
+					},
+					workspace = {
+						checkThirdParty = false,
+						-- NOTE: this is a lot slower and will cause issues when working on your own configuration.
+						--  See https://github.com/neovim/nvim-lspconfig/issues/3189
+						library = vim.api.nvim_get_runtime_file("", true),
+					},
+				})
+			end,
+			---@type lspconfig.settings.lua_ls
+			settings = {
+				Lua = {
+					format = { enable = false }, -- Disable formatting (formatting is done by stylua)
+				},
+			},
+		},
+	}
+
+	vim.pack.add({
+		gh("neovim/nvim-lspconfig"),
+		gh("mason-org/mason.nvim"),
+		gh("mason-org/mason-lspconfig.nvim"),
+		gh("WhoIsSethDaniel/mason-tool-installer.nvim"),
+	})
+
+	require("mason").setup({})
+	require("mason-lspconfig").setup({})
+	local ensure_installed = vim.tbl_keys(servers or {})
+	vim.list_extend(ensure_installed, {
+		"jdtls",
+		"java-debug-adapter",
+		automatic_enable = false,
+	})
+	require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
+
+	for name, server in pairs(servers) do
+		vim.lsp.config(name, server)
+		vim.lsp.enable(name)
+	end
+end
+
+-- DEBUGGING: Java --
+do
+	vim.pack.add({
+		gh("mfussenegger/nvim-dap"),
+		gh("rcarriga/nvim-dap-ui"),
+		gh("nvim-neotest/nvim-nio"),
+		gh("jay-babu/mason-nvim-dap.nvim"),
+		gh("mfussenegger/nvim-jdtls"),
+	})
+
+	-- Basic debugging keymaps from Kickstart
+	vim.keymap.set("n", "<F5>", function()
+		require("dap").continue()
+	end, { desc = "Debug: Start/Continue" })
+	vim.keymap.set("n", "<F1>", function()
+		require("dap").step_into()
+	end, { desc = "Debug: Step Into" })
+	vim.keymap.set("n", "<F2>", function()
+		require("dap").step_over()
+	end, { desc = "Debug: Step Over" })
+	vim.keymap.set("n", "<F3>", function()
+		require("dap").step_out()
+	end, { desc = "Debug: Step Out" })
+	vim.keymap.set("n", "<leader>b", function()
+		require("dap").toggle_breakpoint()
+	end, { desc = "Debug: Toggle Breakpoint" })
+	vim.keymap.set("n", "<leader>B", function()
+		require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))
+	end, { desc = "Debug: Set Conditional Breakpoint" })
+	vim.keymap.set("n", "<F7>", function()
+		require("dapui").toggle()
+	end, { desc = "Debug: See last session result." })
+
+	local dap = require("dap")
+	local dapui = require("dapui")
+
+	require("mason-nvim-dap").setup({
+		automatic_installation = true,
+		handlers = {},
+		ensure_installed = {
+			-- Ensures the Java debug adapter is installed instead of Go's 'delve'
+			"javadbg",
+		},
+	})
+
+	-- Dap UI setup
+	---@diagnostic disable-next-line: missing-fields
+	dapui.setup({
+		icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
+		---@diagnostic disable-next-line: missing-fields
+		controls = {
+			icons = {
+				pause = "⏸",
+				play = "▶",
+				step_into = "⏎",
+				step_over = "⏭",
+				step_out = "⏮",
+				step_back = "b",
+				run_last = "▶▶",
+				terminate = "⏹",
+				disconnect = "⏏",
+			},
+		},
+	})
+
+	dap.listeners.after.event_initialized["dapui_config"] = dapui.open
+	dap.listeners.before.event_terminated["dapui_config"] = dapui.close
+	dap.listeners.before.event_exited["dapui_config"] = dapui.close
+
+	-- Java specific config
+	vim.api.nvim_create_autocmd("FileType", {
+		pattern = "java",
+		callback = function()
+			-- Locate the debugger jar downloaded by mason-nvim-dap
+			local debug_jar = vim.fn.glob(
+				vim.fn.stdpath("data")
+					.. "/mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
+				true
+			)
+
+			require("jdtls").start_or_attach({
+				cmd = { "jdtls" },
+				root_dir = vim.fs.dirname(
+					vim.fs.find({ ".git", "mvnw", "gradlew", "build.gradle" }, { upward = true })[1]
+				) or vim.fn.getcwd(),
+
+				-- Inject the debugger into the language server
+				init_options = {
+					bundles = { debug_jar },
+				},
+
+				on_attach = function(client, bufnr)
+					require("jdtls").setup_dap({ hotcodereplace = "auto" })
+					require("jdtls.dap").setup_dap_main_class_configs()
+
+					-- Re-apply LSP keymaps for Java files
+					vim.keymap.set("n", "grn", vim.lsp.buf.rename, { buffer = bufnr, desc = "LSP: Rename" })
+					vim.keymap.set(
+						{ "n", "x" },
+						"gra",
+						vim.lsp.buf.code_action,
+						{ buffer = bufnr, desc = "LSP: Code action" }
+					)
+					vim.keymap.set("n", "grD", vim.lsp.buf.declaration, { buffer = bufnr, desc = "LSP: Declaration" })
+				end,
+			})
+		end,
+	})
+end
+
+-- FORMATTING --
+do
+	vim.pack.add({ gh("stevearc/conform.nvim") })
+	require("conform").setup({
+		notify_on_error = false,
+		format_on_save = function(bufnr)
+			local enabled_filetypes = {
+				lua = true,
+				java = true,
+				typst = true,
+			}
+			if enabled_filetypes[vim.bo[bufnr].filetype] then
+				return { timeout_ms = 1000, lsp_format = "fallback" }
+			else
+				return nil
+			end
+		end,
+		default_format_opts = {
+			lsp_format = "fallback", -- Use external formatters if configured below, otherwise use LSP formatting. Set to `false` to disable LSP formatting entirely.
+		},
+		-- You can also specify external formatters in here.
+		formatters_by_ft = {
+			-- rust = { 'rustfmt' },
+			-- Conform can also run multiple formatters sequentially
+			-- python = { "isort", "black" },
+			--
+			-- You can use 'stop_after_first' to run the first available formatter from the list
+			-- javascript = { "prettierd", "prettier", stop_after_first = true },
+		},
+	})
+
+	vim.keymap.set({ "n", "v" }, "<leader>=", function()
+		require("conform").format({ async = true })
+	end)
+end
+
+-- AUTOCOMPLETE + SNIPPETS
+do
+	vim.pack.add({
+		{ src = gh("saghen/blink.cmp"), version = vim.version.range("1.*") },
+		gh("L3MON4D3/LuaSnip"),
+	})
+
+	require("blink.cmp").setup({
+		snippets = { preset = "luasnip" },
+		keymap = { preset = "default" },
+		appearance = { nerd_font_variant = "mono" },
+		completion = {
+			trigger = {
+				show_on_keyword = true,
+				show_on_trigger_character = true,
+			},
+			list = { selection = { auto_insert = false } },
+			documentation = { auto_show = true, auto_show_delay_ms = 0 },
+			menu = {
+				draw = {
+					components = {
+						kind_icon = {
+							text = function(ctx)
+								return "[" .. ctx.kind .. "]"
+							end,
+
+							highlight = "BlinkCmpKind",
+						},
+					},
+				},
+			},
+		},
+		signature = { enabled = true },
+		sources = { default = { "lsp", "path", "snippets", "buffer" } },
+		fuzzy = { implementation = "prefer_rust_with_warning" },
+	})
+	vim.lsp.config("*", {
+		capabilities = require("blink.cmp").get_lsp_capabilities(),
+	})
+end
+
+-- TREESITTER --
+do
+	vim.pack.add({ { src = gh("nvim-treesitter/nvim-treesitter"), version = "main" } })
+
+	local parsers = { "bash", "lua", "luadoc", "markdown", "markdown_inline", "typst", "java", "query" }
+	require("nvim-treesitter").install(parsers)
+
+	---@param buf integer
+	---@param language string
+	local function treesitter_try_attach(buf, language)
+		-- Check if the buffer is valid (might not be after install completes)
+		if not vim.api.nvim_buf_is_valid(buf) then
+			return
+		end
+
+		-- Check if a parser exists and load it
+		if not vim.treesitter.language.add(language) then
+			return
+		end
+
+		-- Enable syntax highlighting and other treesitter features
+		vim.treesitter.start(buf)
+
+		-- For more info on folds see `:help folds`
+		-- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+		-- vim.wo.foldmethod = 'expr'
+
+		-- Check if treesitter indentation is available for this language, and if so enable it
+		-- in case there is no indent query, the indentexpr will fallback to the vim's built in one
+		local has_indent_query = vim.treesitter.query.get(language, "indents") ~= nil
+
+		-- Enable treesitter based indentation
+		if has_indent_query then
+			vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+		end
+	end
+
+	local available_parsers = require("nvim-treesitter").get_available()
+	vim.api.nvim_create_autocmd("FileType", {
+		callback = function(args)
+			local buf, filetype = args.buf, args.match
+
+			local language = vim.treesitter.language.get_lang(filetype)
+			if not language then
+				return
+			end
+
+			local installed_parsers = require("nvim-treesitter").get_installed("parsers")
+
+			if vim.tbl_contains(installed_parsers, language) then
+				-- Enable the parser if it is already installed
+				treesitter_try_attach(buf, language)
+			elseif vim.tbl_contains(available_parsers, language) then
+				-- If a parser is available in `nvim-treesitter`, auto-install it and enable it after the installation is done
+				require("nvim-treesitter").install(language):await(function()
+					treesitter_try_attach(buf, language)
+				end)
+			else
+				-- Try to enable treesitter features in case the parser exists but is not available from `nvim-treesitter`
+				treesitter_try_attach(buf, language)
+			end
+		end,
+	})
+end
+
+-- TYPST --
+do
+	vim.pack.add({ "https://github.com/chomosuke/typst-preview.nvim" })
+	require("typst-preview").setup({})
+end
+
+-- MARKDOWN NOTES --
+require("notes.setup")
