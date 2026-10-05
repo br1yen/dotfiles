@@ -116,6 +116,15 @@ do
 			vim.notify("Buffer reloaded: file changed on disk", vim.log.levels.INFO)
 		end,
 	})
+
+	-- echo message timeout
+	require("vim._extui").enable({
+		enable = true,
+		msg = {
+			target = "cmd",
+			timeout = 3000,
+		},
+	})
 end
 
 -- VIM PACK BUILD STEPS --
