@@ -115,6 +115,38 @@ vim.keymap.set("n", "<leader>nn", function()
 	end)
 end, { desc = "New note" })
 
+-- render-markdown is configured eagerly; it only attaches to markdown
+-- buffers itself, so there is no need to defer it.
+require("render-markdown").setup({
+	heading = {
+		sign = false,
+		position = "inline",
+		icons = { "H1 ", "H2 ", "H3 ", "H4 ", "H5 ", "H6 " },
+		width = "block",
+		left_margin = { 0, 1, 2, 3, 4, 5 },
+		backgrounds = { "Normal", "Normal", "Normal", "Normal", "Normal", "Normal" },
+	},
+	code = {
+		sign = false,
+		style = "language",
+		language_icon = false,
+		language_info = false,
+		disable_background = true,
+		left_margin = 4,
+		left_pad = 1,
+		right_pad = 1,
+		border = "none",
+		highlight_border = false,
+	},
+	bullet = { icons = { "•", "‣", "◦", "⁃" } },
+	quote = { icon = "│" },
+	latex = { enabled = false },
+	pipe_table = { preset = "none" },
+	overrides = {
+		buftype = { nofile = { enabled = false } },
+	},
+})
+
 -- LAZY-LOAD PLUGINS --
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { "markdown" },
@@ -126,67 +158,42 @@ vim.api.nvim_create_autocmd("FileType", {
 		end
 		vim.g.notes_plugins_loaded = true
 
-		require("render-markdown").setup({
-			heading = {
-				sign = false,
-				position = "inline",
-				icons = { "H1 ", "H2 ", "H3 ", "H4 ", "H5 ", "H6 " },
-				width = "block",
-				left_margin = { 0, 1, 2, 3, 4, 5 },
-				backgrounds = { "Normal", "Normal", "Normal", "Normal", "Normal", "Normal" },
-			},
-			code = {
-				sign = false,
-				style = "language",
-				language_icon = false,
-				language_info = false,
-				disable_background = true,
-				left_margin = 4,
-				left_pad = 1,
-				right_pad = 1,
-				border = "none",
-				highlight_border = false,
-			},
-			bullet = { icons = { "•", "‣", "◦", "⁃" } },
-			quote = { icon = "│" },
-			latex = { enabled = false },
-			pipe_table = { preset = "none" },
-			overrides = {
-				buftype = { nofile = { enabled = false } },
-			},
-		})
-
-		require("img-clip").setup({
-			default = {
-				dir_path = "images",
-				relative_to_current_file = true,
-				use_absolute_path = false,
-				prompt_for_file_name = false,
-				insert_mode_after_paste = false,
-				file_name = function()
-					return os.date("%Y-%m-%d-%H-%M-%S")
-				end,
-			},
-		})
-
-		require("image").setup({
-			backend = "kitty",
-			kitty_method = "normal",
-			order = 0,
-			renamed = true,
-			processor = "magick_cli",
-			integrations = {
-				markdown = {
-					enabled = true,
-					clear_in_insert_mode = true,
-					download_remote_images = true,
-					only_render_image_at_cursor = true,
-					only_render_image_at_cursor_mode = "inline",
-					floating_windows = false,
+		-- each setup is wrapped so one failure doesn't skip the rest
+		pcall(function()
+			require("img-clip").setup({
+				default = {
+					dir_path = "images",
+					relative_to_current_file = true,
+					use_absolute_path = false,
+					prompt_for_file_name = false,
+					insert_mode_after_paste = false,
+					file_name = function()
+						return os.date("%Y-%m-%d-%H-%M-%S")
+					end,
 				},
-			},
-			window_overlap_clear_enabled = true,
-		})
+			})
+		end)
+
+		pcall(function()
+			require("image").setup({
+				backend = "kitty",
+				kitty_method = "normal",
+				order = 0,
+				renamed = true,
+				processor = "magick_cli",
+				integrations = {
+					markdown = {
+						enabled = true,
+						clear_in_insert_mode = true,
+						download_remote_images = true,
+						only_render_image_at_cursor = true,
+						only_render_image_at_cursor_mode = "inline",
+						floating_windows = false,
+					},
+				},
+				window_overlap_clear_enabled = true,
+			})
+		end)
 
 		pcall(function()
 			require("mdmath").setup({
@@ -194,7 +201,9 @@ vim.api.nvim_create_autocmd("FileType", {
 			})
 		end)
 
-		-- retrigger markdown event to get setup for render-markdown
+		-- Re-fire FileType for the current buffer so image.nvim and mdmath,
+		-- which were only just set up, attach to the first markdown buffer.
+		-- (Not needed for render-markdown anymore, but keep it for these two.)
 		local bufnr = vim.api.nvim_get_current_buf()
 		vim.schedule(function()
 			if not vim.api.nvim_buf_is_valid(bufnr) then

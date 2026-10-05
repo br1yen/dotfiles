@@ -22,7 +22,7 @@ function y() {
 }
 
 # Prompt: host:path $  (# for root)
-PROMPT='%B%m:%~ %b%(!.#.$) '
+PROMPT='        %B%m:%~ %b%(!.#.$) '
 
 # Autosuggestions + accept with Ctrl-Y
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh

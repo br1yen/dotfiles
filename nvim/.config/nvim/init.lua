@@ -12,8 +12,8 @@ do
 	vim.o.winborder = "none"
 	vim.o.cmdheight = 0
 	vim.o.laststatus = 3
-	vim.o.number = true
-	vim.o.relativenumber = true
+	vim.o.number = false
+	vim.o.relativenumber = false
 	vim.o.showmode = false
 	vim.o.signcolumn = "yes"
 
@@ -21,6 +21,7 @@ do
 	vim.o.shiftwidth = 4
 	vim.o.tabstop = 4
 	vim.o.breakindent = true
+	vim.o.smartindent = true
 
 	vim.o.incsearch = true
 
@@ -38,6 +39,7 @@ do
 	vim.o.inccommand = "split"
 
 	vim.o.scrolloff = 16
+	vim.o.smoothscroll = true
 	vim.o.sidescrolloff = 4
 
 	vim.o.confirm = true
@@ -46,6 +48,7 @@ do
 	vim.schedule(function()
 		vim.o.clipboard = "unnamedplus"
 	end)
+	vim.opt.guicursor = "a:block"
 end
 
 -- BASIC REMAPS + AUTOCOMMANDS --
@@ -178,7 +181,8 @@ end
 
 -- Appearance
 do
-	vim.cmd.colorscheme("default")
+	vim.pack.add({ gh("Verf/deepwhite.nvim") })
+	vim.cmd.colorscheme("deepwhite")
 	vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
 	vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE", fg = "NONE" })
 	vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE" })
@@ -186,15 +190,6 @@ do
 	vim.api.nvim_set_hl(0, "MsgArea", { bg = "NONE" })
 
 	vim.pack.add({ gh("nvim-mini/mini.nvim") })
-	require("mini.icons").setup()
-	require("mini.ai").setup({
-		-- avoid conflicts with the built-in incremental selection mappings
-		mappings = {
-			around_next = "aa",
-			inside_next = "ii",
-		},
-		n_lines = 500,
-	})
 	require("mini.surround").setup()
 	local statusline = require("mini.statusline")
 	---@diagnostic disable-next-line: duplicate-set-field
@@ -202,44 +197,6 @@ do
 		return "%2l:%-2v"
 	end
 	statusline.setup({ use_icons = vim.g.have_nerd_font })
-	require("mini.pairs").setup()
-	local miniclue = require("mini.clue")
-	miniclue.setup({
-		triggers = {
-			-- leader
-			{ mode = "n", keys = "<Leader>" },
-			{ mode = "x", keys = "<Leader>" },
-			-- built-ins
-			{ mode = "n", keys = "g" },
-			{ mode = "x", keys = "g" },
-			{ mode = "n", keys = "z" },
-			{ mode = "x", keys = "z" },
-			{ mode = "n", keys = "[" },
-			{ mode = "n", keys = "]" },
-			{ mode = "n", keys = "<C-w>" },
-			-- registers and marks
-			{ mode = "n", keys = '"' },
-			{ mode = "x", keys = '"' },
-			{ mode = "i", keys = "<C-r>" },
-			{ mode = "c", keys = "<C-r>" },
-			{ mode = "n", keys = "'" },
-			{ mode = "n", keys = "`" },
-		},
-		clues = {
-			miniclue.gen_clues.builtin_completion(),
-			miniclue.gen_clues.g(),
-			miniclue.gen_clues.marks(),
-			miniclue.gen_clues.registers(),
-			miniclue.gen_clues.windows(),
-			miniclue.gen_clues.z(),
-
-			-- names for your own prefix groups
-			{ mode = "n", keys = "<Leader>n", desc = "+Notes" },
-			{ mode = "n", keys = "<Leader>d", desc = "+Debug" },
-			{ mode = "n", keys = "gr", desc = "+LSP" },
-		},
-		window = { delay = 300 },
-	})
 end
 
 -- Files and navigation
@@ -325,9 +282,20 @@ end
 
 -- LSP
 do
-	vim.pack.add({ gh("j-hui/fidget.nvim") })
-	require("fidget").setup({})
-
+	-- vim.pack.add({ gh("j-hui/fidget.nvim") })
+	-- require("fidget").setup({
+	-- 	notification = {
+	-- 		window = {
+	-- 			align = "top",
+	-- 			relative = "editor",
+	-- 			y_padding = 1,
+	-- 		},
+	-- 		view = {
+	-- 			stack_upwards = false,
+	-- 		},
+	-- 	},
+	-- })
+	--
 	vim.api.nvim_create_autocmd("LspAttach", {
 		group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 
@@ -603,30 +571,36 @@ do
 
 	require("blink.cmp").setup({
 		snippets = { preset = "luasnip" },
-		keymap = { preset = "default" },
+		keymap = {
+			preset = "default",
+			["<C-k>"] = { "show_documentation", "hide_documentation", "fallback" },
+			["<C-Space>"] = { "show", "hide", "fallback" },
+		},
 		appearance = { nerd_font_variant = "mono" },
 		completion = {
-			trigger = {
-				show_on_keyword = true,
-				show_on_trigger_character = true,
-			},
 			list = { selection = { auto_insert = false } },
-			documentation = { auto_show = true, auto_show_delay_ms = 0 },
 			menu = {
+				auto_show = false,
+				border = "single",
+				scrollbar = false,
 				draw = {
-					components = {
-						kind_icon = {
-							text = function(ctx)
-								return "[" .. ctx.kind .. "]"
-							end,
-
-							highlight = "BlinkCmpKind",
-						},
-					},
+					columns = { { "label", "label_description", gap = 1 } },
+				},
+			},
+			documentation = {
+				window = {
+					border = "single",
+					scrollbar = false,
 				},
 			},
 		},
-		signature = { enabled = true },
+		signature = {
+			enabled = true,
+			window = {
+				border = "single",
+				scrollbar = false,
+			},
+		},
 		sources = { default = { "lsp", "path", "snippets", "buffer" } },
 		fuzzy = { implementation = "prefer_rust_with_warning" },
 	})
