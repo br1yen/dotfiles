@@ -9,7 +9,7 @@ do
 
 	vim.o.termguicolors = true
 	vim.g.have_nerd_font = false
-	vim.o.winborder = "none"
+	vim.o.winborder = "single"
 	vim.o.cmdheight = 0
 	vim.o.laststatus = 3
 	vim.o.number = true
@@ -38,7 +38,7 @@ do
 	vim.o.splitbelow = true
 	vim.o.inccommand = "split"
 
-	vim.o.scrolloff = 16
+	vim.o.scrolloff = 20
 	vim.o.smoothscroll = true
 	vim.o.sidescrolloff = 4
 
@@ -115,15 +115,6 @@ do
 		callback = function()
 			vim.notify("Buffer reloaded: file changed on disk", vim.log.levels.INFO)
 		end,
-	})
-
-	-- echo message timeout
-	require("vim._extui").enable({
-		enable = true,
-		msg = {
-			target = "cmd",
-			timeout = 3000,
-		},
 	})
 end
 
