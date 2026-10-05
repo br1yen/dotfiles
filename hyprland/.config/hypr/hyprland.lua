@@ -1,4 +1,4 @@
----@diagnostic disable-next-line: undefined-global
+---@diagnostic disable: undefined-global
 ---- MONITORS ----
 -- See https://wiki.hypr.land/configuring/core/monitors/
 hl.monitor({
@@ -33,8 +33,8 @@ hl.env("HYPRCURSOR_SIZE", "24")
 
 hl.config({
 	general = {
-		gaps_out = 4,
-		gaps_in = 2,
+		gaps_out = 2,
+		gaps_in = 1,
 
 		border_size = 1,
 		col = {
@@ -45,13 +45,14 @@ hl.config({
 
 		allow_tearing = true,
 
-		layout = "master",
+		layout = "scrolling",
 	},
 
-	master = {
-		mfact = 0.55,
-		new_status = "master",
-		orientation = "left",
+	scrolling = {
+		fullscreen_on_one_column = false,
+		column_width = 1.0,
+		explicit_column_widths = "0.5, 1.0",
+		follow_focus = false,
 	},
 
 	render = { direct_scanout = 2 },
@@ -97,7 +98,7 @@ hl.config({
 		kb_options = "ctrl:nocaps",
 		kb_rules = "",
 
-		follow_mouse = 1,
+		follow_mouse = 2,
 
 		sensitivity = 0,
 		accel_profile = "flat",
@@ -131,32 +132,39 @@ local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("/home/br1yen/.local/bin/powermenu"))
 hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("/home/br1yen/.local/bin/fzfpdf"))
 hl.bind(mainMod .. " + F", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(mainMod .. " + Return", hl.dsp.layout("swapwithmaster"))
-hl.bind(mainMod .. " + M", hl.dsp.layout("focusmaster"))
-hl.bind(mainMod .. " + H", hl.dsp.focus({ workspace = "m-1" }))
-hl.bind(mainMod .. " + L", hl.dsp.focus({ workspace = "m+1" }))
-hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ workspace = "m-1" }))
-hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ workspace = "m+1" }))
-hl.bind(mainMod .. " + J", hl.dsp.layout("cyclenext"))
-hl.bind(mainMod .. " + K", hl.dsp.layout("cycleprev"))
-hl.bind(mainMod .. " + Tab", hl.dsp.layout("rollnext"))
-hl.bind(mainMod .. " + SHIFT + Tab", hl.dsp.layout("rollprev"))
-hl.bind(mainMod .. " + SHIFT + J", hl.dsp.layout("swapnext"))
-hl.bind(mainMod .. " + SHIFT + K", hl.dsp.layout("swapprev"))
-hl.bind(mainMod .. " + SHIFT + I", hl.dsp.layout("addmaster"))
-hl.bind(mainMod .. " + SHIFT + D", hl.dsp.layout("removemaster"))
-hl.bind(mainMod .. " + SHIFT + L", hl.dsp.layout("orientationleft"))
-hl.bind(mainMod .. " + SHIFT + R", hl.dsp.layout("orientationright"))
-hl.bind(mainMod .. " + SHIFT + T", hl.dsp.layout("orientationtop"))
-hl.bind(mainMod .. " + SHIFT + B", hl.dsp.layout("orientationbottom"))
-hl.bind(mainMod .. " + minus", hl.dsp.layout("mfact -0.05"))
-hl.bind(mainMod .. " + equal", hl.dsp.layout("mfact +0.05"))
 
--- toggle waybar
+local function step(inner, outer)
+	local before = hl.get_active_window()
+	hl.dispatch(hl.dsp.layout("focus " .. inner))
+	local after = hl.get_active_window()
+	if before and after and before.address == after.address then
+		hl.dispatch(hl.dsp.layout("focus " .. outer))
+	end
+end
+
+hl.bind(mainMod .. " + J", function()
+	step("d", "r")
+end)
+hl.bind(mainMod .. " + K", function()
+	step("u", "l")
+end)
+
+hl.bind(mainMod .. " + SHIFT + J", hl.dsp.layout("consume_or_expel next"))
+hl.bind(mainMod .. " + SHIFT + K", hl.dsp.layout("consume_or_expel prev"))
+
+hl.bind(mainMod .. " + H", hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + L", hl.dsp.focus({ workspace = "e+1" }))
+
+hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ workspace = "e-1" }))
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ workspace = "e+1" }))
+
+hl.bind(mainMod .. " + SHIFT + C", hl.dsp.layout("center"))
+hl.bind(mainMod .. " + R", hl.dsp.layout("colresize +conf"))
+hl.bind(mainMod .. " + minus", hl.dsp.layout("colresize -0.1"))
+hl.bind(mainMod .. " + equal", hl.dsp.layout("colresize +0.1"))
+
 hl.bind("SUPER + ESCAPE", hl.dsp.exec_cmd("killall -SIGUSR1 waybar"))
 
--- Switch workspaces with mainMod + [0-9]
--- Move active window to a workspace with mainMod + SHIFT + [0-9]
 for i = 1, 10 do
 	local key = i % 10 -- 10 maps to key 0
 	hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
@@ -187,16 +195,8 @@ hl.bind(
 	hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
 	{ locked = true, repeating = true }
 )
-hl.bind(
-	"XF86AudioMute",
-	hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),
-	{ locked = true, repeating = true }
-)
-hl.bind(
-	"XF86AudioMicMute",
-	hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"),
-	{ locked = true, repeating = true }
-)
+hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"), { locked = true })
+hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"), { locked = true })
 hl.bind("XF86MonBrightnessUp", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%+"), { locked = true, repeating = true })
 hl.bind("XF86MonBrightnessDown", hl.dsp.exec_cmd("brightnessctl -e4 -n2 set 5%-"), { locked = true, repeating = true })
 
