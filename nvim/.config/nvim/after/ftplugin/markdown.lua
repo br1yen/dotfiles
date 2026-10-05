@@ -1,3 +1,7 @@
+if vim.b.notes_refire then
+	return
+end
+
 vim.opt_local.wrap = true
 vim.opt_local.linebreak = true
 
@@ -5,7 +9,8 @@ local buf = vim.api.nvim_get_current_buf()
 
 -- Attach modules
 require("notes.tags").setup()
-require("notes.tags").attach()
+require("notes.tags").attach(buf)
+require("notes.todo").setup()
 require("notes.todo").attach(buf)
 
 local headings = require("notes.headings")
@@ -31,7 +36,13 @@ vim.keymap.set(
 )
 vim.keymap.set({ "n", "x" }, "j", "v:count == 0 ? 'gj' : 'j'", { buffer = true, expr = true })
 vim.keymap.set({ "n", "x" }, "k", "v:count == 0 ? 'gk' : 'k'", { buffer = true, expr = true })
-vim.keymap.set("x", "gs", ":sort /.*due:/<CR>", vim.tbl_extend("force", opts, { desc = "Sort by due date" }))
+vim.keymap.set("x", "<leader>s", ":sort /.*due:/<CR>", vim.tbl_extend("force", opts, { desc = "Sort by due date" }))
+vim.keymap.set(
+	"n",
+	"<leader>s",
+	"vip:sort /.*due:/<CR>",
+	vim.tbl_extend("force", opts, { desc = "Sort paragraph by due date" })
+)
 vim.keymap.set(
 	"n",
 	"gs",

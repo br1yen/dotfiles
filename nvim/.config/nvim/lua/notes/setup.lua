@@ -1,10 +1,27 @@
 -- ~/.config/nvim/lua/notes/setup.lua
-
 ---@param repo string
 ---@return string
 local function gh(repo)
 	return "https://github.com/" .. repo
 end
+
+local NOTES_DIR = vim.fn.expand("~/sync/notes")
+
+local function esc(s)
+	return (s:gsub("[%^%$%(%)%%%.%[%]%*%+%-%?{}|\\]", "\\%0"))
+end
+
+vim.api.nvim_create_autocmd("PackChanged", {
+	callback = function(ev)
+		local spec, kind = ev.data.spec, ev.data.kind
+		if spec.name == "mdmath.nvim" and (kind == "install" or kind == "update") then
+			if not ev.data.active then
+				vim.cmd.packadd("mdmath.nvim")
+			end
+			vim.cmd("MdMath build")
+		end
+	end,
+})
 
 vim.pack.add({
 	gh("MeanderingProgrammer/render-markdown.nvim"),
@@ -15,7 +32,7 @@ vim.pack.add({
 
 -- KEYMAPS + AUTOCMDS
 vim.api.nvim_create_user_command("Notes", function()
-	vim.cmd("edit ~/sync/notes")
+	vim.cmd("edit " .. vim.fn.fnameescape(NOTES_DIR))
 end, {})
 
 vim.api.nvim_create_user_command("NewNote", function(opts)
@@ -25,7 +42,7 @@ vim.api.nvim_create_user_command("NewNote", function(opts)
 		slug = "untitled"
 	end
 
-	local dir = vim.fn.expand("~/sync/notes")
+	local dir = NOTES_DIR
 	vim.fn.mkdir(dir, "p")
 
 	local path = dir .. "/" .. os.date("%Y-%m-%d") .. "-" .. slug .. ".md"
@@ -51,7 +68,7 @@ local function notes_live(prompt, make_pattern)
 
 	local opts = config.normalize_opts({
 		prompt = prompt,
-		cwd = vim.fn.expand("~/sync/notes"),
+		cwd = NOTES_DIR,
 		previewer = "builtin",
 		actions = fzf.defaults.actions.files,
 		fn_transform = function(x)
@@ -61,6 +78,9 @@ local function notes_live(prompt, make_pattern)
 
 	fzf.fzf_live(function(args)
 		local q = args[1] or ""
+		if q == "" then
+			return "true"
+		end
 		return table.concat({
 			"rg --column --line-number --no-heading --color=always --smart-case --pcre2",
 			"-g '*.md' -e",
@@ -71,18 +91,22 @@ end
 
 vim.keymap.set("n", "<leader>ng", function()
 	notes_live("Notes> ", function(q)
-		return "^(?!tags:).*?(?<!#)(" .. q .. ")"
+		return "^(?!tags:).*?(?<!#)(" .. esc(q) .. ")"
 	end)
 end, { desc = "Grep note content" })
 
 vim.keymap.set("n", "<leader>nt", function()
 	notes_live("Tags> ", function(q)
-		return "(?<![\\w])#[\\w/-]*(" .. q .. ")|^tags:.*(" .. q .. ")"
+		return "(?<![\\w])#[\\w/-]*(" .. esc(q) .. ")|^tags:.*(" .. esc(q) .. ")"
 	end)
 end, { desc = "Grep tags" })
 
-vim.keymap.set("n", "<leader>t", "<cmd>e ~/sync/notes/todo.md<cr>")
-vim.keymap.set("n", "<leader>nf", "<cmd>FzfLua files cwd=~/sync/notes<cr>")
+vim.keymap.set("n", "<leader>t", function()
+	vim.cmd("edit " .. vim.fn.fnameescape(NOTES_DIR .. "/todo.md"))
+end, { desc = "Open todo" })
+vim.keymap.set("n", "<leader>nf", function()
+	require("fzf-lua").files({ cwd = NOTES_DIR })
+end, { desc = "Find note" })
 vim.keymap.set("n", "<leader>nn", function()
 	vim.ui.input({ prompt = "Note: " }, function(title)
 		if title and title ~= "" then
@@ -127,6 +151,9 @@ vim.api.nvim_create_autocmd("FileType", {
 			quote = { icon = "│" },
 			latex = { enabled = false },
 			pipe_table = { preset = "none" },
+			overrides = {
+				buftype = { nofile = { enabled = false } },
+			},
 		})
 
 		require("img-clip").setup({
@@ -170,7 +197,12 @@ vim.api.nvim_create_autocmd("FileType", {
 		-- retrigger markdown event to get setup for render-markdown
 		local bufnr = vim.api.nvim_get_current_buf()
 		vim.schedule(function()
-			vim.api.nvim_exec_autocmds("FileType", { buffer = bufnr, modeline = false })
+			if not vim.api.nvim_buf_is_valid(bufnr) then
+				return
+			end
+			vim.b[bufnr].notes_refire = true
+			pcall(vim.api.nvim_exec_autocmds, "FileType", { buffer = bufnr, modeline = false })
+			vim.b[bufnr].notes_refire = nil
 		end)
 	end,
 })

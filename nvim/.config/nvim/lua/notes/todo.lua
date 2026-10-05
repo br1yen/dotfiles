@@ -2,6 +2,15 @@ local M = {}
 
 local ns = vim.api.nvim_create_namespace("todo_dates")
 local days = { sun = 0, mon = 1, tue = 2, wed = 3, thu = 4, fri = 5, sat = 6 }
+local full_days = {
+	sunday = 0,
+	monday = 1,
+	tuesday = 2,
+	wednesday = 3,
+	thursday = 4,
+	friday = 5,
+	saturday = 6,
+}
 
 local function define_hl()
 	local set = function(n, o)
@@ -84,7 +93,7 @@ local function resolve(arg)
 	elseif arg:match("^%+%d+$") then
 		off = tonumber(arg:sub(2))
 	else
-		local want = days[arg:sub(1, 3)]
+		local want = days[arg] or full_days[arg]
 		if not want then
 			return nil
 		end
@@ -120,7 +129,7 @@ end
 -- Call this per-buffer from ftplugin/markdown.lua
 function M.attach(buf)
 	-- Attach buffer-local autocmds
-	vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "TextChanged", "TextChangedI", "InsertLeave" }, {
+	vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "TextChanged", "InsertLeave" }, {
 		group = vim.api.nvim_create_augroup("todo_dates_" .. buf, { clear = true }),
 		buffer = buf,
 		callback = function()

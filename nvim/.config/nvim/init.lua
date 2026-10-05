@@ -14,8 +14,8 @@ do
 	vim.o.laststatus = 3
 	vim.o.number = true
 	vim.o.relativenumber = true
-	vim.o.signcolumn = "no"
 	vim.o.showmode = false
+	vim.o.signcolumn = "yes"
 
 	vim.o.expandtab = true
 	vim.o.shiftwidth = 4
@@ -50,8 +50,8 @@ end
 
 -- BASIC REMAPS + AUTOCOMMANDS --
 do
-	vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
-	vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
+	vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Write" })
+	vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
 
 	vim.keymap.set({ "n", "x" }, "gl", "$")
 	vim.keymap.set({ "n", "x" }, "gh", "0")
@@ -203,6 +203,43 @@ do
 	end
 	statusline.setup({ use_icons = vim.g.have_nerd_font })
 	require("mini.pairs").setup()
+	local miniclue = require("mini.clue")
+	miniclue.setup({
+		triggers = {
+			-- leader
+			{ mode = "n", keys = "<Leader>" },
+			{ mode = "x", keys = "<Leader>" },
+			-- built-ins
+			{ mode = "n", keys = "g" },
+			{ mode = "x", keys = "g" },
+			{ mode = "n", keys = "z" },
+			{ mode = "x", keys = "z" },
+			{ mode = "n", keys = "[" },
+			{ mode = "n", keys = "]" },
+			{ mode = "n", keys = "<C-w>" },
+			-- registers and marks
+			{ mode = "n", keys = '"' },
+			{ mode = "x", keys = '"' },
+			{ mode = "i", keys = "<C-r>" },
+			{ mode = "c", keys = "<C-r>" },
+			{ mode = "n", keys = "'" },
+			{ mode = "n", keys = "`" },
+		},
+		clues = {
+			miniclue.gen_clues.builtin_completion(),
+			miniclue.gen_clues.g(),
+			miniclue.gen_clues.marks(),
+			miniclue.gen_clues.registers(),
+			miniclue.gen_clues.windows(),
+			miniclue.gen_clues.z(),
+
+			-- names for your own prefix groups
+			{ mode = "n", keys = "<Leader>n", desc = "+Notes" },
+			{ mode = "n", keys = "<Leader>d", desc = "+Debug" },
+			{ mode = "n", keys = "gr", desc = "+LSP" },
+		},
+		window = { delay = 300 },
+	})
 end
 
 -- Files and navigation
@@ -222,7 +259,7 @@ do
 		},
 	})
 
-	vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>")
+	vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", { desc = "File manager" })
 
 	vim.pack.add({ gh("ibhagwan/fzf-lua") })
 	local fzf = require("fzf-lua")
@@ -260,26 +297,30 @@ do
 		},
 	})
 
-	vim.keymap.set("n", "<leader>f", fzf.files)
-	vim.keymap.set("n", "<leader>g", fzf.live_grep)
-	vim.keymap.set("n", "<leader>r", fzf.history)
-	vim.keymap.set("n", "<leader>b", fzf.buffers)
-	vim.keymap.set("n", "<leader>h", fzf.help_tags)
-	vim.keymap.set("n", "<leader>a", fzf.resume)
-	vim.keymap.set("n", "<leader>/", fzf.lgrep_curbuf)
+	vim.keymap.set("n", "<leader>f", fzf.files, { desc = "Files" })
+	vim.keymap.set("n", "<leader>g", fzf.live_grep, { desc = "Grep" })
+	vim.keymap.set("n", "<leader>r", fzf.history, { desc = "History" })
+	vim.keymap.set("n", "<leader>b", fzf.buffers, { desc = "Buffers" })
+	vim.keymap.set("n", "<leader>h", fzf.help_tags, { desc = "Help" })
+	vim.keymap.set("n", "<leader>a", fzf.resume, { desc = "Resume picker" })
+	vim.keymap.set("n", "<leader>/", fzf.lgrep_curbuf, { desc = "Grep buffer" })
 	vim.keymap.set("n", "<leader>F", function()
 		fzf.files({ cmd = "fd --type f --hidden --follow" })
-	end)
+	end, { desc = "Files (incl. hidden)" })
+
 	vim.keymap.set("n", "<leader>G", function()
-		fzf.live_grep({ rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden" })
-	end)
-	vim.keymap.set("n", "grr", fzf.lsp_references)
-	vim.keymap.set("n", "gri", fzf.lsp_implementations)
-	vim.keymap.set("n", "grd", fzf.lsp_definitions)
-	vim.keymap.set("n", "grt", fzf.lsp_typedefs)
-	vim.keymap.set("n", "gsd", fzf.lsp_document_symbols)
-	vim.keymap.set("n", "gsw", fzf.lsp_live_workspace_symbols)
-	vim.keymap.set("n", "<leader>d", fzf.diagnostics_document)
+		fzf.live_grep({
+			rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden",
+		})
+	end, { desc = "Grep (incl. hidden)" })
+	vim.keymap.set("n", "grr", fzf.lsp_references, { desc = "References" })
+	vim.keymap.set("n", "gri", fzf.lsp_implementations, { desc = "Implementations" })
+	vim.keymap.set("n", "grd", fzf.lsp_definitions, { desc = "Definitions" })
+	vim.keymap.set("n", "grt", fzf.lsp_typedefs, { desc = "Type definitions" })
+	vim.keymap.set("n", "grs", fzf.lsp_document_symbols, { desc = "Symbols (document)" })
+	vim.keymap.set("n", "grw", fzf.lsp_live_workspace_symbols, { desc = "Symbols (workspace)" })
+	vim.keymap.set("n", "<leader>dd", fzf.diagnostics_document, { desc = "Diagnostics (buffer)" })
+	vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, { desc = "Diagnostics (loclist)" })
 end
 
 -- LSP
@@ -392,12 +433,12 @@ do
 	})
 
 	require("mason").setup({})
-	require("mason-lspconfig").setup({})
+	require("mason-lspconfig").setup({ automatic_enable = false })
+
 	local ensure_installed = vim.tbl_keys(servers or {})
 	vim.list_extend(ensure_installed, {
 		"jdtls",
 		"java-debug-adapter",
-		automatic_enable = false,
 	})
 	require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
 
@@ -430,10 +471,10 @@ do
 	vim.keymap.set("n", "<F3>", function()
 		require("dap").step_out()
 	end, { desc = "Debug: Step Out" })
-	vim.keymap.set("n", "<leader>b", function()
+	vim.keymap.set("n", "<leader>db", function()
 		require("dap").toggle_breakpoint()
 	end, { desc = "Debug: Toggle Breakpoint" })
-	vim.keymap.set("n", "<leader>B", function()
+	vim.keymap.set("n", "<leader>dB", function()
 		require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))
 	end, { desc = "Debug: Set Conditional Breakpoint" })
 	vim.keymap.set("n", "<F7>", function()
@@ -550,7 +591,7 @@ do
 
 	vim.keymap.set({ "n", "v" }, "<leader>=", function()
 		require("conform").format({ async = true })
-	end)
+	end, { desc = "Format" })
 end
 
 -- AUTOCOMPLETE + SNIPPETS
