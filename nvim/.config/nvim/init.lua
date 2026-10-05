@@ -12,14 +12,14 @@ do
 	vim.o.winborder = "none"
 	vim.o.cmdheight = 0
 	vim.o.laststatus = 3
-	vim.o.number = false
-	vim.o.relativenumber = false
+	vim.o.number = true
+	vim.o.relativenumber = true
 	vim.o.showmode = false
 	vim.o.signcolumn = "yes"
 
 	vim.o.expandtab = true
-	vim.o.shiftwidth = 4
-	vim.o.tabstop = 4
+	vim.o.shiftwidth = 8
+	vim.o.tabstop = 8
 	vim.o.breakindent = true
 	vim.o.smartindent = true
 
