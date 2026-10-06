@@ -22,6 +22,9 @@ do
 	vim.o.tabstop = 8
 	vim.o.breakindent = true
 	vim.o.smartindent = true
+	vim.o.wrap = false
+	vim.o.linebreak = true
+	vim.opt.showbreak = "↪ "
 
 	vim.o.incsearch = true
 
@@ -38,9 +41,9 @@ do
 	vim.o.splitbelow = true
 	vim.o.inccommand = "split"
 
-	vim.o.scrolloff = 20
+	vim.o.scrolloff = 8
 	vim.o.smoothscroll = true
-	vim.o.sidescrolloff = 4
+	vim.o.sidescrolloff = 8
 
 	vim.o.confirm = true
 
@@ -182,12 +185,29 @@ end
 -- Appearance
 do
 	vim.pack.add({ gh("Verf/deepwhite.nvim") })
+
+	local function set_overrides()
+		local hl = vim.api.nvim_set_hl
+		local fg = "#0e7490"
+		local bg = "#cffafe"
+
+		hl(0, "@markup.quote.markdown", { fg = fg, bg = bg, bold = true })
+		hl(0, "@markup.quote", { fg = fg, bg = bg, bold = true })
+		hl(0, "markdownBlockquote", { fg = fg, bg = bg, bold = true })
+
+		hl(0, "NormalFloat", { bg = "NONE" })
+		hl(0, "FloatBorder", { bg = "NONE", fg = "NONE" })
+		hl(0, "StatusLine", { bg = "NONE" })
+		hl(0, "StatusLineNC", { bg = "NONE" })
+		hl(0, "MsgArea", { bg = "NONE" })
+	end
+
+	vim.api.nvim_create_autocmd("ColorScheme", {
+		pattern = "deepwhite",
+		callback = set_overrides,
+	})
+
 	vim.cmd.colorscheme("deepwhite")
-	vim.api.nvim_set_hl(0, "NormalFloat", { bg = "NONE" })
-	vim.api.nvim_set_hl(0, "FloatBorder", { bg = "NONE", fg = "NONE" })
-	vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE" })
-	vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "NONE" })
-	vim.api.nvim_set_hl(0, "MsgArea", { bg = "NONE" })
 
 	vim.pack.add({ gh("nvim-mini/mini.nvim") })
 	require("mini.surround").setup()
@@ -206,7 +226,7 @@ do
 	vim.pack.add({ gh("mikavilpas/yazi.nvim") })
 	require("yazi").setup({
 		open_for_directories = true,
-		floating_window_scaling_factor = 0.80,
+		floating_window_scaling_factor = 0.95,
 		yazi_floating_window_border = "single",
 		yazi_floating_window_winblend = 0,
 		highlight_hovered_buffers_in_same_directory = false,
@@ -224,11 +244,17 @@ do
 		defaults = { formatter = "path.filename_first", git_icons = false },
 		fzf_colors = true,
 		winopts = {
+			height = 0.95,
+			width = 0.95,
+			row = 0.5,
+			col = 0.5,
 			border = "single",
 			backdrop = 100,
 			preview = {
 				border = "single",
 				layout = "flex",
+				horizontal = "right:50%",
+				vertical = "down:50%",
 				scrollbar = false,
 				title = false,
 			},
