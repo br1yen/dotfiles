@@ -8,13 +8,11 @@ do
 	vim.o.mouse = "a"
 
 	vim.o.termguicolors = true
-	vim.g.have_nerd_font = true
+	vim.g.have_nerd_font = false
 	vim.o.winborder = "single"
-	vim.o.cmdheight = 0
-	vim.o.laststatus = 3
 	vim.o.number = true
 	vim.o.relativenumber = true
-	vim.o.showmode = false
+	vim.o.showmode = true
 	vim.o.signcolumn = "yes"
 
 	vim.o.expandtab = true
@@ -76,9 +74,6 @@ do
 		severity_sort = true,
 		float = { border = "single", source = "if_many" },
 		underline = { severity = { min = vim.diagnostic.severity.WARN } },
-
-		virtual_text = true, -- end of line warning
-		virtual_lines = false, -- under the line warning
 
 		-- auto open diagnostic warning
 		jump = {
@@ -183,39 +178,24 @@ end
 
 -- Appearance
 do
-	vim.pack.add({ gh("Verf/deepwhite.nvim") })
+	vim.pack.add({ gh("miikanissi/modus-themes.nvim") })
+	vim.cmd("colorscheme modus")
 
-	local function set_overrides()
-		local hl = vim.api.nvim_set_hl
-		local fg = "#007A7A"
-		local bg = "#D4E7E1"
-
-		hl(0, "@markup.quote.markdown", { fg = fg, bg = bg, bold = true })
-		hl(0, "@markup.quote", { fg = fg, bg = bg, bold = true })
-		hl(0, "markdownBlockquote", { fg = fg, bg = bg, bold = true })
-
-		hl(0, "NormalFloat", { bg = "NONE" })
-		hl(0, "FloatBorder", { bg = "NONE", fg = "NONE" })
-		hl(0, "StatusLine", { bg = "NONE" })
-		hl(0, "StatusLineNC", { bg = "NONE" })
-		hl(0, "MsgArea", { bg = "NONE" })
-	end
-
-	vim.api.nvim_create_autocmd("ColorScheme", {
-		pattern = "deepwhite",
-		callback = set_overrides,
-	})
-
-	vim.cmd.colorscheme("deepwhite")
+	vim.api.nvim_set_hl(0, "LineNr", { fg = "#222222", bg = "NONE" })
+	vim.api.nvim_set_hl(0, "LineNrAbove", { fg = "#222222", bg = "NONE" })
+	vim.api.nvim_set_hl(0, "LineNrBelow", { fg = "#222222", bg = "NONE" })
+	vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#ffffff", bg = "NONE", bold = true })
+	vim.api.nvim_set_hl(0, "SignColumn", { bg = "NONE" })
+	vim.api.nvim_set_hl(0, "FoldColumn", { bg = "NONE" })
+	vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#000000" })
+	vim.api.nvim_set_hl(0, "FloatBorder", { bg = "#000000" })
+	vim.api.nvim_set_hl(0, "Pmenu", { bg = "#000000" })
+	vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#222222" })
+	vim.api.nvim_set_hl(0, "StatusLine", { bg = "#000000", fg = "#ffffff" })
+	vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "#000000", fg = "#787878" })
 
 	vim.pack.add({ gh("nvim-mini/mini.nvim") })
 	require("mini.surround").setup()
-	local statusline = require("mini.statusline")
-	---@diagnostic disable-next-line: duplicate-set-field
-	statusline.section_location = function()
-		return "%2l:%-2v"
-	end
-	statusline.setup({ use_icons = vim.g.have_nerd_font })
 end
 
 -- Files and navigation
@@ -225,7 +205,7 @@ do
 	vim.pack.add({ gh("mikavilpas/yazi.nvim") })
 	require("yazi").setup({
 		open_for_directories = true,
-		floating_window_scaling_factor = 0.95,
+		floating_window_scaling_factor = 0.90,
 		yazi_floating_window_border = "single",
 		yazi_floating_window_winblend = 0,
 		highlight_hovered_buffers_in_same_directory = false,
@@ -243,8 +223,8 @@ do
 		defaults = { formatter = "path.filename_first", git_icons = false },
 		fzf_colors = true,
 		winopts = {
-			height = 0.95,
-			width = 0.95,
+			height = 0.90,
+			width = 0.90,
 			row = 0.5,
 			col = 0.5,
 			border = "single",
@@ -339,34 +319,6 @@ do
 			map("grD", vim.lsp.buf.declaration, "Declaration")
 
 			local client = vim.lsp.get_client_by_id(event.data.client_id)
-
-			if client and client:supports_method("textDocument/documentHighlight", event.buf) then
-				local highlight_augroup = vim.api.nvim_create_augroup("kickstart-lsp-highlight", { clear = false })
-
-				vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
-					buffer = event.buf,
-					group = highlight_augroup,
-					callback = vim.lsp.buf.document_highlight,
-				})
-
-				vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-					buffer = event.buf,
-					group = highlight_augroup,
-					callback = vim.lsp.buf.clear_references,
-				})
-
-				vim.api.nvim_create_autocmd("LspDetach", {
-					buffer = event.buf,
-					group = vim.api.nvim_create_augroup("kickstart-lsp-detach", { clear = true }),
-					callback = function(event2)
-						vim.lsp.buf.clear_references()
-						vim.api.nvim_clear_autocmds({
-							group = highlight_augroup,
-							buffer = event2.buf,
-						})
-					end,
-				})
-			end
 		end,
 	})
 

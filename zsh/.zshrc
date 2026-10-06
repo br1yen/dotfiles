@@ -22,13 +22,17 @@ function y() {
 }
 
 # Prompt: host:path $  (# for root)
-PROMPT='        %B%m:%~ %b%(!.#.$) '
+PROMPT='%B%m:%~ %b%(!.#.$) '
 
 # Autosuggestions + accept with Ctrl-Y
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 bindkey '^Y' autosuggest-accept
 
 # Completion
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zmodload zsh/complist
+zstyle ':completion:*' menu select
+zstyle ':completion:*:default' list-colors "${(s.:.)LS_COLORS}"
 autoload -Uz compinit
 if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
     compinit
@@ -48,7 +52,6 @@ eval "$(zoxide init zsh)"
 # aliases
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
-alias vi='nvim'
 
 alias gs='git status'
 alias ga='git add'

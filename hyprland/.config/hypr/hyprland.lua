@@ -33,8 +33,8 @@ hl.env("HYPRCURSOR_SIZE", "24")
 
 hl.config({
 	general = {
-		gaps_out = 2,
-		gaps_in = 1,
+		gaps_out = 1,
+		gaps_in = 0,
 
 		border_size = 1,
 		col = {
@@ -128,8 +128,9 @@ local mainMod = "SUPER"
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("fuzzel"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("librewolf"))
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("ghostty"))
-local closeWindowBind = hl.bind(mainMod .. " + Q", hl.dsp.window.close())
+hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("/home/br1yen/.local/bin/powermenu"))
+hl.bind(mainMod .. " + G", hl.dsp.exec_cmd("/home/br1yen/.local/bin/windows-switcher"))
 hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("/home/br1yen/.local/bin/fzfpdf"))
 hl.bind(mainMod .. " + F", hl.dsp.window.float({ action = "toggle" }))
 
