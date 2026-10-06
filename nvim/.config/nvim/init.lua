@@ -8,7 +8,7 @@ do
 	vim.o.mouse = "a"
 
 	vim.o.termguicolors = true
-	vim.g.have_nerd_font = false
+	vim.g.have_nerd_font = true
 	vim.o.winborder = "single"
 	vim.o.cmdheight = 0
 	vim.o.laststatus = 3
@@ -24,15 +24,14 @@ do
 	vim.o.smartindent = true
 	vim.o.wrap = false
 	vim.o.linebreak = true
-	vim.opt.showbreak = "↪ "
+	vim.o.showbreak = "↪ "
 
 	vim.o.incsearch = true
+	vim.o.ignorecase = true
+	vim.o.smartcase = true
 
 	vim.o.undofile = true
 	vim.o.swapfile = false
-
-	vim.o.ignorecase = true
-	vim.o.smartcase = true
 
 	vim.o.updatetime = 250
 	vim.o.timeoutlen = 300
