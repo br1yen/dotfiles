@@ -16,16 +16,16 @@ local function define_hl()
 	local set = function(n, o)
 		vim.api.nvim_set_hl(0, n, o)
 	end
-	set("DueOverdue", { fg = "#ffffff", bg = "#e06c75", bold = true })
-	set("DueSoon1", { fg = "#e06c75", bold = true })
-	set("DueSoon3", { fg = "#d19a66", bold = true })
-	set("DueWeek", { fg = "#e5c07b" })
-	set("DueLater", { fg = "#98c379" })
-	set("DoOverdue", { fg = "#c678dd", bold = true })
-	set("DoToday", { fg = "#61afef", bold = true })
-	set("DoTomorrow", { fg = "#56b6c2", bold = true })
-	set("DoSoon", { fg = "#6a9fd0" })
-	set("DoLater", { fg = "#5c6370" })
+	set("DueOverdue", { fg = "#FAF2EB", bg = "#A60000", bold = true }) -- cream on red
+	set("DueSoon1", { fg = "#A60000", bold = true }) -- red (1)
+	set("DueSoon3", { fg = "#8A6A00", bold = true }) -- amber (3)
+	set("DueWeek", { fg = "#8A6A00" }) -- amber, not bold
+	set("DueLater", { fg = "#00A600" }) -- green (2)
+	set("DoOverdue", { fg = "#6F00A6", bold = true }) -- purple (5)
+	set("DoToday", { fg = "#0000A6", bold = true }) -- blue (4)
+	set("DoTomorrow", { fg = "#00A6A6", bold = true }) -- cyan (6)
+	set("DoSoon", { fg = "#0000A6" }) -- blue, not bold
+	set("DoLater", { fg = "#8F8A83" }) -- gray (8)
 end
 
 local function days_until(y, m, d)

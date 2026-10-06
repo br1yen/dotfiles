@@ -3,8 +3,8 @@ local M = {}
 local ns = vim.api.nvim_create_namespace("md_tags")
 
 local function define_hl()
-	vim.api.nvim_set_hl(0, "MarkdownTag", { fg = "#56b6c2" })
-	vim.api.nvim_set_hl(0, "MarkdownContext", { fg = "#cc91be" })
+	vim.api.nvim_set_hl(0, "MarkdownTag", { fg = "#00A6A6", ctermfg = 6 })
+	vim.api.nvim_set_hl(0, "MarkdownContext", { fg = "#6F00A6", ctermfg = 5 })
 end
 
 function M.setup()

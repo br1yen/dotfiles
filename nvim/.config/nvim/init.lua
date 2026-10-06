@@ -188,8 +188,8 @@ do
 
 	local function set_overrides()
 		local hl = vim.api.nvim_set_hl
-		local fg = "#0e7490"
-		local bg = "#cffafe"
+		local fg = "#007A7A"
+		local bg = "#D4E7E1"
 
 		hl(0, "@markup.quote.markdown", { fg = fg, bg = bg, bold = true })
 		hl(0, "@markup.quote", { fg = fg, bg = bg, bold = true })
