@@ -28,6 +28,10 @@ PROMPT='%B%m:%~ %b%(!.#.$) '
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 bindkey '^Y' autosuggest-accept
 
+# Fuzzy reverse search
+source /usr/share/fzf/key-bindings.zsh
+source /usr/share/fzf/completion.zsh
+
 # Completion
 zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zmodload zsh/complist
@@ -45,9 +49,6 @@ HISTFILE=~/.zsh_history
 HISTSIZE=50000
 SAVEHIST=50000
 setopt SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
-
-# zoxide (provides z and zi)
-eval "$(zoxide init zsh)"
 
 # aliases
 alias ls='ls --color=auto'
