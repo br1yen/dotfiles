@@ -200,22 +200,11 @@ end
 
 -- Files and navigation
 do
-	vim.pack.add({ gh("nvim-lua/plenary.nvim") })
-
-	vim.pack.add({ gh("mikavilpas/yazi.nvim") })
-	require("yazi").setup({
-		open_for_directories = true,
-		floating_window_scaling_factor = 0.90,
-		yazi_floating_window_border = "single",
-		yazi_floating_window_winblend = 0,
-		highlight_hovered_buffers_in_same_directory = false,
-
-		highlight_groups = {
-			hovered_buffer = { bg = "NONE" },
-		},
+	vim.pack.add({ gh("luukvbaal/nnn.nvim") })
+	require("nnn").setup()
+	vim.keymap.set("n", "<leader>e", "<cmd>NnnPicker<cr>", {
+		desc = "Open nnn",
 	})
-
-	vim.keymap.set("n", "<leader>e", "<cmd>Yazi<cr>", { desc = "File manager" })
 
 	vim.pack.add({ gh("ibhagwan/fzf-lua") })
 	local fzf = require("fzf-lua")

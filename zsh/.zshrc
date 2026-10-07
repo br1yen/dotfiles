@@ -12,15 +12,6 @@ export MANPAGER='nvim +Man!'
 # Keep emacs-style line editing (see note below)
 bindkey -e
 
-# yazi autocd
-function y() {
-    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-    command yazi "$@" --cwd-file="$tmp"
-    IFS= read -r -d '' cwd < "$tmp"
-    [[ -n "$cwd" && "$cwd" != "$PWD" && -d "$cwd" ]] && builtin cd -- "$cwd"
-    command rm -f -- "$tmp"
-}
-
 # Prompt: host:path $  (# for root)
 PROMPT='%B%m:%~ %b%(!.#.$) '
 
@@ -50,9 +41,17 @@ HISTSIZE=50000
 SAVEHIST=50000
 setopt SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
 
+# nnn
+export NNN_OPTS="Hezx"
+export NNN_BMS="d:$HOME/Downloads;s:$HOME/sync;c:$HOME/.config"
+export NNN_TRASH="trash-put"
+export NNN_OPENER="$HOME/.config/nnn/opener"
+
 # aliases
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
+alias fm='nnn'
+alias vi='nvim'
 
 alias gs='git status'
 alias ga='git add'
