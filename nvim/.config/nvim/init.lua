@@ -178,21 +178,53 @@ end
 
 -- Appearance
 do
-	vim.pack.add({ gh("miikanissi/modus-themes.nvim") })
-	vim.cmd("colorscheme modus")
+	vim.cmd("colorscheme default")
 
-	vim.api.nvim_set_hl(0, "LineNr", { fg = "#222222", bg = "NONE" })
-	vim.api.nvim_set_hl(0, "LineNrAbove", { fg = "#222222", bg = "NONE" })
-	vim.api.nvim_set_hl(0, "LineNrBelow", { fg = "#222222", bg = "NONE" })
-	vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#ffffff", bg = "NONE", bold = true })
-	vim.api.nvim_set_hl(0, "SignColumn", { bg = "NONE" })
-	vim.api.nvim_set_hl(0, "FoldColumn", { bg = "NONE" })
-	vim.api.nvim_set_hl(0, "NormalFloat", { bg = "#000000" })
-	vim.api.nvim_set_hl(0, "FloatBorder", { bg = "#000000" })
-	vim.api.nvim_set_hl(0, "Pmenu", { bg = "#000000" })
-	vim.api.nvim_set_hl(0, "PmenuSel", { bg = "#222222" })
-	vim.api.nvim_set_hl(0, "StatusLine", { bg = "#000000", fg = "#ffffff" })
-	vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "#000000", fg = "#787878" })
+	-- strip the background from a group but keep its other attributes (fg, bold, etc.)
+	local function clear_bg(name)
+		local hl = vim.api.nvim_get_hl(0, { name = name, link = false })
+		hl.bg = nil
+		hl.ctermbg = nil
+		vim.api.nvim_set_hl(0, name, hl)
+	end
+
+	for _, name in ipairs({
+		-- editor
+		"Normal",
+		"NormalNC",
+		"EndOfBuffer",
+		"MsgArea",
+		"SignColumn",
+		"FoldColumn",
+		"LineNr",
+		"CursorLineNr",
+		"CursorLineSign",
+		"CursorLineFold",
+		"WinSeparator",
+		"VertSplit",
+		-- floats and popups
+		"NormalFloat",
+		"FloatBorder",
+		"FloatTitle",
+		"Pmenu",
+		"PmenuSbar",
+		-- statusline, tabline, winbar
+		"StatusLine",
+		"StatusLineNC",
+		"TabLine",
+		"TabLineFill",
+		"WinBar",
+		"WinBarNC",
+		-- blink.cmp
+		"BlinkCmpMenu",
+		"BlinkCmpMenuBorder",
+		"BlinkCmpDoc",
+		"BlinkCmpDocBorder",
+		"BlinkCmpSignatureHelp",
+		"BlinkCmpSignatureHelpBorder",
+	}) do
+		clear_bg(name)
+	end
 
 	vim.pack.add({ gh("nvim-mini/mini.nvim") })
 	require("mini.surround").setup()

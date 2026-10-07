@@ -33,8 +33,8 @@ hl.env("HYPRCURSOR_SIZE", "24")
 
 hl.config({
 	general = {
-		gaps_out = 1,
-		gaps_in = 0,
+		gaps_out = 4,
+		gaps_in = 4,
 
 		border_size = 1,
 		col = {
@@ -50,7 +50,7 @@ hl.config({
 
 	scrolling = {
 		fullscreen_on_one_column = false,
-		column_width = 1.0,
+		column_width = 0.5,
 		explicit_column_widths = "0.5, 1.0",
 		follow_focus = false,
 	},
