@@ -20,7 +20,7 @@ do
 	vim.o.tabstop = 8
 	vim.o.breakindent = true
 	vim.o.smartindent = true
-	vim.o.wrap = false
+	vim.o.wrap = true
 	vim.o.linebreak = true
 	vim.o.showbreak = "↪ "
 
@@ -67,6 +67,9 @@ do
 
 	vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 	vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+
+	vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, { desc = "Diagnostics (loclist)" })
+	vim.keymap.set("n", "<leader>dq", vim.diagnostic.setqflist, { desc = "Diagnostics (quickfix)" })
 
 	-- diagnostic
 	vim.diagnostic.config({
@@ -209,8 +212,6 @@ do
 		"Pmenu",
 		"PmenuSbar",
 		-- statusline, tabline, winbar
-		"StatusLine",
-		"StatusLineNC",
 		"TabLine",
 		"TabLineFill",
 		"WinBar",
@@ -228,103 +229,44 @@ do
 
 	vim.pack.add({ gh("nvim-mini/mini.nvim") })
 	require("mini.surround").setup()
+	require("mini.icons").setup({})
 end
 
 -- Files and navigation
 do
-	vim.pack.add({ gh("luukvbaal/nnn.nvim") })
-	require("nnn").setup()
+	require("mini.files").setup({
+		mappings = {
+			go_in = "L",
+			go_in_plus = "l",
+		},
+		options = { use_as_default_explorer = true },
+	})
 	vim.keymap.set("n", "<leader>e", function()
-		vim.cmd("lcd " .. vim.fn.expand("%:p:h"))
-		vim.cmd("NnnPicker")
-	end, {
-		desc = "Open nnn",
-	})
+		require("mini.files").open(vim.api.nvim_buf_get_name(0))
+	end, { desc = "File explorer" })
 
-	vim.pack.add({ gh("ibhagwan/fzf-lua") })
-	local fzf = require("fzf-lua")
-	fzf.setup({
-		defaults = { formatter = "path.filename_first", git_icons = false },
-		fzf_colors = true,
-		winopts = {
-			height = 0.90,
-			width = 0.90,
-			row = 0.5,
-			col = 0.5,
-			border = "single",
-			backdrop = 100,
-			preview = {
-				border = "single",
-				layout = "flex",
-				horizontal = "right:50%",
-				vertical = "down:50%",
-				scrollbar = false,
-				title = false,
-			},
-		},
-		fzf_opts = {
-			["--info"] = "inline-right", -- match count on the prompt line
-			["--no-scrollbar"] = true,
-			["--ellipsis"] = "…",
-		},
-		files = {
-			cmd = "fd --type f --follow --exclude '.*' "
-				.. "--exclude '*.png' --exclude '*.jpg' --exclude '*.jpeg' "
-				.. "--exclude '*.gif' --exclude '*.webp' "
-				.. "--exclude 'paru' --exclude 'sync/documents'",
-		},
-		grep = {
-			formatter = "path.filename_first",
-			rg_opts = "--column --line-number --no-heading --color=always --smart-case "
-				.. "--glob '!.*' --glob '!.*/*' "
-				.. "--glob '!*.png' --glob '!*.jpg' --glob '!*.jpeg' "
-				.. "--glob '!*.gif' --glob '!*.webp' "
-				.. "--glob '!**/paru/**' --glob '!**/sync/documents/**'",
-		},
-	})
-
-	vim.keymap.set("n", "<leader>f", fzf.files, { desc = "Files" })
-	vim.keymap.set("n", "<leader>g", fzf.live_grep, { desc = "Grep" })
-	vim.keymap.set("n", "<leader>r", fzf.history, { desc = "History" })
-	vim.keymap.set("n", "<leader>b", fzf.buffers, { desc = "Buffers" })
-	vim.keymap.set("n", "<leader>h", fzf.help_tags, { desc = "Help" })
-	vim.keymap.set("n", "<leader>a", fzf.resume, { desc = "Resume picker" })
-	vim.keymap.set("n", "<leader>/", fzf.lgrep_curbuf, { desc = "Grep buffer" })
-	vim.keymap.set("n", "<leader>F", function()
-		fzf.files({ cmd = "fd --type f --hidden --follow" })
-	end, { desc = "Files (incl. hidden)" })
-
-	vim.keymap.set("n", "<leader>G", function()
-		fzf.live_grep({
-			rg_opts = "--column --line-number --no-heading --color=always --smart-case --hidden",
-		})
-	end, { desc = "Grep (incl. hidden)" })
-	vim.keymap.set("n", "grr", fzf.lsp_references, { desc = "References" })
-	vim.keymap.set("n", "gri", fzf.lsp_implementations, { desc = "Implementations" })
-	vim.keymap.set("n", "grd", fzf.lsp_definitions, { desc = "Definitions" })
-	vim.keymap.set("n", "grt", fzf.lsp_typedefs, { desc = "Type definitions" })
-	vim.keymap.set("n", "grs", fzf.lsp_document_symbols, { desc = "Symbols (document)" })
-	vim.keymap.set("n", "grw", fzf.lsp_live_workspace_symbols, { desc = "Symbols (workspace)" })
-	vim.keymap.set("n", "<leader>dd", fzf.diagnostics_document, { desc = "Diagnostics (buffer)" })
-	vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, { desc = "Diagnostics (loclist)" })
+	-- mini.pick: files + recent files
+	require("mini.pick").setup()
+	require("mini.extra").setup()
+	vim.keymap.set("n", "<leader>f", MiniPick.builtin.files, { desc = "Files" })
+	vim.keymap.set("n", "<leader>g", function()
+		require("live_grep").open()
+	end, { desc = "Grep" })
+	vim.keymap.set("n", "<leader>b", MiniPick.builtin.buffers, { desc = "Buffers" })
+	vim.keymap.set("n", "<leader>h", MiniPick.builtin.help, { desc = "Help" })
+	vim.keymap.set("n", "<leader>a", MiniPick.builtin.resume, { desc = "Resume picker" })
+	vim.keymap.set("n", "<leader>r", function()
+		MiniExtra.pickers.oldfiles()
+	end, { desc = "Recent files" })
+	vim.keymap.set("n", "<leader>m", function()
+		MiniExtra.pickers.manpages()
+	end, { desc = "Man pages" })
 end
 
 -- LSP
 do
-	-- vim.pack.add({ gh("j-hui/fidget.nvim") })
-	-- require("fidget").setup({
-	-- 	notification = {
-	-- 		window = {
-	-- 			align = "top",
-	-- 			relative = "editor",
-	-- 			y_padding = 1,
-	-- 		},
-	-- 		view = {
-	-- 			stack_upwards = false,
-	-- 		},
-	-- 	},
-	-- })
-	--
+	vim.pack.add({ gh("j-hui/fidget.nvim") })
+	require("fidget").setup({})
 	vim.api.nvim_create_autocmd("LspAttach", {
 		group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 
@@ -338,9 +280,9 @@ do
 				})
 			end
 
-			map("grn", vim.lsp.buf.rename, "Rename")
-			map("gra", vim.lsp.buf.code_action, "Code action", { "n", "x" })
+			map("grd", vim.lsp.buf.definition, "Definition")
 			map("grD", vim.lsp.buf.declaration, "Declaration")
+			map("grw", vim.lsp.buf.workspace_symbol, "Symbols (workspace)")
 
 			local client = vim.lsp.get_client_by_id(event.data.client_id)
 		end,

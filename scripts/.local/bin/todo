@@ -11,23 +11,24 @@ function jd(y,m,d) { if (m<=2) { y--; m+=12 } return int(365.25*y)+int(30.6001*(
 
 function paint(kind, n) {
   if (kind=="due") {
-    if (n<0)  return "\033[1;4;38;2;166;0;0m"
-    if (n<=1) return "\033[1;38;2;166;0;0m"
-    if (n<=3) return "\033[1;38;2;138;106;0m"
-    if (n<=7) return "\033[38;2;138;106;0m"
-    return "\033[38;2;0;166;0m"
+    if (n<0)  return "\033[1;38;2;20;22;27;48;2;255;192;185m" # #14161b on #ffc0b9
+    if (n<=1) return "\033[1;38;2;255;192;185m"                 # #ffc0b9
+    if (n<=3) return "\033[1;38;2;252;224;148m"                 # #fce094
+    if (n<=7) return "\033[38;2;252;224;148m"                   # #fce094
+    return "\033[38;2;179;246;192m"                             # #b3f6c0
   }
-  if (n<0)  return "\033[1;38;2;111;0;166m"
-  if (n==0) return "\033[1;38;2;0;0;166m"
-  if (n==1) return "\033[1;38;2;0;166;166m"
-  if (n<=3) return "\033[38;2;0;0;166m"
-  return "\033[38;2;143;138;131m"
+
+  if (n<0)  return "\033[1;38;2;255;202;255m"                  # #ffcaff
+  if (n==0) return "\033[1;38;2;166;219;255m"                  # #a6dbff
+  if (n==1) return "\033[1;38;2;140;248;247m"                  # #8cf8f7
+  if (n<=3) return "\033[38;2;166;219;255m"                    # #a6dbff
+  return "\033[38;2;79;82;88m"                                # #4f5258
 }
 
-# tag colors: #tag cyan, @context purple
+# #tag = cyan, @context = purple
 function tagpaint(tok) {
-  if (substr(tok, 1, 1) == "#") return "\033[38;2;0;166;166m"
-  return "\033[38;2;111;0;166m"
+  if (substr(tok, 1, 1) == "#") return "\033[38;2;140;248;247m"  # #8cf8f7
+  return "\033[38;2;255;202;255m"                                # #ffcaff
 }
 
 # days from today for due:/do: in a line, or 99999 if absent
@@ -100,11 +101,11 @@ agenda() {
         (( text > 0 )) && printf '\n%s[2m%s undated items (todo -f to see all)%s[0m\n' "$ESC" "$text" "$ESC"
         continue
       fi
-      if   (( k < 0 ));  then g="Overdue";     c='1;38;2;166;0;0'
-      elif (( k == 0 )); then g="Today";       c='1;38;2;0;0;166'
-      elif (( k <= 7 )); then g="Next 7 days"; c='1;38;2;138;106;0'
-      else                    g="Later";       c='1;38;2;0;166;0'
-      fi
+if   (( k < 0 ));  then g="Overdue";     c='1;38;2;255;192;185'
+elif (( k == 0 )); then g="Today";       c='1;38;2;166;219;255'
+elif (( k <= 7 )); then g="Next 7 days"; c='1;38;2;252;224;148'
+else                    g="Later";       c='1;38;2;179;246;192'
+fi
       if [[ $g != "$last" ]]; then
         printf '\n%s[%sm%s%s[0m\n' "$ESC" "$c" "$g" "$ESC"
         last=$g

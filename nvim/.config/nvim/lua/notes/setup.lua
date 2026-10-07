@@ -62,51 +62,32 @@ vim.api.nvim_create_user_command("NewNote", function(opts)
 	end
 end, { nargs = "*" })
 
-local function notes_live(prompt, make_pattern)
-	local fzf = require("fzf-lua")
-	local config = require("fzf-lua.config")
-
-	local opts = config.normalize_opts({
-		prompt = prompt,
-		cwd = NOTES_DIR,
-		previewer = "builtin",
-		actions = fzf.defaults.actions.files,
-		fn_transform = function(x)
-			return fzf.make_entry.file(x, { file_icons = true, color_icons = true })
-		end,
-	}, config.globals.grep)
-
-	fzf.fzf_live(function(args)
-		local q = args[1] or ""
-		if q == "" then
-			return "true"
-		end
-		return table.concat({
-			"rg --column --line-number --no-heading --color=always --smart-case --pcre2",
-			"-g '*.md' -e",
-			vim.fn.shellescape(make_pattern(q)),
-		}, " ")
-	end, opts)
-end
-
 vim.keymap.set("n", "<leader>ng", function()
-	notes_live("Notes> ", function(q)
-		return "^(?!tags:).*?(?<!#)(" .. esc(q) .. ")"
-	end)
+	require("live_grep").open({
+		name = "Notes",
+		cwd = NOTES_DIR,
+		args = { "--pcre2", "-g", "*.md" },
+		pattern = function(q)
+			return "^(?!tags:).*?(?<!#)(" .. esc(q) .. ")"
+		end,
+	})
 end, { desc = "Grep note content" })
 
 vim.keymap.set("n", "<leader>nt", function()
-	notes_live("Tags> ", function(q)
-		return "(?<![\\w])#[\\w/-]*(" .. esc(q) .. ")|^tags:.*(" .. esc(q) .. ")"
-	end)
+	require("live_grep").open({
+		name = "Tags",
+		cwd = NOTES_DIR,
+		args = { "--pcre2", "-g", "*.md" },
+		pattern = function(q)
+			return "(?<![\\w])#[\\w/-]*(" .. esc(q) .. ")|^tags:.*(" .. esc(q) .. ")"
+		end,
+	})
 end, { desc = "Grep tags" })
 
-vim.keymap.set("n", "<leader>t", function()
-	vim.cmd("edit " .. vim.fn.fnameescape(NOTES_DIR .. "/todo.md"))
-end, { desc = "Open todo" })
 vim.keymap.set("n", "<leader>nf", function()
-	require("fzf-lua").files({ cwd = NOTES_DIR })
+	MiniPick.builtin.files(nil, { source = { cwd = NOTES_DIR } })
 end, { desc = "Find note" })
+
 vim.keymap.set("n", "<leader>nn", function()
 	vim.ui.input({ prompt = "Note: " }, function(title)
 		if title and title ~= "" then
@@ -114,6 +95,10 @@ vim.keymap.set("n", "<leader>nn", function()
 		end
 	end)
 end, { desc = "New note" })
+
+vim.keymap.set("n", "<leader>t", function()
+	vim.cmd("edit " .. vim.fn.fnameescape(NOTES_DIR .. "/todo.md"))
+end, { desc = "Open todo" })
 
 -- render-markdown is configured eagerly; it only attaches to markdown
 -- buffers itself, so there is no need to defer it.

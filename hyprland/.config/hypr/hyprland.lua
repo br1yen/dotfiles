@@ -143,21 +143,21 @@ local function step(inner, outer)
 	end
 end
 
-hl.bind(mainMod .. " + J", function()
+hl.bind(mainMod .. " + L", function()
 	step("d", "r")
 end)
-hl.bind(mainMod .. " + K", function()
+hl.bind(mainMod .. " + H", function()
 	step("u", "l")
 end)
 
-hl.bind(mainMod .. " + SHIFT + J", hl.dsp.layout("consume_or_expel next"))
-hl.bind(mainMod .. " + SHIFT + K", hl.dsp.layout("consume_or_expel prev"))
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.layout("consume_or_expel next"))
+hl.bind(mainMod .. " + SHIFT + H", hl.dsp.layout("consume_or_expel prev"))
 
-hl.bind(mainMod .. " + H", hl.dsp.focus({ workspace = "e-1" }))
-hl.bind(mainMod .. " + L", hl.dsp.focus({ workspace = "e+1" }))
+hl.bind(mainMod .. " + K", hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + J", hl.dsp.focus({ workspace = "e+1" }))
 
-hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ workspace = "e-1" }))
-hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ workspace = "e+1" }))
+hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ workspace = "e-1" }))
+hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ workspace = "e+1" }))
 
 hl.bind(mainMod .. " + SHIFT + C", hl.dsp.layout("center"))
 hl.bind(mainMod .. " + R", hl.dsp.layout("colresize +conf"))
