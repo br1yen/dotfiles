@@ -62,27 +62,138 @@ vim.api.nvim_create_user_command("NewNote", function(opts)
 	end
 end, { nargs = "*" })
 
+local notes_opts = {
+	name = "Notes",
+	cwd = NOTES_DIR,
+	args = { "--pcre2", "-g", "*.md" },
+	pattern = function(q)
+		return "^(?!tags:).*?(?<!#)(" .. esc(q) .. ")"
+	end,
+}
+
+local function rg_to_qf(opts, q)
+	local pattern = opts.pattern and opts.pattern(q) or esc(q)
+	local cmd = { "rg", "--vimgrep", "--smart-case" }
+	vim.list_extend(cmd, opts.args or {})
+	vim.list_extend(cmd, { "--", pattern, opts.cwd or "." })
+
+	vim.system(
+		cmd,
+		{ text = true },
+		vim.schedule_wrap(function(res)
+			local lines = vim.split(res.stdout or "", "\n", { trimempty = true })
+			if #lines == 0 then
+				vim.notify("No matches for " .. q, vim.log.levels.WARN)
+				return
+			end
+			vim.fn.setqflist({}, " ", {
+				title = (opts.name or "grep") .. ": " .. q,
+				lines = lines,
+				efm = "%f:%l:%c:%m",
+			})
+			vim.cmd("copen")
+		end)
+	)
+end
+
 vim.keymap.set("n", "<leader>ng", function()
-	require("live_grep").open({
-		name = "Notes",
-		cwd = NOTES_DIR,
-		args = { "--pcre2", "-g", "*.md" },
-		pattern = function(q)
-			return "^(?!tags:).*?(?<!#)(" .. esc(q) .. ")"
+	require("live_grep").open(vim.tbl_extend("force", notes_opts, {
+		on_quickfix = function(q)
+			rg_to_qf(notes_opts, q)
 		end,
-	})
+	}))
 end, { desc = "Grep note content" })
 
+vim.keymap.set("n", "<leader>nq", function()
+	vim.ui.input({ prompt = "Notes query: " }, function(q)
+		if q and q ~= "" then
+			rg_to_qf(notes_opts, q)
+		end
+	end)
+end, { desc = "Query notes -> quickfix" })
+
+local function collect_tags()
+	local counts = {}
+	local function add(t)
+		t = t:gsub("^#", "")
+		if t ~= "" then
+			counts[t] = (counts[t] or 0) + 1
+		end
+	end
+
+	-- inline #tags
+	local inline = vim.system({
+		"rg",
+		"-o",
+		"-N",
+		"--no-filename",
+		"--pcre2",
+		"-g",
+		"*.md",
+		"(?<![\\w#])#[A-Za-z][\\w/-]*",
+		NOTES_DIR,
+	}, { text = true }):wait()
+	for line in vim.gsplit(inline.stdout or "", "\n", { trimempty = true }) do
+		add(line)
+	end
+
+	-- frontmatter "tags: a, b" / "tags: [a, b]"
+	local fm = vim.system({
+		"rg",
+		"-N",
+		"--no-filename",
+		"-g",
+		"*.md",
+		"^tags:",
+		NOTES_DIR,
+	}, { text = true }):wait()
+	for line in vim.gsplit(fm.stdout or "", "\n", { trimempty = true }) do
+		line = line:gsub("^tags:%s*", ""):gsub("[%[%]\"']", "")
+		for t in line:gmatch("[^,%s]+") do
+			add(t)
+		end
+	end
+
+	local items = {}
+	for tag, n in pairs(counts) do
+		table.insert(items, { text = ("%s (%d)"):format(tag, n), tag = tag })
+	end
+	table.sort(items, function(a, b)
+		return a.tag < b.tag
+	end)
+	return items
+end
+
+local tag_opts = {
+	name = "Tag",
+	cwd = NOTES_DIR,
+	args = { "--pcre2", "-g", "*.md" },
+	pattern = function(tag)
+		local t = esc(tag)
+		return "(?<![\\w])#" .. t .. "(?![\\w/-])|^tags:.*(?<![\\w])" .. t .. "(?![\\w])"
+	end,
+}
+
 vim.keymap.set("n", "<leader>nt", function()
-	require("live_grep").open({
-		name = "Tags",
-		cwd = NOTES_DIR,
-		args = { "--pcre2", "-g", "*.md" },
-		pattern = function(q)
-			return "(?<![\\w])#[\\w/-]*(" .. esc(q) .. ")|^tags:.*(" .. esc(q) .. ")"
-		end,
+	local items = collect_tags()
+	if #items == 0 then
+		vim.notify("No tags found", vim.log.levels.WARN)
+		return
+	end
+	MiniPick.start({
+		source = {
+			name = "Tags",
+			items = items,
+			choose = function(item)
+				if item then
+					vim.schedule(function()
+						rg_to_qf(tag_opts, item.tag)
+					end)
+				end
+			end,
+		},
 	})
-end, { desc = "Grep tags" })
+end, { desc = "Pick tag -> quickfix" })
 
 vim.keymap.set("n", "<leader>nf", function()
 	MiniPick.builtin.files(nil, { source = { cwd = NOTES_DIR } })

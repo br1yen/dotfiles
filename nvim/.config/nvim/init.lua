@@ -16,8 +16,8 @@ do
 	vim.o.signcolumn = "yes"
 
 	vim.o.expandtab = true
-	vim.o.shiftwidth = 8
-	vim.o.tabstop = 8
+	vim.o.shiftwidth = 4
+	vim.o.tabstop = 4
 	vim.o.breakindent = true
 	vim.o.smartindent = true
 	vim.o.wrap = true
@@ -38,9 +38,9 @@ do
 	vim.o.splitbelow = true
 	vim.o.inccommand = "split"
 
-	vim.o.scrolloff = 8
+	vim.o.scrolloff = 4
 	vim.o.smoothscroll = true
-	vim.o.sidescrolloff = 8
+	vim.o.sidescrolloff = 4
 
 	vim.o.confirm = true
 
@@ -48,18 +48,47 @@ do
 	vim.schedule(function()
 		vim.o.clipboard = "unnamedplus"
 	end)
-	vim.opt.guicursor = "a:block"
 end
 
 -- BASIC REMAPS + AUTOCOMMANDS --
 do
-	vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Write" })
-	vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
+	vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
+	vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
 
-	vim.keymap.set({ "n", "x" }, "gl", "$")
-	vim.keymap.set({ "n", "x" }, "gh", "0")
-	vim.keymap.set({ "n", "x" }, "gs", "^")
-	vim.keymap.set({ "n", "x" }, "<C-f>", ":<C-f>")
+	vim.keymap.set("n", "n", "nzz")
+	vim.keymap.set("n", "N", "Nzz")
+	vim.keymap.set("n", "<C-d>", "<C-d>zz")
+	vim.keymap.set("n", "<C-u>", "<C-u>zz")
+	vim.keymap.set("n", "]d", function()
+		vim.diagnostic.jump({ count = vim.v.count1 })
+		vim.cmd("normal! zz")
+	end, { desc = "Next diagnostic" })
+	vim.keymap.set("n", "[d", function()
+		vim.diagnostic.jump({ count = -vim.v.count1 })
+		vim.cmd("normal! zz")
+	end, { desc = "Prev diagnostic" })
+	vim.keymap.set("n", "<C-f>", "<C-f>zz")
+	vim.keymap.set("n", "<C-b>", "<C-b>zz")
+	vim.keymap.set("n", "*", "*zz")
+	vim.keymap.set("n", "#", "#zz")
+	vim.keymap.set("n", "g*", "g*zz")
+	vim.keymap.set("n", "g#", "g#zz")
+	vim.keymap.set("n", "{", "{zz")
+	vim.keymap.set("n", "}", "}zz")
+	vim.keymap.set("n", "<C-o>", "<C-o>zz")
+	vim.keymap.set("n", "<C-i>", "<C-i>zz")
+	vim.keymap.set("n", "%", "%zz")
+	vim.keymap.set("n", "]c", "]czz")
+	vim.keymap.set("n", "[c", "[czz")
+	vim.keymap.set("n", "]q", "<cmd>cnext<CR>zz", { desc = "Next quickfix" })
+	vim.keymap.set("n", "[q", "<cmd>cprev<CR>zz", { desc = "Prev quickfix" })
+	vim.keymap.set("n", "]Q", "<cmd>clast<CR>zz", { desc = "Last quickfix" })
+	vim.keymap.set("n", "[Q", "<cmd>cfirst<CR>zz", { desc = "First quickfix" })
+	vim.keymap.set("n", "]l", "<cmd>lnext<CR>zz", { desc = "Next loclist" })
+	vim.keymap.set("n", "[l", "<cmd>lprev<CR>zz", { desc = "Prev loclist" })
+	vim.keymap.set("n", "]L", "<cmd>llast<CR>zz", { desc = "Last loclist" })
+	vim.keymap.set("n", "[L", "<cmd>lfirst<CR>zz", { desc = "First loclist" })
+
 	vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
 	vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
 	vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
@@ -67,9 +96,6 @@ do
 
 	vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 	vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-
-	vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, { desc = "Diagnostics (loclist)" })
-	vim.keymap.set("n", "<leader>dq", vim.diagnostic.setqflist, { desc = "Diagnostics (quickfix)" })
 
 	-- diagnostic
 	vim.diagnostic.config({
@@ -90,7 +116,8 @@ do
 		},
 	})
 
-	vim.keymap.set("n", "<leader>D", vim.diagnostic.setloclist, { desc = "Open diagnostic [Q]uickfix list" })
+	vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, { desc = "Diagnostics (loclist)" })
+	vim.keymap.set("n", "<leader>dq", vim.diagnostic.setqflist, { desc = "Diagnostics (quickfix)" })
 
 	vim.api.nvim_create_autocmd("TextYankPost", {
 		desc = "Highlight when yanking text",
@@ -254,7 +281,6 @@ do
 	end, { desc = "Grep" })
 	vim.keymap.set("n", "<leader>b", MiniPick.builtin.buffers, { desc = "Buffers" })
 	vim.keymap.set("n", "<leader>h", MiniPick.builtin.help, { desc = "Help" })
-	vim.keymap.set("n", "<leader>a", MiniPick.builtin.resume, { desc = "Resume picker" })
 	vim.keymap.set("n", "<leader>r", function()
 		MiniExtra.pickers.oldfiles()
 	end, { desc = "Recent files" })
@@ -283,6 +309,12 @@ do
 			map("grd", vim.lsp.buf.definition, "Definition")
 			map("grD", vim.lsp.buf.declaration, "Declaration")
 			map("grw", vim.lsp.buf.workspace_symbol, "Symbols (workspace)")
+			vim.keymap.set("n", "<leader>o", function()
+				MiniExtra.pickers.lsp({ scope = "document_symbol" })
+			end, { desc = "Symbols (document)" })
+			vim.keymap.set("n", "<leader>s", function()
+				MiniExtra.pickers.lsp({ scope = "workspace_symbol" })
+			end, { desc = "Symbols (workspace)" })
 
 			local client = vim.lsp.get_client_by_id(event.data.client_id)
 		end,
@@ -517,6 +549,7 @@ do
 		keymap = {
 			preset = "default",
 			["<C-k>"] = { "show_documentation", "hide_documentation", "fallback" },
+			["<C-s>"] = { "show_signature", "hide_signature", "fallback" },
 			["<C-Space>"] = { "show", "hide", "fallback" },
 		},
 		appearance = { nerd_font_variant = "mono" },

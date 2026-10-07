@@ -13,7 +13,7 @@ local function big()
 	}
 end
 
----@param opts? { name?: string, cwd?: string, pattern?: fun(q: string): string, args?: string[] }
+---@param opts? { name?: string, cwd?: string, pattern?: fun(q: string): string, args?: string[], on_quickfix?: fun(q: string) }
 function M.open(opts)
 	opts = opts or {}
 	local cwd = opts.cwd or vim.uv.cwd()
@@ -96,6 +96,18 @@ function M.open(opts)
 		end
 	end
 
+	local to_quickfix = {
+		func = function()
+			local q = table.concat(MiniPick.get_picker_query() or {})
+			MiniPick.stop()
+			if q ~= "" and opts.on_quickfix then
+				vim.schedule(function()
+					opts.on_quickfix(q)
+				end)
+			end
+		end,
+	}
+
 	return MiniPick.start({
 		source = {
 			items = {},
@@ -104,6 +116,9 @@ function M.open(opts)
 			match = match,
 			show = show,
 			choose = MiniPick.default_choose,
+		},
+		mappings = {
+			to_quickfix_ctrl = vim.tbl_extend("force", { char = "<C-q>" }, to_quickfix),
 		},
 		window = { config = big },
 	})
