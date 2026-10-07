@@ -1,5 +1,5 @@
-font-family = GeistMono Nerd Font
-font-size = 12
+font-family = Inconsolata
+font-size = 14
 scrollback-limit = 10000
 theme = Nvim Dark
 
