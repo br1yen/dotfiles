@@ -9,11 +9,10 @@ export VISUAL=nvim
 # nvim as man pager
 export MANPAGER='nvim +Man!'
 
-# Keep emacs-style line editing (see note below)
 bindkey -e
 
 # Prompt: host:path $  (# for root)
-PROMPT='%B%m:%~ %b%(!.#.$) '
+PROMPT='%F{green}%B%m%b%f:%F{blue}%~%f %(!.#.$)%f '
 
 # Autosuggestions + accept with Ctrl-Y
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh

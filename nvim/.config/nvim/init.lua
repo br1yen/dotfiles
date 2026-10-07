@@ -202,7 +202,10 @@ end
 do
 	vim.pack.add({ gh("luukvbaal/nnn.nvim") })
 	require("nnn").setup()
-	vim.keymap.set("n", "<leader>e", "<cmd>NnnPicker<cr>", {
+	vim.keymap.set("n", "<leader>e", function()
+		vim.cmd("lcd " .. vim.fn.expand("%:p:h"))
+		vim.cmd("NnnPicker")
+	end, {
 		desc = "Open nnn",
 	})
 
