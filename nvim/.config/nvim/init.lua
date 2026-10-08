@@ -58,6 +58,8 @@ do
 
 	vim.keymap.set("n", "n", "nzz")
 	vim.keymap.set("n", "N", "Nzz")
+	vim.keymap.set("n", "u", "uzz")
+	vim.keymap.set("n", "U", "Uzz")
 	vim.keymap.set("n", "<C-d>", "<C-d>zz")
 	vim.keymap.set("n", "<C-u>", "<C-u>zz")
 	vim.keymap.set("n", "]d", function()
