@@ -16,50 +16,44 @@ local function define_hl()
 	local set = vim.api.nvim_set_hl
 
 	set(0, "DueOverdue", {
-		fg = "#14161b",
-		bg = "#ffc0b9",
+		fg = "#c47f88",
 		bold = true,
 	})
 
-	set(0, "DueSoon1", {
-		fg = "#ffc0b9",
+	set(0, "DueToday", {
+		fg = "#d8c58f",
 		bold = true,
 	})
 
-	set(0, "DueSoon3", {
-		fg = "#fce094",
-		bold = true,
-	})
-
-	set(0, "DueWeek", {
-		fg = "#fce094",
+	set(0, "DueSoon", {
+		fg = "#c4b77f",
 	})
 
 	set(0, "DueLater", {
-		fg = "#b3f6c0",
+		fg = "#78977f",
 	})
 
 	set(0, "DoOverdue", {
-		fg = "#ffcaff",
+		fg = "#b58b9e",
 		bold = true,
 	})
 
 	set(0, "DoToday", {
-		fg = "#a6dbff",
+		fg = "#89afbc",
 		bold = true,
 	})
 
 	set(0, "DoTomorrow", {
-		fg = "#8cf8f7",
+		fg = "#82a9b5",
 		bold = true,
 	})
 
 	set(0, "DoSoon", {
-		fg = "#a6dbff",
+		fg = "#718c9d",
 	})
 
 	set(0, "DoLater", {
-		fg = "#4f5258",
+		fg = "#5f7569",
 	})
 end
 
@@ -73,12 +67,10 @@ end
 local function due_group(n)
 	if n < 0 then
 		return "DueOverdue"
-	elseif n <= 1 then
-		return "DueSoon1"
-	elseif n <= 3 then
-		return "DueSoon3"
+	elseif n == 0 then
+		return "DueToday"
 	elseif n <= 7 then
-		return "DueWeek"
+		return "DueSoon"
 	else
 		return "DueLater"
 	end
@@ -152,7 +144,6 @@ local function set_date(key, arg)
 	vim.api.nvim_set_current_line(line .. " " .. key .. ":" .. d)
 end
 
--- Call this ONCE from init.lua or a global setup file
 function M.setup()
 	define_hl()
 	vim.api.nvim_create_autocmd("ColorScheme", {
@@ -161,9 +152,7 @@ function M.setup()
 	})
 end
 
--- Call this per-buffer from ftplugin/markdown.lua
 function M.attach(buf)
-	-- Attach buffer-local autocmds
 	vim.api.nvim_create_autocmd({ "BufEnter", "FocusGained", "TextChanged", "InsertLeave" }, {
 		group = vim.api.nvim_create_augroup("todo_dates_" .. buf, { clear = true }),
 		buffer = buf,
@@ -193,10 +182,10 @@ function M.attach(buf)
 		end,
 	})
 
-	-- Attach buffer-local commands
 	vim.api.nvim_buf_create_user_command(buf, "Due", function(o)
 		set_date("due", o.args)
 	end, { nargs = 1 })
+
 	vim.api.nvim_buf_create_user_command(buf, "Do", function(o)
 		set_date("do", o.args)
 	end, { nargs = 1 })

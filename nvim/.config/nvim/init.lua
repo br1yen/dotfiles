@@ -27,6 +27,7 @@ do
 	vim.o.incsearch = true
 	vim.o.ignorecase = true
 	vim.o.smartcase = true
+	vim.o.wildmenu = true
 
 	vim.o.undofile = true
 	vim.o.swapfile = false
@@ -208,55 +209,30 @@ end
 
 -- Appearance
 do
-	vim.cmd("colorscheme default")
-
-	-- strip the background from a group but keep its other attributes (fg, bold, etc.)
-	local function clear_bg(name)
-		local hl = vim.api.nvim_get_hl(0, { name = name, link = false })
-		hl.bg = nil
-		hl.ctermbg = nil
-		vim.api.nvim_set_hl(0, name, hl)
-	end
-
-	for _, name in ipairs({
-		-- editor
-		"Normal",
-		"NormalNC",
-		"EndOfBuffer",
-		"MsgArea",
-		"SignColumn",
-		"FoldColumn",
-		"LineNr",
-		"CursorLineNr",
-		"CursorLineSign",
-		"CursorLineFold",
-		"WinSeparator",
-		"VertSplit",
-		-- floats and popups
-		"NormalFloat",
-		"FloatBorder",
-		"FloatTitle",
-		"Pmenu",
-		"PmenuSbar",
-		-- statusline, tabline, winbar
-		"TabLine",
-		"TabLineFill",
-		"WinBar",
-		"WinBarNC",
-		-- blink.cmp
-		"BlinkCmpMenu",
-		"BlinkCmpMenuBorder",
-		"BlinkCmpDoc",
-		"BlinkCmpDocBorder",
-		"BlinkCmpSignatureHelp",
-		"BlinkCmpSignatureHelpBorder",
-	}) do
-		clear_bg(name)
-	end
-
 	vim.pack.add({ gh("nvim-mini/mini.nvim") })
 	require("mini.surround").setup()
-	require("mini.icons").setup({})
+	require("mini.icons").setup()
+
+	vim.pack.add({ gh("RRethy/base16-nvim") })
+	vim.cmd("colorscheme base16-sequoia-monochrome-dark")
+	require("base16-colorscheme").setup({
+		base00 = "#0f1014",
+		base01 = "#17191e",
+		base02 = "#17191e",
+		base03 = "#43444d",
+		base04 = "#575861",
+		base05 = "#868690",
+		base06 = "#868690",
+		base07 = "#0f1014",
+		base08 = "#999eb2",
+		base09 = "#999eb2",
+		base0A = "#d3d5de",
+		base0B = "#626983",
+		base0C = "#b6bac8",
+		base0D = "#7c829d",
+		base0E = "#d3d5de",
+		base0F = "#626983",
+	})
 end
 
 -- Files and navigation

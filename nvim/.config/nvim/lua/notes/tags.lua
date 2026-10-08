@@ -4,11 +4,11 @@ local ns = vim.api.nvim_create_namespace("md_tags")
 
 local function define_hl()
 	vim.api.nvim_set_hl(0, "MarkdownTag", {
-		fg = "#8cf8f7",
+		fg = "#82a9b5",
 	})
 
 	vim.api.nvim_set_hl(0, "MarkdownContext", {
-		fg = "#ffcaff",
+		fg = "#a894b5",
 	})
 end
 
@@ -20,7 +20,6 @@ function M.setup()
 	})
 end
 
--- Return {start, end} byte ranges of inline code spans (`...` or ``...``).
 local function code_spans(line)
 	local spans = {}
 	local i = 1
@@ -30,7 +29,6 @@ local function code_spans(line)
 			break
 		end
 
-		-- the closing run must have the same number of backticks
 		local close_end
 		local j = e + 1
 		while true do
@@ -46,8 +44,9 @@ local function code_spans(line)
 		end
 
 		if not close_end then
-			break -- unmatched backticks, treat the rest as plain text
+			break
 		end
+
 		spans[#spans + 1] = { s, close_end }
 		i = close_end + 1
 	end
@@ -79,6 +78,7 @@ local function paint(buf)
 	if not vim.api.nvim_buf_is_valid(buf) then
 		return
 	end
+
 	vim.api.nvim_buf_clear_namespace(buf, ns, 0, -1)
 
 	local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
@@ -108,6 +108,7 @@ function M.attach(buf)
 			paint(buf)
 		end,
 	})
+
 	paint(buf)
 end
 

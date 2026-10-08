@@ -12,11 +12,7 @@ export MANPAGER='nvim +Man!'
 bindkey -e
 
 # Prompt: host:path $  (# for root)
-PROMPT='%F{green}%B%m%b%f:%F{blue}%~%f %(!.#.$)%f '
-
-# Autosuggestions + accept with Ctrl-Y
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-bindkey '^Y' autosuggest-accept
+PROMPT='%m%b%f:%~%f %(!.#.$)%f '
 
 # Fuzzy reverse search
 source /usr/share/fzf/key-bindings.zsh
@@ -27,12 +23,15 @@ zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
 zmodload zsh/complist
 zstyle ':completion:*' menu select
 zstyle ':completion:*:default' list-colors "${(s.:.)LS_COLORS}"
+
 autoload -Uz compinit
 if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
     compinit
 else
     compinit -C
 fi
+
+bindkey '^[[Z' reverse-menu-complete
 
 # History
 HISTFILE=~/.zsh_history
@@ -49,8 +48,6 @@ export NNN_OPENER="$HOME/.config/nnn/opener"
 # aliases
 alias ls='ls --color=auto'
 alias grep='grep --color=auto'
-alias fm='nnn'
-alias vi='nvim'
 
 alias gs='git status'
 alias ga='git add'
