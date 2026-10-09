@@ -52,7 +52,7 @@ hl.config({
 		fullscreen_on_one_column = false,
 		column_width = 0.5,
 		explicit_column_widths = "0.5, 1.0",
-        follow_min_visible = "0.0",
+		follow_min_visible = "0.0",
 		follow_focus = true,
 	},
 
@@ -110,11 +110,8 @@ hl.config({
 	},
 })
 
-hl.gesture({
-	fingers = 3,
-	direction = "horizontal",
-	action = "workspace",
-})
+hl.gesture({ fingers = 3, direction = "vertical", action = "workspace" })
+hl.gesture({ fingers = 3, direction = "horizontal", action = "scroll_move" })
 
 -- Example per-device config
 -- See https://wiki.hypr.land/configuring/core/devices/ for more
