@@ -165,17 +165,19 @@ hl.bind(mainMod .. " + SHIFT + P", hl.dsp.window.move({ workspace = "e-1" }))
 hl.bind(mainMod .. " + SHIFT + L", hl.dsp.layout("consume_or_expel next"))
 hl.bind(mainMod .. " + SHIFT + H", hl.dsp.layout("consume_or_expel prev"))
 
-hl.bind(mainMod .. " + SHIFT + C", hl.dsp.layout("center"))
+hl.bind(mainMod .. " + SHIFT + I", hl.dsp.layout("center"))
 hl.bind(mainMod .. " + R", hl.dsp.layout("colresize +conf"))
 hl.bind(mainMod .. " + minus", hl.dsp.layout("colresize -0.1"))
 hl.bind(mainMod .. " + equal", hl.dsp.layout("colresize +0.1"))
 
 hl.bind("SUPER + ESCAPE", hl.dsp.exec_cmd("killall -SIGUSR1 waybar"))
 
-for i = 1, 10 do
-	local key = i % 10 -- 10 maps to key 0
-	hl.bind(mainMod .. " + " .. key, hl.dsp.focus({ workspace = i }))
-	hl.bind(mainMod .. " + SHIFT + " .. key, hl.dsp.window.move({ workspace = i }))
+for i = 1, 4 do
+	hl.workspace_rule({ workspace = tostring(i), persistent = true })
+end
+for i = 1, 4 do
+	hl.bind(mainMod .. " + " .. i, hl.dsp.focus({ workspace = i }))
+	hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i }))
 end
 
 hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen())
