@@ -78,8 +78,28 @@ hl.config({
 		},
 	},
 
-	animations = { enabled = false },
+	animations = { enabled = true },
 })
+
+hl.curve("snap", { type = "bezier", points = { {0.16, 1}, {0.3, 1} } })
+
+hl.animation({ leaf = "global", enabled = false })
+
+-- windows
+hl.animation({ leaf = "windowsIn",   enabled = true, speed = 1.5, bezier = "snap", style = "popin 90%" })
+hl.animation({ leaf = "windowsOut",  enabled = true, speed = 1.2, bezier = "snap", style = "popin 90%" })
+hl.animation({ leaf = "windowsMove", enabled = true, speed = 1.5, bezier = "snap" })
+
+-- fade (pairs with popin so windows don't just appear)
+hl.animation({ leaf = "fadeIn",  enabled = true, speed = 1.2, bezier = "snap" })
+hl.animation({ leaf = "fadeOut", enabled = true, speed = 1.0, bezier = "snap" })
+
+-- layer surfaces: waybar, fuzzel, notifications
+hl.animation({ leaf = "layersIn",  enabled = true, speed = 1.5, bezier = "snap", style = "fade" })
+hl.animation({ leaf = "layersOut", enabled = true, speed = 1.0, bezier = "snap", style = "fade" })
+
+-- workspaces
+hl.animation({ leaf = "workspaces", enabled = true, speed = 1.5, bezier = "snap", style = "slidevert" })
 
 ----  MISC  ----
 hl.config({
