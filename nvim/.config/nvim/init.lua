@@ -40,8 +40,8 @@ do
 	vim.o.inccommand = "split"
 
 	vim.o.scrolloff = 4
-	vim.o.smoothscroll = true
 	vim.o.sidescrolloff = 4
+	vim.o.smoothscroll = true
 
 	vim.o.confirm = true
 
@@ -102,7 +102,7 @@ do
 
 	-- diagnostic
 	vim.diagnostic.config({
-		update_in_insert = false,
+		update_in_insert = true,
 		severity_sort = true,
 		float = { border = "single", source = "if_many" },
 		underline = { severity = { min = vim.diagnostic.severity.WARN } },
@@ -235,6 +235,10 @@ do
 		base0E = "#d3d5de",
 		base0F = "#626983",
 	})
+	vim.api.nvim_set_hl(0, "LineNr", { fg = "#22232a" })
+	vim.api.nvim_set_hl(0, "LineNrAbove", { fg = "#22232a" })
+	vim.api.nvim_set_hl(0, "LineNrBelow", { fg = "#22232a" })
+	vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#43444d" })
 end
 
 -- Files and navigation
@@ -270,7 +274,28 @@ end
 -- LSP
 do
 	vim.pack.add({ gh("j-hui/fidget.nvim") })
-	require("fidget").setup({})
+
+	local fidget_ignore = {}
+	local function fidget_setup()
+		require("fidget").setup({ progress = { ignore = vim.deepcopy(fidget_ignore) } })
+	end
+	fidget_setup()
+
+	-- show startup progress, then silence that server after 15s
+	vim.api.nvim_create_autocmd("LspAttach", {
+		group = vim.api.nvim_create_augroup("fidget-startup-only", { clear = true }),
+		callback = function(event)
+			local client = vim.lsp.get_client_by_id(event.data.client_id)
+			if not client or vim.tbl_contains(fidget_ignore, client.name) then
+				return
+			end
+			vim.defer_fn(function()
+				table.insert(fidget_ignore, client.name)
+				fidget_setup()
+			end, 15000)
+		end,
+	})
+
 	vim.api.nvim_create_autocmd("LspAttach", {
 		group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
 
@@ -485,11 +510,7 @@ do
 	require("conform").setup({
 		notify_on_error = false,
 		format_on_save = function(bufnr)
-			local enabled_filetypes = {
-				lua = true,
-				java = true,
-				typst = true,
-			}
+			local enabled_filetypes = {}
 			if enabled_filetypes[vim.bo[bufnr].filetype] then
 				return { timeout_ms = 1000, lsp_format = "fallback" }
 			else
@@ -549,7 +570,7 @@ do
 			},
 		},
 		signature = {
-			enabled = true,
+			enabled = false,
 			window = {
 				border = "single",
 				scrollbar = false,

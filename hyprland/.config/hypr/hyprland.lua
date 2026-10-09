@@ -3,7 +3,7 @@
 -- See https://wiki.hypr.land/configuring/core/monitors/
 hl.monitor({
 	output = "DP-3",
-	mode = "1920x1080@180",
+	mode = "1920x1080@170",
 	position = "auto",
 	scale = "1.0",
 })
@@ -33,15 +33,15 @@ hl.env("HYPRCURSOR_SIZE", "24")
 
 hl.config({
 	general = {
-		gaps_out = 4,
-		gaps_in = 4,
+		gaps_out = 6,
+		gaps_in = 2,
 
 		border_size = 1,
 		col = {
-			active_border = "#000000",
-			inactive_border = "#4F5258",
+			active_border = "#7c829d",
+			inactive_border = "#17191e",
 		},
-		resize_on_border = true,
+		resize_on_border = false,
 
 		allow_tearing = true,
 
@@ -52,7 +52,8 @@ hl.config({
 		fullscreen_on_one_column = false,
 		column_width = 0.5,
 		explicit_column_widths = "0.5, 1.0",
-		follow_focus = false,
+        follow_min_visible = "0.0",
+		follow_focus = true,
 	},
 
 	render = { direct_scanout = 2 },
@@ -131,33 +132,21 @@ hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("ghostty"))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("/home/br1yen/.local/bin/powermenu"))
 hl.bind(mainMod .. " + G", hl.dsp.exec_cmd("/home/br1yen/.local/bin/windows-switcher"))
-hl.bind(mainMod .. " + P", hl.dsp.exec_cmd("/home/br1yen/.local/bin/fzfpdf"))
+hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("/home/br1yen/.local/bin/fzfpdf"))
 hl.bind(mainMod .. " + F", hl.dsp.window.float({ action = "toggle" }))
 
-local function step(inner, outer)
-	local before = hl.get_active_window()
-	hl.dispatch(hl.dsp.layout("focus " .. inner))
-	local after = hl.get_active_window()
-	if before and after and before.address == after.address then
-		hl.dispatch(hl.dsp.layout("focus " .. outer))
-	end
-end
+hl.bind(mainMod .. " + H", hl.dsp.layout("focus l"))
+hl.bind(mainMod .. " + J", hl.dsp.layout("focus d"))
+hl.bind(mainMod .. " + K", hl.dsp.layout("focus u"))
+hl.bind(mainMod .. " + L", hl.dsp.layout("focus r"))
 
-hl.bind(mainMod .. " + L", function()
-	step("d", "r")
-end)
-hl.bind(mainMod .. " + H", function()
-	step("u", "l")
-end)
+hl.bind(mainMod .. " + N", hl.dsp.focus({ workspace = "e+1" }))
+hl.bind(mainMod .. " + P", hl.dsp.focus({ workspace = "e-1" }))
+hl.bind(mainMod .. " + SHIFT + N", hl.dsp.window.move({ workspace = "e+1" }))
+hl.bind(mainMod .. " + SHIFT + P", hl.dsp.window.move({ workspace = "e-1" }))
 
 hl.bind(mainMod .. " + SHIFT + L", hl.dsp.layout("consume_or_expel next"))
 hl.bind(mainMod .. " + SHIFT + H", hl.dsp.layout("consume_or_expel prev"))
-
-hl.bind(mainMod .. " + K", hl.dsp.focus({ workspace = "e-1" }))
-hl.bind(mainMod .. " + J", hl.dsp.focus({ workspace = "e+1" }))
-
-hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ workspace = "e-1" }))
-hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ workspace = "e+1" }))
 
 hl.bind(mainMod .. " + SHIFT + C", hl.dsp.layout("center"))
 hl.bind(mainMod .. " + R", hl.dsp.layout("colresize +conf"))
