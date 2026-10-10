@@ -26,7 +26,8 @@
             "class<com.mitchellh.ghostty>": "term",
             "class<cs2>": "cs2",
             "class<steam>": "steam",
-            "title<.*nvim.*>": "nvim"
+            "title<.*nvim.*>": "nvim",
+            "class<md.obsidian.Obsidian>": "notes"
         }
     },
 
