@@ -5,106 +5,58 @@ do
 
 	vim.g.mapleader = " "
 	vim.g.maplocalleader = " "
-	vim.o.mouse = "a"
+	vim.opt.mouse = "a"
 
-	vim.o.termguicolors = true
-	vim.g.have_nerd_font = false
-	vim.o.winborder = "single"
-	vim.o.number = true
-	vim.o.relativenumber = true
-	vim.o.showmode = true
-	vim.o.signcolumn = "yes"
+	vim.opt.termguicolors = true
+	vim.opt.background = "dark"
+	vim.g.have_nerd_font = true
+	vim.opt.winborder = "none"
+	vim.opt.number = true
+	vim.opt.relativenumber = true
+	vim.opt.signcolumn = "yes"
 
-	vim.o.expandtab = true
-	vim.o.shiftwidth = 4
-	vim.o.tabstop = 4
-	vim.o.breakindent = true
-	vim.o.smartindent = true
-	vim.o.wrap = true
-	vim.o.linebreak = true
-	vim.o.showbreak = "↪ "
+	vim.opt.tabstop = 2
+	vim.opt.shiftwidth = 2
+	vim.opt.softtabstop = 2
+	vim.opt.expandtab = true
+	vim.opt.breakindent = true
+	vim.opt.smartindent = true
+	vim.opt.linebreak = true
+	vim.opt.showbreak = "↪ "
 
-	vim.o.incsearch = true
-	vim.o.ignorecase = true
-	vim.o.smartcase = true
-	vim.o.wildmenu = true
+	vim.opt.ignorecase = true
+	vim.opt.smartcase = true
 
-	vim.o.undofile = true
-	vim.o.swapfile = false
+	vim.opt.undofile = true
+	vim.opt.swapfile = false
 
-	vim.o.updatetime = 250
-	vim.o.timeoutlen = 300
+	vim.opt.updatetime = 250
+	vim.opt.timeoutlen = 300
 
-	vim.o.splitright = true
-	vim.o.splitbelow = true
-	vim.o.inccommand = "split"
+	vim.opt.splitright = true
+	vim.opt.splitbelow = true
 
-	vim.o.scrolloff = 4
-	vim.o.sidescrolloff = 4
-	vim.o.smoothscroll = true
+	vim.opt.scrolloff = 999
+	vim.opt.sidescrolloff = 999
+	vim.opt.smoothscroll = true
 
-	vim.o.confirm = true
+	vim.opt.confirm = true
 
-	-- sync system clipboard
 	vim.schedule(function()
-		vim.o.clipboard = "unnamedplus"
+		vim.opt.clipboard = "unnamedplus"
 	end)
 end
 
 -- BASIC REMAPS + AUTOCOMMANDS --
 do
-	vim.keymap.set("n", "<leader>w", "<cmd>w<cr>")
-	vim.keymap.set("n", "<leader>q", "<cmd>q<cr>")
-
-	vim.keymap.set("n", "n", "nzz")
-	vim.keymap.set("n", "N", "Nzz")
-	vim.keymap.set("n", "u", "uzz")
-	vim.keymap.set("n", "U", "Uzz")
-	vim.keymap.set("n", "<C-d>", "<C-d>zz")
-	vim.keymap.set("n", "<C-u>", "<C-u>zz")
-	vim.keymap.set("n", "]d", function()
-		vim.diagnostic.jump({ count = vim.v.count1 })
-		vim.cmd("normal! zz")
-	end, { desc = "Next diagnostic" })
-	vim.keymap.set("n", "[d", function()
-		vim.diagnostic.jump({ count = -vim.v.count1 })
-		vim.cmd("normal! zz")
-	end, { desc = "Prev diagnostic" })
-	vim.keymap.set("n", "<C-f>", "<C-f>zz")
-	vim.keymap.set("n", "<C-b>", "<C-b>zz")
-	vim.keymap.set("n", "*", "*zz")
-	vim.keymap.set("n", "#", "#zz")
-	vim.keymap.set("n", "g*", "g*zz")
-	vim.keymap.set("n", "g#", "g#zz")
-	vim.keymap.set("n", "{", "{zz")
-	vim.keymap.set("n", "}", "}zz")
-	vim.keymap.set("n", "<C-o>", "<C-o>zz")
-	vim.keymap.set("n", "<C-i>", "<C-i>zz")
-	vim.keymap.set("n", "%", "%zz")
-	vim.keymap.set("n", "]c", "]czz")
-	vim.keymap.set("n", "[c", "[czz")
-	vim.keymap.set("n", "]q", "<cmd>cnext<CR>zz", { desc = "Next quickfix" })
-	vim.keymap.set("n", "[q", "<cmd>cprev<CR>zz", { desc = "Prev quickfix" })
-	vim.keymap.set("n", "]Q", "<cmd>clast<CR>zz", { desc = "Last quickfix" })
-	vim.keymap.set("n", "[Q", "<cmd>cfirst<CR>zz", { desc = "First quickfix" })
-	vim.keymap.set("n", "]l", "<cmd>lnext<CR>zz", { desc = "Next loclist" })
-	vim.keymap.set("n", "[l", "<cmd>lprev<CR>zz", { desc = "Prev loclist" })
-	vim.keymap.set("n", "]L", "<cmd>llast<CR>zz", { desc = "Last loclist" })
-	vim.keymap.set("n", "[L", "<cmd>lfirst<CR>zz", { desc = "First loclist" })
-
-	vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
-	vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
-	vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
-	vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
-
 	vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
 	vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 	-- diagnostic
 	vim.diagnostic.config({
-		update_in_insert = true,
+		update_in_insert = false,
 		severity_sort = true,
-		float = { border = "single", source = "if_many" },
+		float = { border = "none", source = "if_many" },
 		underline = { severity = { min = vim.diagnostic.severity.WARN } },
 
 		-- auto open diagnostic warning
@@ -119,8 +71,8 @@ do
 		},
 	})
 
-	vim.keymap.set("n", "<leader>dl", vim.diagnostic.setloclist, { desc = "Diagnostics (loclist)" })
-	vim.keymap.set("n", "<leader>dq", vim.diagnostic.setqflist, { desc = "Diagnostics (quickfix)" })
+	vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostics (loclist)" })
+	vim.keymap.set("n", "<leader>Q", vim.diagnostic.setqflist, { desc = "Diagnostics (quickfix)" })
 
 	vim.api.nvim_create_autocmd("TextYankPost", {
 		desc = "Highlight when yanking text",
@@ -150,36 +102,12 @@ end
 
 -- VIM PACK BUILD STEPS --
 do
-	local function run_build(name, cmd, cwd)
-		local result = vim.system(cmd, { cwd = cwd }):wait()
-
-		if result.code ~= 0 then
-			local stderr = result.stderr or ""
-			local stdout = result.stdout or ""
-			local output = stderr ~= "" and stderr or stdout
-
-			if output == "" then
-				output = "No output from build command."
-			end
-
-			vim.notify(("Build failed for %s:\n%s"):format(name, output), vim.log.levels.ERROR)
-		end
-	end
-
-	-- Run the appropriate build/update command after a plugin is installed/updated.
 	vim.api.nvim_create_autocmd("PackChanged", {
 		callback = function(ev)
 			local name = ev.data.spec.name
 			local kind = ev.data.kind
 
 			if kind ~= "install" and kind ~= "update" then
-				return
-			end
-
-			if name == "LuaSnip" then
-				if vim.fn.has("win32") ~= 1 and vim.fn.executable("make") == 1 then
-					run_build(name, { "make", "install_jsregexp" }, ev.data.path)
-				end
 				return
 			end
 
@@ -191,469 +119,48 @@ do
 				return
 			end
 
-			if name == "mdmath.nvim" then
-				if not ev.data.active then
-					vim.cmd.packadd("mdmath.nvim")
-				end
-				vim.cmd("MdMath build")
-				return
-			end
+      if name == "telescope-fzf-native.nvim" then
+        vim.system({ "make" }, { cwd = ev.data.path }):wait()
+        return
+      end
 		end,
 	})
 end
 
--- PLUGINS --
----@param repo string
----@return string
-local function gh(repo)
-	return "https://github.com/" .. repo
+-- Remove unused packages
+local function pack_clean()
+  local unused_plugins = {}
+
+  for _, plugin in ipairs(vim.pack.get()) do
+    if not plugin.active then
+      table.insert(unused_plugins, plugin.spec.name)
+    end
+  end
+
+  if #unused_plugins == 0 then
+    print("No unused plugins.")
+    return
+  end
+
+  local choice = vim.fn.confirm(
+    "Remove unused plugins?\n" .. table.concat(unused_plugins, "\n"),
+    "&Yes\n&No",
+    2
+  )
+  if choice == 1 then
+    vim.pack.del(unused_plugins)
+  end
 end
 
--- Appearance
-do
-	vim.pack.add({ gh("nvim-mini/mini.nvim") })
-	require("mini.surround").setup()
-	require("mini.icons").setup()
+vim.keymap.set("n", "<leader>pc", pack_clean, { desc = "Pack: clean unused" })
 
-	vim.pack.add({ gh("RRethy/base16-nvim") })
-	vim.cmd("colorscheme base16-sequoia-monochrome-dark")
-	require("base16-colorscheme").setup({
-		base00 = "#0f1014",
-		base01 = "#17191e",
-		base02 = "#17191e",
-		base03 = "#43444d",
-		base04 = "#575861",
-		base05 = "#868690",
-		base06 = "#868690",
-		base07 = "#0f1014",
-		base08 = "#999eb2",
-		base09 = "#999eb2",
-		base0A = "#d3d5de",
-		base0B = "#626983",
-		base0C = "#b6bac8",
-		base0D = "#7c829d",
-		base0E = "#d3d5de",
-		base0F = "#626983",
-	})
-	vim.api.nvim_set_hl(0, "LineNr", { fg = "#22232a" })
-	vim.api.nvim_set_hl(0, "LineNrAbove", { fg = "#22232a" })
-	vim.api.nvim_set_hl(0, "LineNrBelow", { fg = "#22232a" })
-	vim.api.nvim_set_hl(0, "CursorLineNr", { fg = "#43444d" })
-end
-
--- Files and navigation
-do
-	require("mini.files").setup({
-		mappings = {
-			go_in = "L",
-			go_in_plus = "l",
-		},
-		options = { use_as_default_explorer = true },
-	})
-	vim.keymap.set("n", "<leader>e", function()
-		require("mini.files").open(vim.api.nvim_buf_get_name(0))
-	end, { desc = "File explorer" })
-
-	-- mini.pick: files + recent files
-	require("mini.pick").setup()
-	require("mini.extra").setup()
-	vim.keymap.set("n", "<leader>f", MiniPick.builtin.files, { desc = "Files" })
-	vim.keymap.set("n", "<leader>g", function()
-		require("live_grep").open()
-	end, { desc = "Grep" })
-	vim.keymap.set("n", "<leader>b", MiniPick.builtin.buffers, { desc = "Buffers" })
-	vim.keymap.set("n", "<leader>h", MiniPick.builtin.help, { desc = "Help" })
-	vim.keymap.set("n", "<leader>r", function()
-		MiniExtra.pickers.oldfiles()
-	end, { desc = "Recent files" })
-	vim.keymap.set("n", "<leader>m", function()
-		MiniExtra.pickers.manpages()
-	end, { desc = "Man pages" })
-end
-
--- LSP
-do
-	vim.pack.add({ gh("j-hui/fidget.nvim") })
-
-	local fidget_ignore = {}
-	local function fidget_setup()
-		require("fidget").setup({ progress = { ignore = vim.deepcopy(fidget_ignore) } })
-	end
-	fidget_setup()
-
-	-- show startup progress, then silence that server after 15s
-	vim.api.nvim_create_autocmd("LspAttach", {
-		group = vim.api.nvim_create_augroup("fidget-startup-only", { clear = true }),
-		callback = function(event)
-			local client = vim.lsp.get_client_by_id(event.data.client_id)
-			if not client or vim.tbl_contains(fidget_ignore, client.name) then
-				return
-			end
-			vim.defer_fn(function()
-				table.insert(fidget_ignore, client.name)
-				fidget_setup()
-			end, 15000)
-		end,
-	})
-
-	vim.api.nvim_create_autocmd("LspAttach", {
-		group = vim.api.nvim_create_augroup("kickstart-lsp-attach", { clear = true }),
-
-		callback = function(event)
-			local map = function(keys, func, desc, mode)
-				mode = mode or "n"
-
-				vim.keymap.set(mode, keys, func, {
-					buffer = event.buf,
-					desc = "LSP: " .. desc,
-				})
-			end
-
-			map("grd", vim.lsp.buf.definition, "Definition")
-			map("grD", vim.lsp.buf.declaration, "Declaration")
-			map("grw", vim.lsp.buf.workspace_symbol, "Symbols (workspace)")
-			vim.keymap.set("n", "<leader>o", function()
-				MiniExtra.pickers.lsp({ scope = "document_symbol" })
-			end, { desc = "Symbols (document)" })
-			vim.keymap.set("n", "<leader>s", function()
-				MiniExtra.pickers.lsp({ scope = "workspace_symbol" })
-			end, { desc = "Symbols (workspace)" })
-
-			local client = vim.lsp.get_client_by_id(event.data.client_id)
-		end,
-	})
-
-	---@type table<string, vim.lsp.Config>
-	local servers = {
-		typstyle = {}, -- format typst documents
-		tinymist = {
-			settings = {
-				formatterMode = "typstyle",
-				exportPdf = "onType",
-			},
-		},
-
-		stylua = {}, -- format lua
-		lua_ls = { -- recommended lua language server config
-			on_init = function(client)
-				client.server_capabilities.documentFormattingProvider = false -- Disable formatting (formatting is done by stylua)
-
-				if client.workspace_folders then
-					local path = client.workspace_folders[1].name
-					if
-						path ~= vim.fn.stdpath("config")
-						and (vim.uv.fs_stat(path .. "/.luarc.json") or vim.uv.fs_stat(path .. "/.luarc.jsonc"))
-					then
-						return
-					end
-				end
-
-				local current_settings = client.config.settings --[[@as lspconfig.settings.lua_ls]]
-				client.config.settings.Lua = vim.tbl_deep_extend("force", current_settings.Lua, {
-					runtime = {
-						version = "LuaJIT",
-						path = { "lua/?.lua", "lua/?/init.lua" },
-					},
-					workspace = {
-						checkThirdParty = false,
-						-- NOTE: this is a lot slower and will cause issues when working on your own configuration.
-						--  See https://github.com/neovim/nvim-lspconfig/issues/3189
-						library = vim.api.nvim_get_runtime_file("", true),
-					},
-				})
-			end,
-			---@type lspconfig.settings.lua_ls
-			settings = {
-				Lua = {
-					format = { enable = false }, -- Disable formatting (formatting is done by stylua)
-				},
-			},
-		},
-	}
-
-	vim.pack.add({
-		gh("neovim/nvim-lspconfig"),
-		gh("mason-org/mason.nvim"),
-		gh("mason-org/mason-lspconfig.nvim"),
-		gh("WhoIsSethDaniel/mason-tool-installer.nvim"),
-	})
-
-	require("mason").setup({})
-	require("mason-lspconfig").setup({ automatic_enable = false })
-
-	local ensure_installed = vim.tbl_keys(servers or {})
-	vim.list_extend(ensure_installed, {
-		"jdtls",
-		"java-debug-adapter",
-	})
-	require("mason-tool-installer").setup({ ensure_installed = ensure_installed })
-
-	for name, server in pairs(servers) do
-		vim.lsp.config(name, server)
-		vim.lsp.enable(name)
-	end
-end
-
--- DEBUGGING: Java --
-do
-	vim.pack.add({
-		gh("mfussenegger/nvim-dap"),
-		gh("rcarriga/nvim-dap-ui"),
-		gh("nvim-neotest/nvim-nio"),
-		gh("jay-babu/mason-nvim-dap.nvim"),
-		gh("mfussenegger/nvim-jdtls"),
-	})
-
-	-- Basic debugging keymaps from Kickstart
-	vim.keymap.set("n", "<F5>", function()
-		require("dap").continue()
-	end, { desc = "Debug: Start/Continue" })
-	vim.keymap.set("n", "<F1>", function()
-		require("dap").step_into()
-	end, { desc = "Debug: Step Into" })
-	vim.keymap.set("n", "<F2>", function()
-		require("dap").step_over()
-	end, { desc = "Debug: Step Over" })
-	vim.keymap.set("n", "<F3>", function()
-		require("dap").step_out()
-	end, { desc = "Debug: Step Out" })
-	vim.keymap.set("n", "<leader>db", function()
-		require("dap").toggle_breakpoint()
-	end, { desc = "Debug: Toggle Breakpoint" })
-	vim.keymap.set("n", "<leader>dB", function()
-		require("dap").set_breakpoint(vim.fn.input("Breakpoint condition: "))
-	end, { desc = "Debug: Set Conditional Breakpoint" })
-	vim.keymap.set("n", "<F7>", function()
-		require("dapui").toggle()
-	end, { desc = "Debug: See last session result." })
-
-	local dap = require("dap")
-	local dapui = require("dapui")
-
-	require("mason-nvim-dap").setup({
-		automatic_installation = true,
-		handlers = {},
-		ensure_installed = {
-			-- Ensures the Java debug adapter is installed instead of Go's 'delve'
-			"javadbg",
-		},
-	})
-
-	-- Dap UI setup
-	---@diagnostic disable-next-line: missing-fields
-	dapui.setup({
-		icons = { expanded = "▾", collapsed = "▸", current_frame = "*" },
-		---@diagnostic disable-next-line: missing-fields
-		controls = {
-			icons = {
-				pause = "⏸",
-				play = "▶",
-				step_into = "⏎",
-				step_over = "⏭",
-				step_out = "⏮",
-				step_back = "b",
-				run_last = "▶▶",
-				terminate = "⏹",
-				disconnect = "⏏",
-			},
-		},
-	})
-
-	dap.listeners.after.event_initialized["dapui_config"] = dapui.open
-	dap.listeners.before.event_terminated["dapui_config"] = dapui.close
-	dap.listeners.before.event_exited["dapui_config"] = dapui.close
-
-	-- Java specific config
-	vim.api.nvim_create_autocmd("FileType", {
-		pattern = "java",
-		callback = function()
-			-- Locate the debugger jar downloaded by mason-nvim-dap
-			local debug_jar = vim.fn.glob(
-				vim.fn.stdpath("data")
-					.. "/mason/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-*.jar",
-				true
-			)
-
-			require("jdtls").start_or_attach({
-				cmd = { "jdtls" },
-				root_dir = vim.fs.dirname(
-					vim.fs.find({ ".git", "mvnw", "gradlew", "build.gradle" }, { upward = true })[1]
-				) or vim.fn.getcwd(),
-
-				-- Inject the debugger into the language server
-				init_options = {
-					bundles = { debug_jar },
-				},
-
-				on_attach = function(client, bufnr)
-					require("jdtls").setup_dap({ hotcodereplace = "auto" })
-					require("jdtls.dap").setup_dap_main_class_configs()
-
-					-- Re-apply LSP keymaps for Java files
-					vim.keymap.set("n", "grn", vim.lsp.buf.rename, { buffer = bufnr, desc = "LSP: Rename" })
-					vim.keymap.set(
-						{ "n", "x" },
-						"gra",
-						vim.lsp.buf.code_action,
-						{ buffer = bufnr, desc = "LSP: Code action" }
-					)
-					vim.keymap.set("n", "grD", vim.lsp.buf.declaration, { buffer = bufnr, desc = "LSP: Declaration" })
-				end,
-			})
-		end,
-	})
-end
-
--- FORMATTING --
-do
-	vim.pack.add({ gh("stevearc/conform.nvim") })
-	require("conform").setup({
-		notify_on_error = false,
-		format_on_save = function(bufnr)
-			local enabled_filetypes = {}
-			if enabled_filetypes[vim.bo[bufnr].filetype] then
-				return { timeout_ms = 1000, lsp_format = "fallback" }
-			else
-				return nil
-			end
-		end,
-		default_format_opts = {
-			lsp_format = "fallback", -- Use external formatters if configured below, otherwise use LSP formatting. Set to `false` to disable LSP formatting entirely.
-		},
-		-- You can also specify external formatters in here.
-		formatters_by_ft = {
-			-- rust = { 'rustfmt' },
-			-- Conform can also run multiple formatters sequentially
-			-- python = { "isort", "black" },
-			--
-			-- You can use 'stop_after_first' to run the first available formatter from the list
-			-- javascript = { "prettierd", "prettier", stop_after_first = true },
-		},
-	})
-
-	vim.keymap.set({ "n", "v" }, "<leader>=", function()
-		require("conform").format({ async = true })
-	end, { desc = "Format" })
-end
-
--- AUTOCOMPLETE + SNIPPETS
-do
-	vim.pack.add({
-		{ src = gh("saghen/blink.cmp"), version = vim.version.range("1.*") },
-		gh("L3MON4D3/LuaSnip"),
-	})
-
-	require("blink.cmp").setup({
-		snippets = { preset = "luasnip" },
-		keymap = {
-			preset = "default",
-			["<C-k>"] = { "show_documentation", "hide_documentation", "fallback" },
-			["<C-s>"] = { "show_signature", "hide_signature", "fallback" },
-			["<C-Space>"] = { "show", "hide", "fallback" },
-		},
-		appearance = { nerd_font_variant = "mono" },
-		completion = {
-			list = { selection = { auto_insert = false } },
-			menu = {
-				auto_show = false,
-				border = "single",
-				scrollbar = false,
-				draw = {
-					columns = { { "label", "label_description", gap = 1 } },
-				},
-			},
-			documentation = {
-				window = {
-					border = "single",
-					scrollbar = false,
-				},
-			},
-		},
-		signature = {
-			enabled = false,
-			window = {
-				border = "single",
-				scrollbar = false,
-			},
-		},
-		sources = { default = { "lsp", "path", "snippets", "buffer" } },
-		fuzzy = { implementation = "prefer_rust_with_warning" },
-	})
-	vim.lsp.config("*", {
-		capabilities = require("blink.cmp").get_lsp_capabilities(),
-	})
-end
-
--- TREESITTER --
-do
-	vim.pack.add({ { src = gh("nvim-treesitter/nvim-treesitter"), version = "main" } })
-
-	local parsers = { "bash", "lua", "luadoc", "markdown", "markdown_inline", "typst", "java", "query" }
-	require("nvim-treesitter").install(parsers)
-
-	---@param buf integer
-	---@param language string
-	local function treesitter_try_attach(buf, language)
-		-- Check if the buffer is valid (might not be after install completes)
-		if not vim.api.nvim_buf_is_valid(buf) then
-			return
-		end
-
-		-- Check if a parser exists and load it
-		if not vim.treesitter.language.add(language) then
-			return
-		end
-
-		-- Enable syntax highlighting and other treesitter features
-		vim.treesitter.start(buf)
-
-		-- For more info on folds see `:help folds`
-		-- vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-		-- vim.wo.foldmethod = 'expr'
-
-		-- Check if treesitter indentation is available for this language, and if so enable it
-		-- in case there is no indent query, the indentexpr will fallback to the vim's built in one
-		local has_indent_query = vim.treesitter.query.get(language, "indents") ~= nil
-
-		-- Enable treesitter based indentation
-		if has_indent_query then
-			vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-		end
-	end
-
-	local available_parsers = require("nvim-treesitter").get_available()
-	vim.api.nvim_create_autocmd("FileType", {
-		callback = function(args)
-			local buf, filetype = args.buf, args.match
-
-			local language = vim.treesitter.language.get_lang(filetype)
-			if not language then
-				return
-			end
-
-			local installed_parsers = require("nvim-treesitter").get_installed("parsers")
-
-			if vim.tbl_contains(installed_parsers, language) then
-				-- Enable the parser if it is already installed
-				treesitter_try_attach(buf, language)
-			elseif vim.tbl_contains(available_parsers, language) then
-				-- If a parser is available in `nvim-treesitter`, auto-install it and enable it after the installation is done
-				require("nvim-treesitter").install(language):await(function()
-					treesitter_try_attach(buf, language)
-				end)
-			else
-				-- Try to enable treesitter features in case the parser exists but is not available from `nvim-treesitter`
-				treesitter_try_attach(buf, language)
-			end
-		end,
-	})
-end
-
--- TYPST --
-do
-	vim.pack.add({ "https://github.com/chomosuke/typst-preview.nvim" })
-	require("typst-preview").setup({})
-end
-
--- MARKDOWN NOTES --
-require("notes.setup")
+require("plugins.icons")
+require("plugins.obsidian")
+require("plugins.lsp")
+require("plugins.debug")
+require("plugins.blink")
+require("plugins.treesitter")
+require("plugins.telescope")
+require("plugins.oil")
+require("plugins.mini-surround")
+require("plugins.typst-preview")

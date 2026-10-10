@@ -1,6 +1,7 @@
 font-family = Inconsolata
 font-size = 14
 scrollback-limit = 10000
+theme = Nvim Dark
 
 cursor-style = block
 cursor-style-blink = false
@@ -13,27 +14,3 @@ copy-on-select = true
 resize-overlay = never
 right-click-action = ignore
 scrollbar = never
-
-background = #0f1014
-foreground = #868690
-cursor-color = #d3d5de
-selection-background = #1b1d23
-selection-foreground = #868690
-
-palette = 0=#0f1014
-palette = 1=#999eb2
-palette = 2=#626983
-palette = 3=#d3d5de
-palette = 4=#7c829d
-palette = 5=#d3d5de
-palette = 6=#b6bac8
-palette = 7=#868690
-
-palette = 8=#43444d
-palette = 9=#999eb2
-palette = 10=#626983
-palette = 11=#d3d5de
-palette = 12=#7c829d
-palette = 13=#d3d5de
-palette = 14=#b6bac8
-palette = 15=#868690
