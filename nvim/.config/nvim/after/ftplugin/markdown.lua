@@ -13,15 +13,12 @@ require("notes.tags").attach(buf)
 require("notes.todo").setup()
 require("notes.todo").attach(buf)
 
-local headings = require("notes.headings")
-local links = require("notes.links")
 local opts = { buffer = true, silent = true }
 
 -- Date abbreviation
 vim.cmd([[iabbrev <buffer> <expr> ddd strftime('%F')]])
 
 -- Keymaps
-vim.keymap.set("n", "gf", links.smart_gf, vim.tbl_extend("force", opts, { desc = "Follow markdown link" }))
 vim.keymap.set("n", ">>", function()
 	headings.change(1, ">>")
 end, vim.tbl_extend("force", opts, { desc = "Demote heading" }))

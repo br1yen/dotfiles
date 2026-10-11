@@ -2,13 +2,17 @@ vim.pack.add({ "https://github.com/obsidian-nvim/obsidian.nvim" })
 
 require("obsidian").setup({
   workspaces = {
-    { name = "notes", path = "~/sync/notes" },
+    {
+      name = "notes",
+      path = "~/sync/notes",
+    }
+  },
+  frontmatter = {
+    enabled = false,
   },
   picker = { name = "telescope.nvim" },
   ui = { enable = false },
   legacy_commands = false,
-  notes_subdir = nil,
-  daily_notes = { folder = "daily" },
   note_id_func = function(title)
     local slug = ""
     if title ~= nil then
