@@ -1,133 +1,101 @@
--- OPTIONS --
-do
-	-- faster startup by caching compile Lua modules
-	vim.loader.enable()
+--- Options
+-- faster startup by caching compile Lua modules
+vim.loader.enable()
 
-	vim.g.mapleader = " "
-	vim.g.maplocalleader = " "
-	vim.opt.mouse = "a"
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
+vim.opt.mouse = "a"
 
-	vim.opt.termguicolors = true
-	vim.opt.background = "dark"
-	vim.g.have_nerd_font = true
-	vim.opt.winborder = "none"
-	vim.opt.number = true
-	vim.opt.relativenumber = true
-	vim.opt.signcolumn = "yes"
+vim.opt.termguicolors = true
+vim.opt.background = "dark"
+vim.g.have_nerd_font = true
+vim.opt.winborder = "none"
+vim.opt.number = true
+vim.opt.relativenumber = true
+vim.opt.signcolumn = "yes"
 
-	vim.opt.tabstop = 2
-	vim.opt.shiftwidth = 2
-	vim.opt.softtabstop = 2
-	vim.opt.expandtab = true
-	vim.opt.breakindent = true
-	vim.opt.smartindent = true
-	vim.opt.linebreak = true
-	vim.opt.showbreak = "↪ "
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.softtabstop = 2
+vim.opt.expandtab = true
+vim.opt.breakindent = true
+vim.opt.smartindent = true
+vim.opt.linebreak = true
+vim.opt.showbreak = "↪ "
 
-	vim.opt.ignorecase = true
-	vim.opt.smartcase = true
+vim.opt.ignorecase = true
+vim.opt.smartcase = true
 
-	vim.opt.undofile = true
-	vim.opt.swapfile = false
+vim.opt.undofile = true
+vim.opt.swapfile = false
 
-	vim.opt.updatetime = 250
-	vim.opt.timeoutlen = 300
+vim.opt.updatetime = 250
+vim.opt.timeoutlen = 300
 
-	vim.opt.splitright = true
-	vim.opt.splitbelow = true
+vim.opt.splitright = true
+vim.opt.splitbelow = true
 
-	vim.opt.scrolloff = 999
-	vim.opt.sidescrolloff = 999
-	vim.opt.smoothscroll = true
+vim.opt.scrolloff = 999
+vim.opt.smoothscroll = true
 
-	vim.opt.confirm = true
+vim.opt.confirm = true
+vim.opt.completeopt = "menu,menuone,noinsert"
 
-	vim.schedule(function()
-		vim.opt.clipboard = "unnamedplus"
-	end)
-end
+vim.opt.path:append("**")
 
--- BASIC REMAPS + AUTOCOMMANDS --
-do
-	vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>")
-	vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.schedule(function()
+  vim.opt.clipboard = "unnamedplus"
+end)
 
-	-- diagnostic
-	vim.diagnostic.config({
-		update_in_insert = false,
-		severity_sort = true,
-		float = { border = "none", source = "if_many" },
-		underline = { severity = { min = vim.diagnostic.severity.WARN } },
 
-		-- auto open diagnostic warning
-		jump = {
-			on_jump = function(_, bufnr)
-				vim.diagnostic.open_float({
-					bufnr = bufnr,
-					scope = "cursor",
-					focus = false,
-				})
-			end,
-		},
-	})
+-- Netrw
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "netrw",
+  callback = function()
+    local opts = { buffer = true, remap = true, silent = true }
+    vim.keymap.set("n", "h", "-", opts)
+    vim.keymap.set("n", "l", "<CR>", opts)
+    vim.keymap.set("n", "f", "%", opts)
+  end,
+})
+vim.g.netrw_banner = 0
 
-	vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostics (loclist)" })
-	vim.keymap.set("n", "<leader>Q", vim.diagnostic.setqflist, { desc = "Diagnostics (quickfix)" })
 
-	vim.api.nvim_create_autocmd("TextYankPost", {
-		desc = "Highlight when yanking text",
-		group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
-		callback = function()
-			vim.hl.on_yank()
-		end,
-	})
+--- Autocmds
+vim.api.nvim_create_autocmd("TextYankPost", {
+  desc = "Highlight when yanking text",
+  group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
+  callback = function()
+    vim.hl.on_yank()
+  end,
+})
 
-	local group = vim.api.nvim_create_augroup("AutoRead", { clear = true })
-	vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermLeave" }, {
-		desc = "Update buffer when file changes",
-		group = group,
-		callback = function()
-			if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then
-				vim.cmd("silent! checktime")
-			end
-		end,
-	})
-	vim.api.nvim_create_autocmd("FileChangedShellPost", {
-		group = group,
-		callback = function()
-			vim.notify("Buffer reloaded: file changed on disk", vim.log.levels.INFO)
-		end,
-	})
-end
+vim.api.nvim_create_autocmd("PackChanged", {
+  callback = function(ev)
+    local name = ev.data.spec.name
+    local kind = ev.data.kind
 
--- VIM PACK BUILD STEPS --
-do
-	vim.api.nvim_create_autocmd("PackChanged", {
-		callback = function(ev)
-			local name = ev.data.spec.name
-			local kind = ev.data.kind
+    if kind ~= "install" and kind ~= "update" then
+      return
+    end
 
-			if kind ~= "install" and kind ~= "update" then
-				return
-			end
-
-			if name == "nvim-treesitter" then
-				if not ev.data.active then
-					vim.cmd.packadd("nvim-treesitter")
-				end
-				vim.cmd("TSUpdate")
-				return
-			end
-
-      if name == "telescope-fzf-native.nvim" then
-        vim.system({ "make" }, { cwd = ev.data.path }):wait()
-        return
+    if name == "nvim-treesitter" then
+      if not ev.data.active then
+        vim.cmd.packadd("nvim-treesitter")
       end
-		end,
-	})
-end
+      vim.cmd("TSUpdate")
+      return
+    end
 
--- Remove unused packages
+    if name == "telescope-fzf-native.nvim" then
+      vim.system({ "make" }, { cwd = ev.data.path }):wait()
+      return
+    end
+  end,
+})
+
+
+--- Local functions
 local function pack_clean()
   local unused_plugins = {}
 
@@ -152,15 +120,138 @@ local function pack_clean()
   end
 end
 
-vim.keymap.set("n", "<leader>pc", pack_clean, { desc = "Pack: clean unused" })
+local group = vim.api.nvim_create_augroup("AutoRead", { clear = true })
+vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermLeave" }, {
+  desc = "Update buffer when file changes",
+  group = group,
+  callback = function()
+    if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then
+      vim.cmd("silent! checktime")
+    end
+  end,
+})
+vim.api.nvim_create_autocmd("FileChangedShellPost", {
+  group = group,
+  callback = function()
+    vim.notify("Buffer reloaded: file changed on disk", vim.log.levels.INFO)
+  end,
+})
 
-require("plugins.icons")
-require("plugins.obsidian")
-require("plugins.lsp")
-require("plugins.debug")
-require("plugins.blink")
-require("plugins.treesitter")
-require("plugins.telescope")
-require("plugins.oil")
-require("plugins.mini-surround")
-require("plugins.typst-preview")
+
+-- Debug
+vim.pack.add({
+  "https://github.com/mfussenegger/nvim-dap",
+  {
+    src = "https://github.com/igorlfs/nvim-dap-view",
+    version = vim.version.range("1.*"),
+  },
+  "https://github.com/theHamsta/nvim-dap-virtual-text",
+})
+require("dap-view").setup()
+require("nvim-dap-virtual-text").setup({
+  commented = true,
+  highlight_changed_variables = true,
+})
+
+-- Mason
+vim.pack.add({ "https://github.com/mason-org/mason.nvim" })
+require("mason").setup()
+
+
+--- LSP
+vim.pack.add({ "https://github.com/neovim/nvim-lspconfig" })
+
+-- Lua
+vim.lsp.config("lua_ls", {
+  settings = {
+    Lua = {
+      diagnostics = {
+        globals = { "vim" },
+      },
+    },
+  },
+})
+vim.lsp.enable({ 'lua_ls' })
+
+-- Java
+vim.pack.add({ "https://github.com/mfussenegger/nvim-jdtls" })
+
+-- Typst
+vim.lsp.enable({ 'tinymist' })
+
+-- Configuration
+vim.lsp.inlay_hint.enable()
+vim.diagnostic.config({
+  update_in_insert = false,
+  severity_sort = true,
+  virtual_text = true,
+  underline = { severity = { min = vim.diagnostic.severity.WARN } },
+  jump = {
+    on_jump = function(_, bufnr)
+      vim.diagnostic.open_float({
+        bufnr = bufnr,
+        scope = "cursor",
+        focus = false,
+      })
+    end,
+  },
+})
+vim.api.nvim_create_autocmd('LspAttach', {
+  group = vim.api.nvim_create_augroup('my.lsp', {}),
+  callback = function(ev)
+    local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
+    if client:supports_method('textDocument/completion') then
+      vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
+    end
+    if not client:supports_method('textDocument/willSaveWaitUntil')
+        and client:supports_method('textDocument/formatting') then
+      vim.api.nvim_create_autocmd('BufWritePre', {
+        group = vim.api.nvim_create_augroup('my.lsp', { clear = false }),
+        buffer = ev.buf,
+        callback = function()
+          vim.lsp.buf.format({ bufnr = ev.buf, id = client.id, timeout_ms = 1000 })
+        end,
+      })
+    end
+  end,
+})
+
+
+-- Treesitter
+vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" } })
+local parsers = { "lua", "typst", "java", "query" }
+require("nvim-treesitter").install(parsers)
+vim.api.nvim_create_autocmd("FileType", {
+  callback = function()
+    pcall(vim.treesitter.start)
+    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  end,
+})
+vim.opt.foldmethod = "expr"
+vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.opt.foldenable = false
+
+
+-- Typst
+vim.pack.add({ "https://github.com/chomosuke/typst-preview.nvim" })
+require("typst-preview").setup({})
+
+
+--- Keybinds
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.keymap.set("n", "<space>x", ":.lua<CR>", { desc = "Execute line of lua" })
+vim.keymap.set("v", "<space>x", ":lua<CR>", { desc = "Execute selection of lua" })
+vim.keymap.set("n", "<leader>pc", pack_clean, { desc = "Pack: clean unused" })
+vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostics (loclist)" })
+vim.keymap.set("n", "<leader>Q", vim.diagnostic.setqflist, { desc = "Diagnostics (quickfix)" })
+vim.keymap.set("n", "-", "<cmd>Explore<CR>", { desc = "Explore current directory" })
+vim.keymap.set("n", "gbb", require("dap").toggle_breakpoint, { desc = "Debug: Toggle breakpoint" })
+vim.keymap.set("n", "gbc", require("dap").continue, { desc = "Debug: Continue" })
+vim.keymap.set("n", "gbn", require("dap").step_over, { desc = "Debug: Step over" })
+vim.keymap.set("n", "gbi", require("dap").step_into, { desc = "Debug: Step into" })
+vim.keymap.set("n", "gbo", require("dap").step_out, { desc = "Debug: Step out" })
+vim.keymap.set("n", "gbt", require("dap").terminate, { desc = "Debug: Terminate" })
+vim.keymap.set("n", "<leader>dr", require("dap").repl.open, { desc = "Debug: Open REPL" })
+vim.keymap.set("n", "<leader>dl", require("dap").run_last, { desc = "Debug: Run last configuration" })
+vim.keymap.set("n", "<leader>dv", "<cmd>DapViewToggle<CR>", { desc = "Debug: Toggle view" })
