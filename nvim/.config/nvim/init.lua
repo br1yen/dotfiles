@@ -47,7 +47,6 @@ vim.schedule(function()
   vim.opt.clipboard = "unnamedplus"
 end)
 
-
 -- Netrw
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "netrw",
@@ -200,6 +199,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('my.lsp', {}),
   callback = function(ev)
     local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
+    if not client then return end
     if client:supports_method('textDocument/completion') then
       vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
     end
@@ -209,7 +209,7 @@ vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('my.lsp', { clear = false }),
         buffer = ev.buf,
         callback = function()
-          vim.lsp.buf.format({ bufnr = ev.buf, id = client.id, timeout_ms = 1000 })
+          vim.lsp.buf.format({ bufnr = ev.buf, id = client.id })
         end,
       })
     end
