@@ -13,6 +13,7 @@ vim.opt.winborder = "none"
 vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
+vim.opt.laststatus = 3
 
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
@@ -39,13 +40,21 @@ vim.opt.scrolloff = 999
 vim.opt.smoothscroll = true
 
 vim.opt.confirm = true
-vim.opt.completeopt = "menu,menuone,noinsert"
+vim.opt.completeopt = "menu,fuzzy,menuone,noinsert,popup,preview"
+vim.opt.pumheight = 10
 
 vim.opt.path:append("**")
 
 vim.schedule(function()
   vim.opt.clipboard = "unnamedplus"
 end)
+
+-- Colors
+vim.pack.add({ "https://github.com/metalelf0/black-metal-theme-neovim" })
+require("black-metal").setup({
+  theme = "immortal",
+})
+require("black-metal").load()
 
 -- Netrw
 vim.api.nvim_create_autocmd("FileType", {
@@ -58,7 +67,6 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 vim.g.netrw_banner = 0
-
 
 --- Autocmds
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -199,7 +207,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
   group = vim.api.nvim_create_augroup('my.lsp', {}),
   callback = function(ev)
     local client = assert(vim.lsp.get_client_by_id(ev.data.client_id))
-    if not client then return end
     if client:supports_method('textDocument/completion') then
       vim.lsp.completion.enable(true, client.id, ev.buf, { autotrigger = true })
     end
@@ -238,8 +245,10 @@ require("typst-preview").setup({})
 
 
 --- Keybinds
+for i = 1,9 do vim.keymap.set("n", "<leader>" ..i, i .. "gt", { desc = "Go to tab number" }) end
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.keymap.set("t", "<C-[>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 vim.keymap.set("n", "<space>x", ":.lua<CR>", { desc = "Execute line of lua" })
 vim.keymap.set("v", "<space>x", ":lua<CR>", { desc = "Execute selection of lua" })
 vim.keymap.set("n", "<leader>pc", pack_clean, { desc = "Pack: clean unused" })

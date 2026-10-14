@@ -1,7 +1,7 @@
 font-family = Inconsolata
 font-size = 14
 scrollback-limit = 10000
-theme = Nvim Dark
+theme = Black Metal (Immortal)
 
 cursor-style = block
 cursor-style-blink = false
@@ -14,3 +14,4 @@ copy-on-select = true
 resize-overlay = never
 right-click-action = ignore
 scrollbar = never
+window-inherit-working-directory = false
