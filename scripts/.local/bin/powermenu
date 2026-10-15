@@ -7,11 +7,9 @@ choice=$(
 
 case "$choice" in
   Lock)
-    /usr/bin/hyprlock
+    /usr/bin/loginctl lock-session
     ;;
   Suspend)
-    /usr/bin/hyprlock &
-    sleep 0.5
     /usr/bin/systemctl suspend
     ;;
   'Log out')

@@ -13,6 +13,7 @@ hl.bind("switch:off:Lid Switch", hl.dsp.exec_cmd('hyprctl keyword monitor "eDP-1
 -- See https://wiki.hypr.land/configuring/core/autostart/
 hl.on("hyprland.start", function()
   hl.exec_cmd("nm-applet")
+  hl.exec_cmd("hypridle")
   hl.exec_cmd("librewolf")
   hl.exec_cmd("waybar")
   hl.exec_cmd("swaybg -i ~/sync/pictures/mt.jpeg -m fill")
