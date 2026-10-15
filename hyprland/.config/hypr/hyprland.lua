@@ -4,11 +4,6 @@
 hl.monitor({ output = "DP-3", mode = "1920x1080@170", position = "0x0", scale = "1.0" })
 hl.monitor({ output = "eDP-1", mode = "1920x1080@60", position = "1920x0", scale = "1.0" })
 
--- lid switch (locked = works even when locked)
-hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd('hyprctl keyword monitor "eDP-1, disable"'), { locked = true })
-hl.bind("switch:off:Lid Switch", hl.dsp.exec_cmd('hyprctl keyword monitor "eDP-1, 1920x1080@60, 1920x0, 1"'),
-  { locked = true })
-
 ---- AUTOSTART ----
 -- See https://wiki.hypr.land/configuring/core/autostart/
 hl.on("hyprland.start", function()

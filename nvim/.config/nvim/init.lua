@@ -245,7 +245,7 @@ require("typst-preview").setup({})
 
 
 --- Keybinds
-for i = 1,9 do vim.keymap.set("n", "<leader>" ..i, i .. "gt", { desc = "Go to tab number" }) end
+for i = 1, 9 do vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to tab number" }) end
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 vim.keymap.set("t", "<C-[>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
