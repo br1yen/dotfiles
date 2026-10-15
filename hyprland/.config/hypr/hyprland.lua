@@ -1,29 +1,23 @@
 ---@diagnostic disable: undefined-global
 ---- MONITORS ----
 -- See https://wiki.hypr.land/configuring/core/monitors/
-hl.monitor({
-	output = "DP-3",
-	mode = "1920x1080@170",
-	position = "auto",
-	scale = "1.0",
-})
+hl.monitor({ output = "DP-3", mode = "1920x1080@170", position = "0x0", scale = "1.0" })
+hl.monitor({ output = "eDP-1", mode = "1920x1080@60", position = "1920x0", scale = "1.0" })
 
-hl.monitor({
-	output = "eDP-1",
-	mode = "1920x1080@60",
-	position = "auto",
-	scale = "1.0",
-})
+-- lid switch (locked = works even when locked)
+hl.bind("switch:on:Lid Switch", hl.dsp.exec_cmd('hyprctl keyword monitor "eDP-1, disable"'), { locked = true })
+hl.bind("switch:off:Lid Switch", hl.dsp.exec_cmd('hyprctl keyword monitor "eDP-1, 1920x1080@60, 1920x0, 1"'),
+  { locked = true })
 
 ---- AUTOSTART ----
 -- See https://wiki.hypr.land/configuring/core/autostart/
 hl.on("hyprland.start", function()
-	hl.exec_cmd("nm-applet")
-	hl.exec_cmd("librewolf")
-	hl.exec_cmd("waybar")
-	hl.exec_cmd("swaybg -i ~/sync/pictures/mt.jpeg -m fill")
-	hl.exec_cmd("wl-paste --type text --watch cliphist store")
-	hl.exec_cmd("wl-paste --type image --watch cliphist store")
+  hl.exec_cmd("nm-applet")
+  hl.exec_cmd("librewolf")
+  hl.exec_cmd("waybar")
+  hl.exec_cmd("swaybg -i ~/sync/pictures/mt.jpeg -m fill")
+  hl.exec_cmd("wl-paste --type text --watch cliphist store")
+  hl.exec_cmd("wl-paste --type image --watch cliphist store")
 end)
 
 ---- ENVIRONMENT VARIABLES ----
@@ -32,70 +26,70 @@ hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
 
 hl.config({
-	general = {
-		gaps_out = 6,
-		gaps_in = 2,
+  general = {
+    gaps_out = 6,
+    gaps_in = 2,
 
-		border_size = 1,
-		col = {
-			active_border = "#7c829d",
-			inactive_border = "#17191e",
-		},
-		resize_on_border = false,
+    border_size = 1,
+    col = {
+      active_border = "#7c829d",
+      inactive_border = "#17191e",
+    },
+    resize_on_border = false,
 
-		allow_tearing = true,
+    allow_tearing = true,
 
-		layout = "scrolling",
-	},
+    layout = "scrolling",
+  },
 
-	scrolling = {
-		fullscreen_on_one_column = false,
-		column_width = 0.5,
-		explicit_column_widths = "0.5, 1.0",
-		follow_min_visible = "0.0",
-		follow_focus = true,
-	},
+  scrolling = {
+    fullscreen_on_one_column = false,
+    column_width = 0.5,
+    explicit_column_widths = "0.5, 1.0",
+    follow_min_visible = "0.0",
+    follow_focus = true,
+  },
 
-	render = { direct_scanout = 2 },
-	cursor = {
-		no_warps = true,
-		no_hardware_cursors = false,
-	},
+  render = { direct_scanout = 2 },
+  cursor = {
+    no_warps = true,
+    no_hardware_cursors = false,
+  },
 
-	decoration = {
-		rounding = 0,
-		rounding_power = 0,
+  decoration = {
+    rounding = 0,
+    rounding_power = 0,
 
-		active_opacity = 1.0,
-		inactive_opacity = 1.0,
+    active_opacity = 1.0,
+    inactive_opacity = 1.0,
 
-		shadow = {
-			enabled = false,
-		},
+    shadow = {
+      enabled = false,
+    },
 
-		blur = {
-			enabled = false,
-		},
-	},
+    blur = {
+      enabled = false,
+    },
+  },
 
-	animations = { enabled = true },
+  animations = { enabled = true },
 })
 
-hl.curve("snap", { type = "bezier", points = { {0.16, 1}, {0.3, 1} } })
+hl.curve("snap", { type = "bezier", points = { { 0.16, 1 }, { 0.3, 1 } } })
 
 hl.animation({ leaf = "global", enabled = false })
 
 -- windows
-hl.animation({ leaf = "windowsIn",   enabled = true, speed = 1.5, bezier = "snap", style = "popin 90%" })
-hl.animation({ leaf = "windowsOut",  enabled = true, speed = 1.2, bezier = "snap", style = "popin 90%" })
+hl.animation({ leaf = "windowsIn", enabled = true, speed = 1.5, bezier = "snap", style = "popin 90%" })
+hl.animation({ leaf = "windowsOut", enabled = true, speed = 1.2, bezier = "snap", style = "popin 90%" })
 hl.animation({ leaf = "windowsMove", enabled = true, speed = 1.5, bezier = "snap" })
 
 -- fade (pairs with popin so windows don't just appear)
-hl.animation({ leaf = "fadeIn",  enabled = true, speed = 1.2, bezier = "snap" })
+hl.animation({ leaf = "fadeIn", enabled = true, speed = 1.2, bezier = "snap" })
 hl.animation({ leaf = "fadeOut", enabled = true, speed = 1.0, bezier = "snap" })
 
 -- layer surfaces: waybar, fuzzel, notifications
-hl.animation({ leaf = "layersIn",  enabled = true, speed = 1.5, bezier = "snap", style = "fade" })
+hl.animation({ leaf = "layersIn", enabled = true, speed = 1.5, bezier = "snap", style = "fade" })
 hl.animation({ leaf = "layersOut", enabled = true, speed = 1.0, bezier = "snap", style = "fade" })
 
 -- workspaces
@@ -103,31 +97,31 @@ hl.animation({ leaf = "workspaces", enabled = true, speed = 1.5, bezier = "snap"
 
 ----  MISC  ----
 hl.config({
-	misc = {
-		force_default_wallpaper = 0,
-		disable_splash_rendering = true,
-		disable_hyprland_logo = true,
-	},
+  misc = {
+    force_default_wallpaper = 0,
+    disable_splash_rendering = true,
+    disable_hyprland_logo = true,
+  },
 })
 
 ---- INPUT ----
 hl.config({
-	input = {
-		kb_layout = "us",
-		kb_variant = "",
-		kb_model = "",
-		kb_options = "ctrl:nocaps",
-		kb_rules = "",
+  input = {
+    kb_layout = "us",
+    kb_variant = "",
+    kb_model = "",
+    kb_options = "ctrl:nocaps",
+    kb_rules = "",
 
-		follow_mouse = 2,
+    follow_mouse = 2,
 
-		sensitivity = 0,
-		accel_profile = "flat",
+    sensitivity = 0,
+    accel_profile = "flat",
 
-		touchpad = {
-			natural_scroll = false,
-		},
-	},
+    touchpad = {
+      natural_scroll = false,
+    },
+  },
 })
 
 hl.gesture({ fingers = 3, direction = "vertical", action = "workspace" })
@@ -136,8 +130,8 @@ hl.gesture({ fingers = 3, direction = "horizontal", action = "scroll_move" })
 -- Example per-device config
 -- See https://wiki.hypr.land/configuring/core/devices/ for more
 hl.device({
-	name = "epic-mouse-v1",
-	sensitivity = 0.0,
+  name = "epic-mouse-v1",
+  sensitivity = 0.0,
 })
 
 ---- KEYBINDINGS ----
@@ -173,11 +167,11 @@ hl.bind(mainMod .. " + equal", hl.dsp.layout("colresize +0.1"))
 hl.bind("SUPER + ESCAPE", hl.dsp.exec_cmd("killall -SIGUSR1 waybar"))
 
 for i = 1, 4 do
-	hl.workspace_rule({ workspace = tostring(i), persistent = true })
+  hl.workspace_rule({ workspace = tostring(i), persistent = true })
 end
 for i = 1, 4 do
-	hl.bind(mainMod .. " + " .. i, hl.dsp.focus({ workspace = i }))
-	hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i }))
+  hl.bind(mainMod .. " + " .. i, hl.dsp.focus({ workspace = i }))
+  hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i }))
 end
 
 hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen())
@@ -192,14 +186,14 @@ hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 
 -- Laptop multimedia keys for volume and LCD brightness
 hl.bind(
-	"XF86AudioRaiseVolume",
-	hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"),
-	{ locked = true, repeating = true }
+  "XF86AudioRaiseVolume",
+  hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"),
+  { locked = true, repeating = true }
 )
 hl.bind(
-	"XF86AudioLowerVolume",
-	hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
-	{ locked = true, repeating = true }
+  "XF86AudioLowerVolume",
+  hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
+  { locked = true, repeating = true }
 )
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"), { locked = true })
 hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"), { locked = true })
@@ -217,8 +211,8 @@ hl.bind(mainMod .. " + S", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
 
 -- Screenshot to file
 hl.bind(
-	mainMod .. " + SHIFT + S",
-	hl.dsp.exec_cmd('grim -g "$(slurp)" ~/Pictures/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png')
+  mainMod .. " + SHIFT + S",
+  hl.dsp.exec_cmd('grim -g "$(slurp)" ~/Pictures/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png')
 )
 
 -- Clipboard history
@@ -227,27 +221,27 @@ hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("sh -c 'cliphist list | fuzzel --dmen
 ---- WINDOWS AND WORKSPACES ----
 -- See https://wiki.hypr.land/configuring/core/rules/
 local suppressMaximizeRule = hl.window_rule({
-	-- Ignore maximize requests from all apps. You'll probably like this.
-	name = "suppress-maximize-events",
-	match = { class = ".*" },
+  -- Ignore maximize requests from all apps. You'll probably like this.
+  name = "suppress-maximize-events",
+  match = { class = ".*" },
 
-	suppress_event = "maximize",
+  suppress_event = "maximize",
 })
 -- suppressMaximizeRule:set_enabled(false)
 
 hl.window_rule({
-	-- Fix some dragging issues with XWayland
-	name = "fix-xwayland-drags",
-	match = {
-		class = "^$",
-		title = "^$",
-		xwayland = true,
-		float = true,
-		fullscreen = false,
-		pin = false,
-	},
+  -- Fix some dragging issues with XWayland
+  name = "fix-xwayland-drags",
+  match = {
+    class = "^$",
+    title = "^$",
+    xwayland = true,
+    float = true,
+    fullscreen = false,
+    pin = false,
+  },
 
-	no_focus = true,
+  no_focus = true,
 })
 
 -- Layer rules also return a handle.
@@ -260,33 +254,33 @@ hl.window_rule({
 
 -- Hyprland-run windowrule
 hl.window_rule({
-	name = "move-hyprland-run",
-	match = { class = "hyprland-run" },
+  name = "move-hyprland-run",
+  match = { class = "hyprland-run" },
 
-	move = "20 monitor_h-120",
-	float = true,
+  move = "20 monitor_h-120",
+  float = true,
 })
 
 hl.window_rule({
-	name = "librewolf-workspace",
-	match = { class = "^librewolf$" },
-	workspace = "2",
+  name = "librewolf-workspace",
+  match = { class = "^librewolf$" },
+  workspace = "2",
 })
 
 hl.window_rule({
-	name = "pavucontrol",
-	match = { class = "^(org.pulseaudio.pavucontrol)$" },
-	float = true,
-	center = true,
+  name = "pavucontrol",
+  match = { class = "^(org.pulseaudio.pavucontrol)$" },
+  float = true,
+  center = true,
 })
 
 hl.window_rule({
-	name = "cs2-gaming",
-	match = { class = "^cs2$" },
-	fullscreen = true,
-	immediate = true,
-	idle_inhibit = "fullscreen",
-	no_anim = true,
-	no_blur = true,
-	no_shadow = true,
+  name = "cs2-gaming",
+  match = { class = "^cs2$" },
+  fullscreen = true,
+  immediate = true,
+  idle_inhibit = "fullscreen",
+  no_anim = true,
+  no_blur = true,
+  no_shadow = true,
 })
