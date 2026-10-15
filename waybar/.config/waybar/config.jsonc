@@ -1,79 +1,80 @@
 {
-    "layer": "top",
-    "position": "top",
-    "spacing": 4,
+  "layer": "top",
+  "position": "top",
+  "spacing": 4,
 
-    "modules-left": [
-        "hyprland/workspaces",
-    ],
+  "modules-left": [
+    "hyprland/workspaces",
+  ],
 
-    "modules-center": [
-        "clock"
-    ],
+  "modules-center": [
+    "clock"
+  ],
 
-    "modules-right": [
-        "pulseaudio",
-        "battery",
-        "tray"
-    ],
+  "modules-right": [
+    "pulseaudio",
+    "battery",
+    "tray"
+  ],
 
-    "hyprland/workspaces": {
-        "format": "{name} {windows}",
-        "window-rewrite-default": "?",
-        "window-rewrite-separator": "",
-        "window-rewrite": {
-            "class<librewolf>": "web",
-            "class<com.mitchellh.ghostty>": "term",
-            "class<cs2>": "cs2",
-            "class<steam>": "steam",
-            "title<.*nvim.*>": "nvim",
-            "class<md.obsidian.Obsidian>": "notes"
-        }
-    },
-
-    "hyprland/window": {
-        "format": "{}",
-        "max-length": 40,
-        "separate-outputs": true
-    },
-
-    "clock": {
-        "format": "{:%a %d %b   %I:%M %p}",
-        "tooltip-format": "<tt>{calendar}</tt>",
-        "calendar": {
-            "mode": "month",
-            "mode-mon-col": 3,
-            "weeks-pos": "right",
-            "on-scroll": 1,
-            "format": {
-                "months":   "<span color='#ffffff'><b>{}</b></span>",
-                "days":     "<span color='#deddda'>{}</span>",
-                "weeks":    "<span color='#77767b'>W{}</span>",
-                "weekdays": "<span color='#9a9996'><b>{}</b></span>",
-                "today":    "<span color='#78aeed'><b><u>{}</u></b></span>"
-            }
-        }
-    },
-    "pulseaudio": {
-        "format": "{icon}  {volume}%",
-        "format-muted": "󰝟 muted",
-        "format-icons": {
-            "default": [" ", " ", " "]
-        },
-        "on-click": "pavucontrol",
-        "tooltip": false
-    },
-
-    "battery": {
-        "format": " {icon} {capacity}%",
-        "format-charging": "󰂄 {capacity}%",
-        "format-plugged": "󰂄 {capacity}%",
-        "format-icons": ["󰁺", "󰁼", "󰁾", "󰂀", "󰂂"],
-        "tooltip": false
-    },
-
-    "tray": {
-        "spacing": 8,
-        "tooltip": false
+  "hyprland/workspaces": {
+    "format": "{name} {windows}",
+    "window-rewrite-default": "?",
+    "window-rewrite-separator": "",
+    "window-rewrite": {
+      "class<librewolf>": "web",
+      "class<com.mitchellh.ghostty>": "term",
+      "class<cs2>": "cs2",
+      "class<steam>": "steam",
+      "title<.*nvim.*>": "nvim",
+      "class<md.obsidian.Obsidian>": "notes",
+      "class<org.pwmt.zathura>": "pdf",
     }
+  },
+
+  "hyprland/window": {
+    "format": "{}",
+    "max-length": 40,
+    "separate-outputs": true
+  },
+
+  "clock": {
+    "format": "{:%a %d %b   %I:%M %p}",
+    "tooltip-format": "<tt>{calendar}</tt>",
+    "calendar": {
+      "mode": "month",
+      "mode-mon-col": 3,
+      "weeks-pos": "right",
+      "on-scroll": 1,
+      "format": {
+        "months":   "<span color='#ffffff'><b>{}</b></span>",
+        "days":     "<span color='#deddda'>{}</span>",
+        "weeks":    "<span color='#77767b'>W{}</span>",
+        "weekdays": "<span color='#9a9996'><b>{}</b></span>",
+        "today":    "<span color='#78aeed'><b><u>{}</u></b></span>"
+      }
+    }
+  },
+  "pulseaudio": {
+    "format": "{icon}  {volume}%",
+    "format-muted": "󰝟 muted",
+    "format-icons": {
+      "default": [" ", " ", " "]
+    },
+    "on-click": "pavucontrol",
+    "tooltip": false
+  },
+
+  "battery": {
+    "format": " {icon} {capacity}%",
+    "format-charging": "󰂄 {capacity}%",
+    "format-plugged": "󰂄 {capacity}%",
+    "format-icons": ["󰁺", "󰁼", "󰁾", "󰂀", "󰂂"],
+    "tooltip": false
+  },
+
+  "tray": {
+    "spacing": 8,
+    "tooltip": false
+  }
 }
