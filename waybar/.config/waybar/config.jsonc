@@ -29,6 +29,7 @@
       "title<.*nvim.*>": "nvim",
       "class<md.obsidian.Obsidian>": "notes",
       "class<org.pwmt.zathura>": "pdf",
+      "class<thunar>": "files",
     }
   },
 
