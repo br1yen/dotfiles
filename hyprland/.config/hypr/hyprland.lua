@@ -1,7 +1,17 @@
 ---@diagnostic disable: undefined-global
 ---- MONITORS ----
 -- See https://wiki.hypr.land/configuring/core/monitors/
-hl.monitor({ output = "DP-3", mode = "1920x1080@170", position = "0x0", scale = "1.0" })
+hl.monitor({
+  output = "DP-3",
+  mode = "1920x1080@170",
+  position = "0x0",
+  scale = 1.0,
+
+  bitdepth = 10,
+  cm = "hdr",
+  supports_hdr = 1,
+  supports_wide_color = 1,
+})
 hl.monitor({ output = "eDP-1", mode = "1920x1080@60", position = "1920x0", scale = "1.0" })
 
 ---- AUTOSTART ----
@@ -10,6 +20,7 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("nm-applet")
   hl.exec_cmd("hypridle")
   hl.exec_cmd("librewolf")
+  hl.exec_once("hyprsunset")
   hl.exec_cmd("waybar")
   hl.exec_cmd("swaybg -i ~/sync/pictures/mt.jpeg -m fill")
   hl.exec_cmd("wl-paste --type text --watch cliphist store")
@@ -46,7 +57,11 @@ hl.config({
     follow_focus = true,
   },
 
-  render = { direct_scanout = 2 },
+  render = {
+    direct_scanout = 2,
+    cm_enabled = true,
+    cm_auto_hdr = 1,
+  },
   cursor = {
     no_warps = true,
     no_hardware_cursors = false,
