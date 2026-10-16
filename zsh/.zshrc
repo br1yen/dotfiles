@@ -1,6 +1,7 @@
 # PATH (typeset -U dedupes entries)
-typeset -U path
+typeset -U path PATH
 path=(~/.local/bin $path)
+export PATH
 
 # Default editor
 export EDITOR=nvim
@@ -11,7 +12,6 @@ export MANPAGER='nvim +Man!'
 
 bindkey -e
 
-# Prompt: host:path $  (# for root)
 PROMPT='%m%b%f:%~%f %(!.#.$)%f '
 
 # Fuzzy reverse search
@@ -46,8 +46,8 @@ export NNN_TRASH="trash-put"
 export NNN_OPENER="$HOME/.config/nnn/opener"
 
 # aliases
-alias ls='ls --color=auto'
 alias grep='grep --color=auto'
+alias diff='diff --color=auto'
 
 alias gs='git status'
 alias ga='git add'
