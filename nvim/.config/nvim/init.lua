@@ -205,7 +205,6 @@ vim.pack.add({ "https://github.com/mfussenegger/nvim-jdtls" })
 -- Typst
 vim.lsp.config("tinymist", {
   settings = {
-    exportPdf = "onSave",
     formatterMode = "typstyle",
   },
 })

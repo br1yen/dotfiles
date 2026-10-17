@@ -142,7 +142,7 @@ hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("librewolf"))
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("ghostty"))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("/home/br1yen/.local/bin/powermenu"))
-hl.bind(mainMod .. " + G", hl.dsp.exec_cmd("/home/br1yen/.local/bin/windows-switcher"))
+hl.bind(mainMod .. " + G", hl.dsp.exec_cmd("/home/br1yen/.local/bin/find-notes"))
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("/home/br1yen/.local/bin/fzfpdf"))
 hl.bind(mainMod .. " + F", hl.dsp.window.float({ action = "toggle" }))
 
