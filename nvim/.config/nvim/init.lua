@@ -16,6 +16,7 @@ vim.opt.signcolumn = "yes"
 vim.opt.laststatus = 3
 vim.opt.cursorline = true
 vim.opt.showmode = false
+vim.opt.cursorlineopt = "line"
 
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
@@ -52,11 +53,23 @@ vim.schedule(function()
 end)
 
 -- Colors
-vim.pack.add({ "https://github.com/metalelf0/black-metal-theme-neovim" })
-require("black-metal").setup({
-  theme = "immortal",
+vim.pack.add({ "https://github.com/ramojus/mellifluous.nvim" })
+require("mellifluous").setup({
+  flat_background = {
+    line_numbers = true,
+    cursor_line_number = true,
+  },
+  highlight_overrides = {
+    dark = function(highlighter, colors)
+      highlighter.set("Pmenu", { fg = colors.fg })
+      highlighter.set("PmenuKind", { fg = colors.fg })
+      highlighter.set("PmenuExtra", { fg = colors.fg })
+      highlighter.set("NormalFloat", { fg = colors.fg, bg = colors.bg })
+      highlighter.set("FloatBorder", { fg = colors.fg, bg = colors.bg })
+    end,
+  },
 })
-require("black-metal").load()
+vim.cmd.colorscheme("mellifluous")
 
 -- Netrw
 vim.api.nvim_create_autocmd("FileType", {
@@ -102,11 +115,6 @@ vim.api.nvim_create_autocmd("PackChanged", {
         vim.cmd.packadd("nvim-treesitter")
       end
       vim.cmd("TSUpdate")
-      return
-    end
-
-    if name == "telescope-fzf-native.nvim" then
-      vim.system({ "make" }, { cwd = ev.data.path }):wait()
       return
     end
   end,
@@ -171,10 +179,10 @@ require("nvim-dap-virtual-text").setup({
   highlight_changed_variables = true,
 })
 
+
 -- Mason
 vim.pack.add({ "https://github.com/mason-org/mason.nvim" })
 require("mason").setup()
-
 
 --- LSP
 vim.pack.add({ "https://github.com/neovim/nvim-lspconfig" })
@@ -195,6 +203,12 @@ vim.lsp.enable({ 'lua_ls' })
 vim.pack.add({ "https://github.com/mfussenegger/nvim-jdtls" })
 
 -- Typst
+vim.lsp.config("tinymist", {
+  settings = {
+    exportPdf = "onSave",
+    formatterMode = "typstyle",
+  },
+})
 vim.lsp.enable({ 'tinymist' })
 
 -- Configuration

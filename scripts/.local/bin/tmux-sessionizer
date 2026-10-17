@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+entries=(
+  "home=$HOME"
+  "config=$HOME/.config"
+  "notes=$HOME/sync/notes"
+  "csc301=$HOME/sync/school/csc301"
+  "rel103=$HOME/sync/school/rel103"
+  "snc185=$HOME/sync/school/snc185"
+)
+
+if [[ $# -eq 1 ]]; then
+    # called with a name (e.g. from a keybind)
+    pick=$1
+else
+    pick=$(printf '%s\n' "${entries[@]}" | cut -d= -f1 | fzf)
+fi
+[[ -z $pick ]] && exit 0
+
+dir=""
+for e in "${entries[@]}"; do
+    [[ ${e%%=*} == "$pick" ]] && dir=${e#*=}
+done
+[[ -z $dir ]] && { echo "unknown: $pick" >&2; exit 1; }
+
+if ! tmux has-session -t="$pick" 2>/dev/null; then
+    tmux new-session -ds "$pick" -c "$dir"
+fi
+
+if [[ -z $TMUX ]]; then
+    tmux attach -t "$pick"
+else
+    tmux switch-client -t "$pick"
+fi
