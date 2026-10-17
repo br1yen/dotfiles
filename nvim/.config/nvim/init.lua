@@ -70,6 +70,15 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 vim.g.netrw_banner = 0
 
+--- Nnn
+vim.pack.add({ "https://github.com/luukvbaal/nnn.nvim" })
+require("nnn").setup({
+  explorer = {
+    fullscreen = true,
+  },
+  replace_netrw = "picker",
+})
+
 --- Autocmds
 vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Highlight when yanking text",
@@ -256,7 +265,7 @@ vim.keymap.set("v", "<space>x", ":lua<CR>", { desc = "Execute selection of lua" 
 vim.keymap.set("n", "<leader>pc", pack_clean, { desc = "Pack: clean unused" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostics (loclist)" })
 vim.keymap.set("n", "<leader>Q", vim.diagnostic.setqflist, { desc = "Diagnostics (quickfix)" })
-vim.keymap.set("n", "-", "<cmd>Explore<CR>", { desc = "Explore current directory" })
+vim.keymap.set("n", "-", "<cmd>NnnPicker<CR>", { desc = "Explore current directory" })
 vim.keymap.set("n", "gbb", require("dap").toggle_breakpoint, { desc = "Debug: Toggle breakpoint" })
 vim.keymap.set("n", "gbc", require("dap").continue, { desc = "Debug: Continue" })
 vim.keymap.set("n", "gbn", require("dap").step_over, { desc = "Debug: Step over" })

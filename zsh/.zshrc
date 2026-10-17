@@ -44,6 +44,9 @@ export NNN_OPTS="Hezx"
 export NNN_BMS="d:$HOME/Downloads;s:$HOME/sync;c:$HOME/.config"
 export NNN_TRASH="trash-put"
 export NNN_OPENER="$HOME/.config/nnn/opener"
+export NNN_TERMINAL='ghostty'
+export NNN_COLORS='4444'
+export NNN_FCOLORS='000000000000'
 
 # aliases
 alias grep='grep --color=auto'
