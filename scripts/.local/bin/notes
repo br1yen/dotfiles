@@ -1,10 +1,21 @@
 #!/usr/bin/env sh
-# typc: combine every .typ in a class folder into <notes>/pdfs/<class>.pdf
-# usage: typc [class_dir]   (default: current directory)
+# typc: combine every .typ in a class folder into $NOTES/pdfs/<class>.pdf
+# usage: typc [class_dir | class_name]   (default: current directory)
 
-dir=$(realpath "${1:-.}")
+NOTES="${NOTES:-$HOME/sync/school/notes}"   # <- set this to your notes root
+
+arg="${1:-.}"
+if [ -d "$arg" ]; then
+    dir=$(realpath "$arg")
+elif [ -d "$NOTES/$arg" ]; then
+    dir=$(realpath "$NOTES/$arg")      # lets you run `typc csc373` from anywhere
+else
+    echo "typc: no such class folder: $arg" >&2
+    exit 1
+fi
+
 class=$(basename "$dir")
-out="$(dirname "$dir")/pdfs"
+out="$NOTES/pdfs"
 mkdir -p "$out"
 
 tmp=$(mktemp -d)
@@ -12,8 +23,9 @@ trap 'rm -rf "$tmp"' EXIT
 
 set --
 for f in "$dir"/*.typ; do
+    [ -e "$f" ] || { echo "typc: no .typ files in $dir" >&2; exit 1; }
     pdf="$tmp/$(basename "${f%.typ}").pdf"
-    typst compile --root "$(dirname "$dir")" "$f" "$pdf" || exit 1
+    typst compile --root "$NOTES" "$f" "$pdf" || exit 1
     set -- "$@" "$pdf"
 done
 

@@ -16,4 +16,4 @@ selection=$(list | sed "s|^$HOME|~|" | fuzzel --dmenu --prompt='pdf> ' --width=8
 # Expand ~ back to $HOME
 selection="${selection/#\~/$HOME}"
 
-setsid -f zathura "$selection" >/dev/null 2>&1
+setsid -f sioyek "$selection" >/dev/null 2>&1

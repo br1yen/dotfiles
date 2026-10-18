@@ -267,6 +267,20 @@ vim.opt.foldenable = false
 vim.pack.add({ "https://github.com/chomosuke/typst-preview.nvim" })
 require("typst-preview").setup({})
 
+-- Paste images
+vim.pack.add({ "https://github.com/HakonHarnes/img-clip.nvim" })
+require("img-clip").setup({
+  default = {
+    dir_path = "assets",
+    relative_to_current_file = true,
+    prompt_for_file_name = false,
+  },
+  filetypes = {
+    typst = {
+      template = '#image("$FILE_PATH")',
+    },
+  },
+})
 
 --- Keybinds
 for i = 1, 9 do vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to tab number" }) end
@@ -288,3 +302,4 @@ vim.keymap.set("n", "gbt", require("dap").terminate, { desc = "Debug: Terminate"
 vim.keymap.set("n", "<leader>dr", require("dap").repl.open, { desc = "Debug: Open REPL" })
 vim.keymap.set("n", "<leader>dl", require("dap").run_last, { desc = "Debug: Run last configuration" })
 vim.keymap.set("n", "<leader>dv", "<cmd>DapViewToggle<CR>", { desc = "Debug: Toggle view" })
+vim.keymap.set("n", "<leader>p", "<cmd>PasteImage<cr>", { desc = "Paste image from clipboard" })
