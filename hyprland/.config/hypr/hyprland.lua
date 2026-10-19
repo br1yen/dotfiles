@@ -164,7 +164,7 @@ hl.bind(mainMod .. " + R", hl.dsp.layout("colresize +conf"))
 hl.bind(mainMod .. " + minus", hl.dsp.layout("colresize -0.1"))
 hl.bind(mainMod .. " + equal", hl.dsp.layout("colresize +0.1"))
 
-hl.bind("SUPER + ESCAPE", hl.dsp.exec_cmd("killall -SIGUSR1 waybar"))
+hl.bind("SUPER + TAB", hl.dsp.exec_cmd("killall -SIGUSR1 waybar"))
 
 for i = 1, 4 do
   hl.workspace_rule({ workspace = tostring(i), persistent = true })
