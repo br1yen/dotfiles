@@ -34,7 +34,6 @@
   (setq inhibit-startup-echo-area-message user-login-name)
   (setq display-line-numbers-type 'visual)
   (setq display-line-numbers-current-absolute t)
-  (setq tab-bar-show 1)
 
   (add-hook 'prog-mode-hook #'display-line-numbers-mode)
   (add-hook 'text-mode-hook #'display-line-numbers-mode)
