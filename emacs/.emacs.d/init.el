@@ -36,26 +36,35 @@
   (setq display-line-numbers-type 'visual)
   (setq display-line-numbers-current-absolute t)
 
-  (add-hook 'prog-mode-hook #'display-line-numbers-mode)
-  (add-hook 'text-mode-hook #'display-line-numbers-mode)
-  (add-hook 'prog-mode-hook #'visual-line-mode)
-  (add-hook 'text-mode-hook #'visual-line-mode)
+  (add-hook 'prog-mode-hook
+	    (lambda ()
+	      (display-line-numbers-mode 1)
+	      (visual-line-mode 1)))
 
-  (set-face-attribute 'default nil :family "UbuntuMono Nerd Font" :height 120)
-  (set-face-attribute 'fixed-pitch nil :family "UbuntuMono Nerd Font" :height 120)
-  (set-face-attribute 'variable-pitch nil :family "Ubuntu Sans" :height 120)
+  (add-hook 'text-mode-hook
+	    (lambda ()
+	      (display-line-numbers-mode 1)
+	      (variable-pitch-mode 1)
+	      (visual-line-mode 1)))
+
+  (set-face-attribute 'default nil :family "JetBrains Mono" :height 120)
+  (set-face-attribute 'fixed-pitch nil :family "JetBrains Mono" :height 120)
+  (set-face-attribute 'variable-pitch nil :family "Inter" :height 120)
   (set-fontset-font t 'emoji "Noto Color Emoji")
-  (set-fontset-font t 'han "Noto Sans CJK JP"))
+  (set-fontset-font t 'han "Noto Sans CJK JP")
+
+  (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
+  (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
 
 
 ;; Code wrapping respects indent
 (use-package adaptive-wrap
-  :hook (text-mode . adaptive-wrap-prefix-mode))
+  :hook (prog-mode . adaptive-wrap-prefix-mode))
 
 
 ;; Centered paragraphs
 (use-package visual-fill-column
-  :hook (visual-line-mode . visual-fill-column-mode)
+  :hook (text-mode . visual-fill-column-mode)
   :config
   (setq-default visual-fill-column-width 100)
   (setq-default visual-fill-column-center-text t))
