@@ -54,8 +54,27 @@
   (set-fontset-font t 'han "Noto Sans CJK JP")
 
   (set-face-attribute 'line-number nil :inherit 'fixed-pitch)
-  (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch))
+  (set-face-attribute 'line-number-current-line nil :inherit 'fixed-pitch)
 
+  ;; Bookmarks
+  (setq bookmark-alist
+	'(("home"   (filename . "~/"))
+	  ("org"    (filename . "~/sync/org/")) 
+	  ("csc301" (filename . "~/sync/school/csc301/"))
+	  ("rel103" (filename . "~/sync/school/rel103/"))
+	  ("csc373" (filename . "~/sync/school/csc373/"))
+	  ("snc185" (filename . "~/sync/school/snc185/"))
+	  ("emacs"  (filename . "~/.emacs.d/"))
+	  ("config" (filename . "~/.config/"))))
+  (add-hook 'bookmark-after-jump-hook
+	    (lambda ()
+	      (setq-default default-directory default-directory)
+	      (call-interactively #'find-file)))
+
+  ;; Now I don't have to escape insert mode to execute
+  (add-hook 'eshell-mode-hook
+          (lambda ()
+            (evil-local-set-key 'insert (kbd "RET") #'eshell-send-input))))
 
 ;; Code wrapping respects indent
 (use-package adaptive-wrap
@@ -74,18 +93,65 @@
 (use-package org
   :ensure nil
   :custom
+  ;; files
   (org-directory (expand-file-name "~/sync/org/"))
   (org-agenda-files (list org-directory))
+
+  ;; workflow
   (org-agenda-start-with-log-mode t)
   (org-log-done 'time)
+  (org-enforce-todo-dependencies t)
   (org-todo-keywords '((sequence "TODO(t)" "|" "DONE(d)")))
+
+  ;; appearance
+  (org-startup-indented nil)
+  (org-adapt-indentation t)
+  (org-hide-emphasis-markers t)
+  (org-pretty-entities t)
+  (org-ellipsis " ▾")
+  (org-startup-folded 'content)
+  (org-tags-column 0)
+
+  ;; editing
+  (org-return-follows-link t)
+  (org-special-ctrl-a/e t)
+  (org-src-fontify-natively t)
+  (org-src-tab-acts-natively t)
+  (org-src-preserve-indentation t)
+  (org-edit-src-content-indentation 0)
+
+  ;; agenda
+  (org-agenda-start-on-weekday nil)
+  (org-agenda-span 'week)
+  (org-agenda-skip-scheduled-if-done t)
+  (org-agenda-window-setup 'current-window)
+
+  ;; capture
+  (org-capture-templates
+   '(("t" "Task" entry (file "~/sync/org/inbox.org")
+      "* TODO %?\n   %u\n  %i")
+     ("n" "Note" entry (file "~/sync/org/inbox.org")
+      "* %?\n   %u")
+     ("j" "Journal" entry (file "~/sync/org/inbox.org")
+      "* %U\n    %?")))
+
   :config
   (make-directory org-directory t)
-  (setq org-capture-templates
-	'(("t" "Task" entry (file "~/sync/org/inbox.org")
-	   "* TODO %?\n  %U\n")
-	  ("n" "Note" entry (file "~/sync/org/inbox.org")
-	   "* %?\n  %U\n"))))
+
+  (defun my/org-return ()
+    "RET after heading puts cursor under first character of heading"
+    (interactive)
+    (if (save-excursion
+	  (beginning-of-line)
+	  (looking-at "\\*+ +"))
+	(let ((col (- (match-end 0) (line-beginning-position))))
+	  (end-of-line)
+	  (insert "\n" (make-string (1+ col) ?\s)))
+      (org-return)))
+
+  (add-hook 'org-mode-hook
+            (lambda ()
+              (evil-local-set-key 'insert (kbd "RET") #'my/org-return))))
 
 
 ;; Evil
@@ -107,6 +173,7 @@
   (setq evil-vsplit-window-right t)
   (setq evil-echo-state nil)
   :config
+  ;; Keymaps
   (evil-set-leader '(normal motion) (kbd "SPC"))
 
   (advice-add 'evil-force-normal-state :after #'evil-ex-nohighlight)
@@ -125,6 +192,8 @@
 
   (evil-define-key 'normal 'global (kbd "<leader>oa") #'org-agenda)
   (evil-define-key 'normal 'global (kbd "<leader>oc") #'org-capture)
+
+  (evil-define-key 'normal 'global (kbd "<leader>j") #'bookmark-jump)
 
   (evil-mode))
 
@@ -151,3 +220,4 @@
   :config
   (load-theme 'doom-one t)
   (doom-themes-org-config))
+  
