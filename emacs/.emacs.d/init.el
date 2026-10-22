@@ -43,13 +43,13 @@
 
   (add-hook 'text-mode-hook
 	    (lambda ()
-	      (display-line-numbers-mode 1)
+	      ;; (display-line-numbers-mode 1)
 	      (variable-pitch-mode 1)
 	      (visual-line-mode 1)))
 
-  (set-face-attribute 'default nil :family "JetBrains Mono" :height 120)
-  (set-face-attribute 'fixed-pitch nil :family "JetBrains Mono" :height 120)
-  (set-face-attribute 'variable-pitch nil :family "Inter" :height 120)
+  (set-face-attribute 'default nil :family "Inconsolata Medium" :height 120)  
+  (set-face-attribute 'fixed-pitch nil :family "Inconsolata Medium" :height 120)
+  (set-face-attribute 'variable-pitch nil :family "Carlito")
   (set-fontset-font t 'emoji "Noto Color Emoji")
   (set-fontset-font t 'han "Noto Sans CJK JP")
 
@@ -66,7 +66,7 @@
 (use-package visual-fill-column
   :hook (text-mode . visual-fill-column-mode)
   :config
-  (setq-default visual-fill-column-width 100)
+  (setq-default visual-fill-column-width 90)
   (setq-default visual-fill-column-center-text t))
 
 
