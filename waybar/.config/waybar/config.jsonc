@@ -30,6 +30,7 @@
       "class<md.obsidian.Obsidian>": "notes",
       "class<sioyek>": "pdf",
       "class<thunar>": "files",
+      "class<emacs>": "emacs",
     }
   },
 
@@ -41,20 +42,6 @@
 
   "clock": {
     "format": "{:%a %d %b   %I:%M %p}",
-    "tooltip-format": "<tt>{calendar}</tt>",
-    "calendar": {
-      "mode": "month",
-      "mode-mon-col": 3,
-      "weeks-pos": "right",
-      "on-scroll": 1,
-      "format": {
-        "months":   "<span color='#ffffff'><b>{}</b></span>",
-        "days":     "<span color='#deddda'>{}</span>",
-        "weeks":    "<span color='#77767b'>W{}</span>",
-        "weekdays": "<span color='#9a9996'><b>{}</b></span>",
-        "today":    "<span color='#78aeed'><b><u>{}</u></b></span>"
-      }
-    }
   },
   "pulseaudio": {
     "format": "{icon}  {volume}%",

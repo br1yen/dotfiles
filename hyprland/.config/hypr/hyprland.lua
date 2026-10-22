@@ -9,6 +9,7 @@ hl.monitor({ output = "eDP-1", mode = "1920x1080@60", position = "1920x0", scale
 hl.on("hyprland.start", function()
   hl.exec_cmd("nm-applet")
   hl.exec_cmd("hypridle")
+  hl.exec_cmd("emacs")
   hl.exec_cmd("librewolf")
   hl.exec_cmd("hyprsunset")
   hl.exec_cmd("waybar")
@@ -265,6 +266,12 @@ hl.window_rule({
   name = "librewolf-workspace",
   match = { class = "^librewolf$" },
   workspace = "2",
+})
+
+hl.window_rule({
+  name = "emacs-workspace",
+  match = { class = "^emacs$" },
+  workspace = "1",
 })
 
 hl.window_rule({

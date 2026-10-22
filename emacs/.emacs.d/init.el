@@ -32,19 +32,36 @@
   (setq initial-scratch-message nil)
   (setq initial-major-mode 'fundamental-mode)
   (setq inhibit-startup-echo-area-message user-login-name)
+  (setq-default display-line-numbers-width 4)
   (setq display-line-numbers-type 'visual)
   (setq display-line-numbers-current-absolute t)
 
   (add-hook 'prog-mode-hook #'display-line-numbers-mode)
   (add-hook 'text-mode-hook #'display-line-numbers-mode)
+  (add-hook 'prog-mode-hook #'visual-line-mode)
+  (add-hook 'text-mode-hook #'visual-line-mode)
 
-  (set-face-attribute 'default nil :family "Inconsolata" :height 120)
-  (set-face-attribute 'fixed-pitch nil :family "Inconsolata")
-  (set-face-attribute 'variable-pitch nil :family "Inter")
+  (set-face-attribute 'default nil :family "UbuntuMono Nerd Font" :height 120)
+  (set-face-attribute 'fixed-pitch nil :family "UbuntuMono Nerd Font" :height 120)
+  (set-face-attribute 'variable-pitch nil :family "Ubuntu Sans" :height 120)
   (set-fontset-font t 'emoji "Noto Color Emoji")
   (set-fontset-font t 'han "Noto Sans CJK JP"))
 
 
+;; Code wrapping respects indent
+(use-package adaptive-wrap
+  :hook (text-mode . adaptive-wrap-prefix-mode))
+
+
+;; Centered paragraphs
+(use-package visual-fill-column
+  :hook (visual-line-mode . visual-fill-column-mode)
+  :config
+  (setq-default visual-fill-column-width 100)
+  (setq-default visual-fill-column-center-text t))
+
+
+;; Org mode
 (use-package org
   :ensure nil
   :custom
@@ -56,13 +73,16 @@
   :config
   (make-directory org-directory t)
   (setq org-capture-templates
-	'(("t" "Task" entry (file "~/sync/org/tasks.org")
-	   "* TODO %?\n  %U\n"))))
+	'(("t" "Task" entry (file "~/sync/org/inbox.org")
+	   "* TODO %?\n  %U\n")
+	  ("n" "Note" entry (file "~/sync/org/inbox.org")
+	   "* %?\n  %U\n"))))
 
 
 ;; Evil
 (use-package evil
   :init
+  (setq evil-respect-visual-line-mode t)
   (setq evil-want-integration t)
   (setq evil-want-keybinding nil)
   (setq evil-undo-system 'undo-redo)
@@ -70,8 +90,8 @@
   (setq evil-want-C-u-delete t)
   (setq evil-want-Y-yank-to-eol t)
   (setq evil-search-module 'evil-search)
-  (setq evil-flash-delay 1)
-  (setq evil-ex-hl-update-delay 0.01)
+  (setq evil-flash-delay 0)
+  (setq evil-ex-hl-update-delay 0.00)
   (setq evil-shift-width 2)
   (setq evil-v$-excludes-newline t)
   (setq evil-split-window-below t)
