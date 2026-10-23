@@ -91,6 +91,7 @@
   (setq-default visual-fill-column-center-text t))
 
 
+
 ;; Org mode
 (use-package org
   :ensure nil
@@ -160,7 +161,6 @@
   (setq evil-vsplit-window-right t)
   (setq evil-echo-state nil)
   :config
-  ;; Keymaps
   (evil-set-leader '(normal motion) (kbd "SPC"))
 
   (advice-add 'evil-force-normal-state :after #'evil-ex-nohighlight)
@@ -199,10 +199,16 @@
   :after evil
   :config (evil-commentary-mode))
 
-
-;; Color schemes
-(use-package nordic-night-theme)
-(use-package unspecified-theme
+(use-package nordic-night-theme
   :config
-  (load-theme 'unspecified t))
-(set-face-attribute 'default nil :foreground "#c1c1c1" :background "#020202")
+  (load-theme 'nordic-night t)
+
+  (set-face-attribute 'line-number nil
+		      :inherit 'font-lock-comment-face)
+  (set-face-attribute 'line-number-current-line nil
+		      :inherit 'font-lock-comment-face)
+  (dolist (face '(font-lock-comment-face
+		  font-lock-comment-delimiter-face
+		  font-lock-doc-face))
+    (set-face-attribute face nil
+			:weight 'normal)))
