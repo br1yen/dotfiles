@@ -43,7 +43,7 @@
 
   (add-hook 'text-mode-hook
 	    (lambda ()
-	      ;; (display-line-numbers-mode 1)
+	      (display-line-numbers-mode 1)
 	      (variable-pitch-mode 1)
 	      (visual-line-mode 1)))
 
@@ -73,8 +73,10 @@
 
   ;; Now I don't have to escape insert mode to execute
   (add-hook 'eshell-mode-hook
-          (lambda ()
-            (evil-local-set-key 'insert (kbd "RET") #'eshell-send-input))))
+	    (lambda ()
+	      (evil-local-set-key 'insert (kbd "RET") #'eshell-send-input)
+	      (evil-local-set-key 'insert (kbd "<return>") #'eshell-send-input))))
+
 
 ;; Code wrapping respects indent
 (use-package adaptive-wrap
@@ -83,9 +85,9 @@
 
 ;; Centered paragraphs
 (use-package visual-fill-column
-  :hook (text-mode . visual-fill-column-mode)
+  ;; :hook (text-mode . visual-fill-column-mode)
   :config
-  (setq-default visual-fill-column-width 90)
+  (setq-default visual-fill-column-width 100)
   (setq-default visual-fill-column-center-text t))
 
 
@@ -105,10 +107,10 @@
 
   ;; appearance
   (org-startup-indented nil)
-  (org-adapt-indentation t)
+  (org-adapt-indentation nil)
   (org-hide-emphasis-markers t)
   (org-pretty-entities t)
-  (org-ellipsis " ▾")
+  (org-ellipsis " ...")
   (org-startup-folded 'content)
   (org-tags-column 0)
 
@@ -129,29 +131,14 @@
   ;; capture
   (org-capture-templates
    '(("t" "Task" entry (file "~/sync/org/inbox.org")
-      "* TODO %?\n   %u\n  %i")
+      "* TODO %?\n%u\n%i")
      ("n" "Note" entry (file "~/sync/org/inbox.org")
-      "* %?\n   %u")
+      "* %?\n%u")
      ("j" "Journal" entry (file "~/sync/org/inbox.org")
-      "* %U\n    %?")))
+      "* %U\n%?")))
 
   :config
-  (make-directory org-directory t)
-
-  (defun my/org-return ()
-    "RET after heading puts cursor under first character of heading"
-    (interactive)
-    (if (save-excursion
-	  (beginning-of-line)
-	  (looking-at "\\*+ +"))
-	(let ((col (- (match-end 0) (line-beginning-position))))
-	  (end-of-line)
-	  (insert "\n" (make-string (1+ col) ?\s)))
-      (org-return)))
-
-  (add-hook 'org-mode-hook
-            (lambda ()
-              (evil-local-set-key 'insert (kbd "RET") #'my/org-return))))
+  (make-directory org-directory t))
 
 
 ;; Evil
@@ -212,12 +199,10 @@
   :after evil
   :config (evil-commentary-mode))
 
-;;; Colors
-(use-package doom-themes
-  :custom
-  (doom-themes-enable-bold nil)
-  (doom-themes-enable-italic nil)
+
+;; Color schemes
+(use-package nordic-night-theme)
+(use-package unspecified-theme
   :config
-  (load-theme 'doom-one t)
-  (doom-themes-org-config))
-  
+  (load-theme 'unspecified t))
+(set-face-attribute 'default nil :foreground "#c1c1c1" :background "#020202")
