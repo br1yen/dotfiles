@@ -28,6 +28,9 @@
   (setq auto-save-file-name-transforms `((".*" ,(expand-file-name "auto-save/" user-emacs-directory) t)))
   (setq auto-save-list-file-prefix (expand-file-name "auto-save/.saves-" user-emacs-directory))
   (setq custom-file (make-temp-file "emacs-custom-"))
+
+  (setq vc-follow-symlinks t)
+
   (setq inhibit-startup-screen t)
   (setq initial-scratch-message nil)
   (setq initial-major-mode 'fundamental-mode)
@@ -155,7 +158,7 @@
   (setq evil-search-module 'evil-search)
   (setq evil-flash-delay 0)
   (setq evil-ex-hl-update-delay 0.00)
-  (setq evil-shift-width 2)
+  (setq evil-shift-width 4)
   (setq evil-v$-excludes-newline t)
   (setq evil-split-window-below t)
   (setq evil-vsplit-window-right t)
