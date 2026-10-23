@@ -52,6 +52,8 @@ export NNN_FCOLORS='000000000000'
 alias grep='grep --color=auto'
 alias diff='diff --color=auto'
 
+alias em='emacsclient -nw'
+
 alias gs='git status'
 alias ga='git add'
 alias gc='git commit'
