@@ -2,7 +2,7 @@ nvim-pack-lock.json
 elpa/
 eln-cache/
 auto-save-list/
-auto-saves/
+auto-save/
 backups/
 undo-fu-session/
 history
