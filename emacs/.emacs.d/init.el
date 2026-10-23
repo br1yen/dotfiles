@@ -86,15 +86,6 @@
   :hook (prog-mode . adaptive-wrap-prefix-mode))
 
 
-;; Centered paragraphs
-(use-package visual-fill-column
-  ;; :hook (text-mode . visual-fill-column-mode)
-  :config
-  (setq-default visual-fill-column-width 100)
-  (setq-default visual-fill-column-center-text t))
-
-
-
 ;; Org mode
 (use-package org
   :ensure nil
@@ -196,6 +187,8 @@
   :after evil
   :config (evil-commentary-mode))
 
+
+;; Colors
 (use-package nordic-night-theme
   :config
   (load-theme 'nordic-night t)
