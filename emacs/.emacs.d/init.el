@@ -168,14 +168,8 @@
   (evil-define-key 'normal 'global (kbd "<leader>SPC") 'execute-extended-command)
 
   (evil-define-key 'normal 'global (kbd "<leader>f") 'find-file)
-  (evil-define-key 'normal 'global (kbd "<leader>d") 'dired-jump)
+  (evil-define-key 'normal 'global (kbd "<leader>e") 'dired-jump)
   (evil-define-key 'normal 'global (kbd "<leader>b") 'buffer-menu)
-
-  (evil-define-key 'normal 'global (kbd "<leader>el") 'eval-last-sexp)
-  (evil-define-key 'normal 'global (kbd "<leader>eb") 'eval-buffer)
-  (evil-define-key 'normal 'global (kbd "<leader>ed") 'eval-defun)
-  (evil-define-key 'normal 'global (kbd "<leader>ee") 'eval-expression)
-  (evil-define-key 'normal 'global (kbd "<leader>er") 'eval-region)
 
   (evil-define-key 'normal 'global (kbd "<leader>oa") #'org-agenda)
   (evil-define-key 'normal 'global (kbd "<leader>oc") #'org-capture)
