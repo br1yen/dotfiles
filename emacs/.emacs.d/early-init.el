@@ -11,18 +11,18 @@
                           most-positive-fixnum)
       gc-cons-percentage 1.0)
 
-(defvar minimal-emacs-gc-cons-threshold (* 32 1024 1024)
+(defvar post-startup-gc-cons-threshold (* 32 1024 1024)
   "Value to which `gc-cons-threshold' is set after Emacs startup.")
 
-(defvar minimal-emacs-gc-cons-percentage 0.1
+(defvar post-startup-gc-cons-percentage 0.1
   "Value to which `gc-cons-percentage' is set after Emacs startup.")
 
-(defun minimal-emacs--restore-gc ()
+(defun restore-gc-after-startup ()
   "Restore garbage collection settings after startup."
-  (setq gc-cons-threshold minimal-emacs-gc-cons-threshold
-        gc-cons-percentage minimal-emacs-gc-cons-percentage))
+  (setq gc-cons-threshold post-startup-gc-cons-threshold
+        gc-cons-percentage post-startup-gc-cons-percentage))
 
-(add-hook 'emacs-startup-hook #'minimal-emacs--restore-gc 105)
+(add-hook 'emacs-startup-hook #'restore-gc-after-startup 105)
 
 ;;; Native compilation and byte compilation
 
@@ -96,25 +96,26 @@
 
 ;;; Performance: file-name-handler-alist
 
-(defvar minimal-emacs--old-file-name-handler-alist
-  (default-toplevel-value 'file-name-handler-alist))
+(defvar original-file-name-handler-alist
+  (default-toplevel-value 'file-name-handler-alist)
+  "Value of `file-name-handler-alist' before startup optimizations.")
 
-(defun minimal-emacs--respect-file-handlers (fn args-left)
-  "Respect file handlers.
+(defun respect-file-handlers-on-command-line (fn args-left)
+  "Respect file handlers while Emacs processes command-line files.
 FN is the function and ARGS-LEFT is the same argument as `command-line-1'.
 Command-line files may be TRAMP paths, so restore `file-name-handler-alist'
 for that stage of startup."
   (let ((file-name-handler-alist (if args-left
-                                     minimal-emacs--old-file-name-handler-alist
+                                     original-file-name-handler-alist
                                    file-name-handler-alist)))
     (funcall fn args-left)))
 
-(defun minimal-emacs--restore-file-name-handler-alist ()
-  "Restore `file-name-handler-alist'."
+(defun restore-file-name-handler-alist ()
+  "Restore `file-name-handler-alist' after startup."
   (set-default-toplevel-value
    'file-name-handler-alist
    (delete-dups (append file-name-handler-alist
-                        minimal-emacs--old-file-name-handler-alist))))
+                        original-file-name-handler-alist))))
 
 (unless (or init-file-debug noninteractive)
   ;; If bundled libraries are compressed, keep the gzip handler; otherwise omit
@@ -124,14 +125,13 @@ for that stage of startup."
    (if (locate-file-internal "calc-loaddefs.el" load-path)
        nil
      (list (rassq 'jka-compr-handler
-                  minimal-emacs--old-file-name-handler-alist))))
+                  original-file-name-handler-alist))))
 
   (put 'file-name-handler-alist 'initial-value
-       minimal-emacs--old-file-name-handler-alist)
+       original-file-name-handler-alist)
 
-  (advice-add 'command-line-1 :around #'minimal-emacs--respect-file-handlers)
-  (add-hook 'emacs-startup-hook #'minimal-emacs--restore-file-name-handler-alist
-            101))
+  (advice-add 'command-line-1 :around #'respect-file-handlers-on-command-line)
+  (add-hook 'emacs-startup-hook #'restore-file-name-handler-alist 101))
 
 ;;; UI elements
 

@@ -287,8 +287,6 @@ for i = 1, 9 do vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to 
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 vim.keymap.set("t", "<C-[>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-vim.keymap.set("n", "<space>x", ":.lua<CR>", { desc = "Execute line of lua" })
-vim.keymap.set("v", "<space>x", ":lua<CR>", { desc = "Execute selection of lua" })
 vim.keymap.set("n", "<leader>pc", pack_clean, { desc = "Pack: clean unused" })
 vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, { desc = "Diagnostics (loclist)" })
 vim.keymap.set("n", "<leader>Q", vim.diagnostic.setqflist, { desc = "Diagnostics (quickfix)" })

@@ -1,9 +1,5 @@
 ;;; init.el --- Init -*- lexical-binding: t; -*-
 
-;; Restore GC after early-init
-(add-hook 'emacs-startup-hook
-          (lambda () (setq gc-cons-threshold (* 16 1024 1024))))
-
 ;; Package.el
 (require 'package)
 (package-initialize)
@@ -388,8 +384,7 @@ This should be called after changing `auto-save-list-file-prefix'."
   (save-place-mode 1)
   (recentf-mode 1)
   (global-auto-revert-mode 1)
-  (window-divider-mode 1)
-  (fido-vertical-mode 1))
+  (window-divider-mode 1))
 
 
 ;;; Org mode
@@ -446,6 +441,17 @@ This should be called after changing `auto-save-list-file-prefix'."
 (use-package adaptive-wrap
   :hook (prog-mode . adaptive-wrap-prefix-mode))
 
+;; Vertical menu
+(use-package vertico
+  :init
+  (vertico-mode))
+
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles partial-completion))))
+  (completion-category-defaults nil)
+  (completion-pcm-leading-wildcard t))
 
 ;;; Evil
 (use-package evil
@@ -510,15 +516,21 @@ This should be called after changing `auto-save-list-file-prefix'."
   :config
   (load-theme 'nordic-night t)
 
+  (let ((bg (face-background 'default)))
+    (dolist (f '(window-divider
+                 window-divider-first-pixel
+                 window-divider-last-pixel))
+      (set-face-attribute f nil :foreground bg :background bg)))
+
   (set-face-attribute 'line-number nil
                       :inherit '(font-lock-comment-face fixed-pitch))
   (set-face-attribute 'line-number-current-line nil
                       :inherit '(font-lock-comment-face fixed-pitch))
   (dolist (face '(font-lock-comment-face
-		  font-lock-comment-delimiter-face
-		  font-lock-doc-face))
+                  font-lock-comment-delimiter-face
+                  font-lock-doc-face))
     (set-face-attribute face nil
-			:weight 'normal)))
+                        :weight 'normal)))
 
 ;; Local variables:
 ;; byte-compile-warnings: (not free-vars)
