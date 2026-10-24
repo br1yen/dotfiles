@@ -7,12 +7,12 @@ export PATH
 export EDITOR=nvim
 export VISUAL=nvim
 
+bindkey -e
+
 # nvim as man pager
 export MANPAGER='nvim +Man!'
 
-bindkey -e
-
-PROMPT='%m%b%f:%~%f %(!.#.$)%f '
+PROMPT='%F{magenta}%m%f %F{yellow}is in%f %F{green}%~%f %F{yellow}to%f '
 
 # Fuzzy reverse search
 source /usr/share/fzf/key-bindings.zsh
