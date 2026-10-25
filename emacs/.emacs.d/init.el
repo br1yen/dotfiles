@@ -479,7 +479,6 @@ This should be called after changing `auto-save-list-file-prefix'."
   (evil-define-key 'normal 'global (kbd "<leader>;") 'execute-extended-command)
 
   (evil-define-key 'normal 'global (kbd "<leader>f") 'find-file)
-  (evil-define-key 'normal 'global (kbd "<leader>w") 'save-buffer)
   (evil-define-key 'normal 'global (kbd "<leader>e") 'dired-jump)
   (evil-define-key 'normal 'global (kbd "<leader>b") 'buffer-menu)
 
