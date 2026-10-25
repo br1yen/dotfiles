@@ -1,0 +1,4 @@
+while true; 
+do printf '\r%s' "$(date)  "; 
+sleep 1; 
+done

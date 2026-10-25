@@ -345,13 +345,13 @@ This should be called after changing `auto-save-list-file-prefix'."
   ;; Prog hook
   (add-hook 'prog-mode-hook
 	    (lambda ()
-	      (display-line-numbers-mode 1)
+	      (display-line-numbers-mode -1)
 	      (visual-line-mode 1)))
 
   ;; Text hook
   (add-hook 'text-mode-hook
 	    (lambda ()
-	      (display-line-numbers-mode 1)
+	      (display-line-numbers-mode -1)
 	      (variable-pitch-mode 1)
 	      (visual-line-mode 1)))
 
@@ -390,6 +390,9 @@ This should be called after changing `auto-save-list-file-prefix'."
 ;;; Org mode
 (use-package org
   :ensure nil
+  :bind (("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
+         ("C-c l" . org-store-link))
   :custom
   ;; files
   (org-directory (expand-file-name "~/sync/org/"))
@@ -454,60 +457,60 @@ This should be called after changing `auto-save-list-file-prefix'."
   (completion-pcm-leading-wildcard t))
 
 ;;; Evil
-(use-package evil
-  :init
-  (setq evil-respect-visual-line-mode t)
-  (setq evil-want-integration t)
-  (setq evil-want-keybinding nil)
-  (setq evil-undo-system 'undo-redo)
-  (setq evil-want-C-u-scroll t)
-  (setq evil-want-C-u-delete t)
-  (setq evil-want-Y-yank-to-eol t)
-  (setq evil-search-module 'evil-search)
-  (setq evil-flash-delay 0)
-  (setq evil-ex-hl-update-delay 0.00)
-  (setq evil-shift-width 4)
-  (setq evil-v$-excludes-newline t)
-  (setq evil-split-window-below t)
-  (setq evil-vsplit-window-right t)
-  (setq evil-echo-state nil)
-  :config
-  (evil-set-leader '(normal motion) (kbd "SPC"))
+;; (use-package evil
+;;   :init
+;;   (setq evil-respect-visual-line-mode t)
+;;   (setq evil-want-integration t)
+;;   (setq evil-want-keybinding nil)
+;;   (setq evil-undo-system 'undo-redo)
+;;   (setq evil-want-C-u-scroll t)
+;;   (setq evil-want-C-u-delete t)
+;;   (setq evil-want-Y-yank-to-eol t)
+;;   (setq evil-search-module 'evil-search)
+;;   (setq evil-flash-delay 0)
+;;   (setq evil-ex-hl-update-delay 0.00)
+;;   (setq evil-shift-width 4)
+;;   (setq evil-v$-excludes-newline t)
+;;   (setq evil-split-window-below t)
+;;   (setq evil-vsplit-window-right t)
+;;   (setq evil-echo-state nil)
+;;   :config
+;;   (evil-set-leader '(normal motion) (kbd "SPC"))
+;; 
+;;   (advice-add 'evil-force-normal-state :after #'evil-ex-nohighlight)
+;; 
+;;   (evil-define-key 'normal 'global (kbd "<leader>;") 'execute-extended-command)
 
-  (advice-add 'evil-force-normal-state :after #'evil-ex-nohighlight)
+;;   (evil-define-key 'normal 'global (kbd "<leader>f") 'find-file)
+;;   (evil-define-key 'normal 'global (kbd "<leader>e") 'dired-jump)
+;;   (evil-define-key 'normal 'global (kbd "<leader>b") 'buffer-menu)
+;; 
+;;   (evil-define-key 'normal 'global (kbd "<leader>oa") #'org-agenda)
+;;   (evil-define-key 'normal 'global (kbd "<leader>oc") #'org-capture)
+;; 
+;;   (evil-define-key 'normal 'global (kbd "<leader>j") #'bookmark-jump)
+;; 
+;;   (evil-mode)
+;; 
+;;   (add-hook 'eshell-mode-hook
+;; 	    (lambda ()
+;; 	      (evil-local-set-key 'insert (kbd "RET") #'eshell-send-input)
+;; 	      (evil-local-set-key 'insert (kbd "<return>") #'eshell-send-input))))
 
-  (evil-define-key 'normal 'global (kbd "<leader>;") 'execute-extended-command)
+;; (use-package evil-collection
+;;   :after evil
+;;   :init
+;;   (setq evil-collection-key-blacklist '("SPC"))
+;;   :custom
+;;   (evil-collection-setup-minibuffer t)
+;;   (evil-collection-calendar-want-org-bindings t)
+;;   (evil-collection-bind-tab-p t)
+;;   :config
+;;   (evil-collection-init))
 
-  (evil-define-key 'normal 'global (kbd "<leader>f") 'find-file)
-  (evil-define-key 'normal 'global (kbd "<leader>e") 'dired-jump)
-  (evil-define-key 'normal 'global (kbd "<leader>b") 'buffer-menu)
-
-  (evil-define-key 'normal 'global (kbd "<leader>oa") #'org-agenda)
-  (evil-define-key 'normal 'global (kbd "<leader>oc") #'org-capture)
-
-  (evil-define-key 'normal 'global (kbd "<leader>j") #'bookmark-jump)
-
-  (evil-mode)
-
-  (add-hook 'eshell-mode-hook
-	    (lambda ()
-	      (evil-local-set-key 'insert (kbd "RET") #'eshell-send-input)
-	      (evil-local-set-key 'insert (kbd "<return>") #'eshell-send-input))))
-
-(use-package evil-collection
-  :after evil
-  :init
-  (setq evil-collection-key-blacklist '("SPC"))
-  :custom
-  (evil-collection-setup-minibuffer t)
-  (evil-collection-calendar-want-org-bindings t)
-  (evil-collection-bind-tab-p t)
-  :config
-  (evil-collection-init))
-
-(use-package evil-commentary
-  :after evil
-  :config (evil-commentary-mode))
+;; (use-package evil-commentary
+;;   :after evil
+;;   :config (evil-commentary-mode))
 
 
 ;;; Colors
