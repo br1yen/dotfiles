@@ -303,7 +303,7 @@
   (after-init . show-paren-mode)
   (after-init . column-number-mode)
   (after-init . electric-pair-mode)
-  (after-init . prettify-symbols-mode)
+  (after-init . global-prettify-symbols-mode)
   (minibuffer-setup . cursor-intangible-mode)
   (prog-mode . show-paren-mode)
   (prog-mode . visual-line-mode)
