@@ -9,7 +9,7 @@ hl.monitor({ output = "eDP-1", mode = "1920x1080@60", position = "1920x0", scale
 hl.on("hyprland.start", function()
   hl.exec_cmd("nm-applet")
   hl.exec_cmd("hypridle")
-  hl.exec_cmd("emacsclient -c")
+  hl.exec_cmd("foot --server")
   hl.exec_cmd("librewolf")
   hl.exec_cmd("hyprsunset")
   hl.exec_cmd("waybar")
@@ -56,7 +56,7 @@ hl.config({
     no_warps = true,
     no_hardware_cursors = false,
   },
-
+g
   decoration = {
     rounding = 0,
     rounding_power = 0,
@@ -140,8 +140,7 @@ local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("fuzzel"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("librewolf"))
-hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("ghostty"))
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("emacsclient -c"))
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("footclient"))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 hl.bind(mainMod .. " + SHIFT + Q", hl.dsp.exec_cmd("/home/br1yen/.local/bin/powermenu"))
 hl.bind(mainMod .. " + G", hl.dsp.exec_cmd("/home/br1yen/.local/bin/find-notes"))
