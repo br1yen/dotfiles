@@ -5,49 +5,32 @@ local project_root = vim.fn.getcwd()
 
 -- Keep separate JDT LS data for each working directory.
 local workspace_name = project_root:gsub("[/\\:]", "_")
-local workspace_dir = vim.fn.stdpath("data")
-    .. "/jdtls-workspace/"
-    .. workspace_name
+local workspace_dir = vim.fn.stdpath("data") .. "/jdtls-workspace/" .. workspace_name
 
 -- Find the Java debugger bundle if it has been installed.
 local debug_jars = vim.fn.glob(
   vim.fn.stdpath("data")
-  .. "/mason/packages/java-debug-adapter/extension/server/"
-  .. "com.microsoft.java.debug.plugin-*.jar",
+    .. "/mason/packages/java-debug-adapter/extension/server/"
+    .. "com.microsoft.java.debug.plugin-*.jar",
   false,
   true
 )
 
 local config = {
-  cmd = {
-    "jdtls",
-    "-data",
-    workspace_dir,
-  },
-
+  name = "jdtls",
+  cmd = { "jdtls", "-data", workspace_dir },
   root_dir = project_root,
-
   settings = {
     java = {
-      project = {
-        sourcePaths = { "." },
-      },
-      configuration = {
-        updateBuildConfiguration = "interactive",
-      },
+      project = { sourcePaths = { "." } },
+      configuration = { updateBuildConfiguration = "interactive" },
     },
   },
-
-  init_options = {
-    bundles = debug_jars,
-  },
+  init_options = { bundles = debug_jars },
+  on_attach = function()
+    jdtls.setup_dap({ hotcodereplace = "auto" })
+    require("jdtls.dap").setup_dap_main_class_configs()
+  end,
 }
 
 jdtls.start_or_attach(config)
-
--- Register Java debugging with nvim-dap.
-jdtls.setup_dap({
-  hotcodereplace = "auto",
-})
-
-require("jdtls.setup").add_commands()
