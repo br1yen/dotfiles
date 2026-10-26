@@ -190,8 +190,4 @@ for that stage of startup."
                               ("melpa"  . 70)
                               ("melpa-stable" . 50)))
 
-;; Local variables:
-;; byte-compile-warnings: (not free-vars)
-;; End:
-
 ;;; early-init.el ends here

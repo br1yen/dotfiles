@@ -1,340 +1,330 @@
 ;;; init.el --- Init -*- lexical-binding: t; -*-
 
-;; Package.el
+;;; Package.el
 (require 'package)
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
 (require 'use-package)
 
-
 ;;; Emacs
 (use-package emacs
   :ensure nil
-  :config
-  (setq which-func-update-delay 1.0)
-  (defalias #'view-hello-file #'ignore)
+  :custom
+  ;; Startup
+  (inhibit-startup-screen t)
+  (initial-scratch-message nil)
+  (initial-major-mode 'fundamental-mode)
+  (inhibit-startup-echo-area-message user-login-name)
+  
+  ;; Editing and display
+  (prettify-symbols-unprettify-at-point 'right-edge)
+  (whitespace-line-column nil)
+  (truncate-string-ellipsis "...")
+  (x-underline-at-descent-line t)
 
-  ;; I don't know
-  (setq prettify-symbols-unprettify-at-point 'right-edge
-        whitespace-line-column nil
-        eval-expression-print-length nil
-        eval-expression-print-level nil
-        visible-bell nil
-        ring-bell-function #'ignore
-        x-underline-at-descent-line t
-        truncate-string-ellipsis "..."
-        display-time-default-load-average nil
-        dired-mouse-drag-file t
-        mouse-yank-at-point t)
+  ;; Evaluation
+  (eval-expression-print-length nil)
+  (eval-expression-print-level nil)
 
-  ;; Line numbers mode
-  (setq-default display-line-numbers-width 3
-                display-line-numbers-widen t
-                display-line-numbers-current-absolute t
-                display-line-numbers-type 'visual)
+  ;; Bell
+  (ring-bell-function #'ignore)
+  (visible-bell nil)
 
-  ;; Startup screen
-  (setq inhibit-startup-screen t
-	initial-scratch-message nil
-	initial-major-mode 'fundamental-mode
-    inhibit-startup-echo-area-message user-login-name)
+  ;; Mode line
+  (display-time-default-load-average nil)
 
-  ;; Minbuffer  
-  (setq enable-recursive-minibuffers t
-      enable-local-eval nil
-      minibuffer-prompt-properties
-      '(read-only t intangible t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
+  ;; Mouse
+  (mouse-yank-at-point t)
+  (dired-mouse-drag-file t)
+
+  ;; Minibuffer behavior
+  (history-length 300)
+  (savehist-additional-variables
+   '(register-alist
+     mark-ring
+     global-mark-ring
+     search-ring
+     regexp-search-ring))
+  (enable-local-eval nil)
+  (minibuffer-prompt-properties
+   '(read-only t
+     intangible t
+     cursor-intangible t
+     face minibuffer-prompt))
 
   ;; Input
-  (setq default-input-method nil
-	native-comp-async-query-on-exit t
-	read-answer-short t
-	revert-buffer-quick-short-answers t)
+  (default-input-method nil)
 
-  (if (boundp 'use-short-answers)
-      (setq use-short-answers t)
-    (advice-add 'yes-or-no-p :override #'y-or-n-p))
-
+  ;; Short answers
+  (read-answer-short t)
+  (revert-buffer-quick-short-answers t)
 
   ;; Backups
-  (setq create-lockfiles nil
-        make-backup-files nil
-        backup-directory-alist `(("." . ,(expand-file-name "backups/" user-emacs-directory)))
-        tramp-backup-directory-alist backup-directory-alist
-        backup-by-copying-when-linked t
-        backup-by-copying t
-        delete-old-versions t
-        version-control t 
-        kept-new-versions 5
-        kept-old-versions 5)
+  (make-backup-files t)
+  (backup-directory-alist
+   `(("." . ,(expand-file-name "backups/" user-emacs-directory))))
+  (backup-by-copying t)
+  (version-control t)
+  (delete-old-versions t)
+  (kept-new-versions 5)
+  (kept-old-versions 5)
 
-  ;; Other file stuff
-  (setq custom-file (make-temp-file "emacs-custom-")
-        epg-pinentry-mode 'loopback
-        auth-sources '("~/.authinfo.gpg")
-        find-library-include-other-files nil
-        delete-by-moving-to-trash (not noninteractive)
-        remote-file-name-inhibit-delete-by-moving-to-trash t
-        find-file-suppress-same-file-warnings t
-        find-file-visit-truename t
-        vc-follow-symlinks t
-        split-width-threshold 170
-        split-height-threshold nil
-        large-file-warning-threshold (* 100 1024 1024))
+  ;; File handling
+  (delete-by-moving-to-trash (not noninteractive))
+  (remote-file-name-inhibit-delete-by-moving-to-trash t)
+  (large-file-warning-threshold (* 100 1024 1024))
+  (vc-follow-symlinks t)
+  (confirm-nonexistent-file-or-buffer nil)
 
-  ;; Auto save
-  (setq auto-save-no-message t)
+  ;; Window management
+  (split-width-threshold 170)
+  (split-height-threshold nil)
+  
+  ;; Auto-saves
+  (auto-save-no-message t)
+  (auto-save-include-big-deletions t)
+  (let ((dir (expand-file-name "auto-saves/" user-emacs-directory)))
+    (make-directory dir t)
+    (setq auto-save-list-file-prefix
+          (expand-file-name "auto-saves/" user-emacs-directory)
+          auto-save-file-name-transforms
+        `((".*" ,dir t))))
+  (tramp-auto-save-directory
+   (expand-file-name "tramp-autosave/" user-emacs-directory))
+
+  ;; Custom file
+  (custom-file (expand-file-name "custom.el" user-emacs-directory))
+
+  ;; Undo history limits
+  (undo-limit (* 13 160000))
+  (undo-strong-limit (* 13 240000))
+  (undo-outer-limit (* 13 24000000))
+
+  ;; Paren mode options
+  (show-paren-delay 0.1)
+  (show-paren-highlight-openparen t)
+  (show-paren-when-point-inside-paren t)
+  (show-paren-when-point-in-periphery t)
+
+  ;; Buffers
+  (custom-buffer-done-kill t)
+  (next-line-add-newlines nil)
+  (bookmark-save-flag 1)
+  (uniquify-buffer-name-style 'forward)
+  (redisplay-skip-fontification-on-input t)
+  (auto-revert-verbose nil)
+  (kill-buffer-delete-auto-save-files t)
+
+  ;; Clipboard
+  (kill-do-not-save-duplicates t)
+  (save-interprogram-paste-before-kill t)
+
+  ;; Imenu
+  (imenu-auto-rescan t)
+  (imenu-max-item-length 160)
+
+  ;; Comint
+  (ansi-color-for-comint-mode t)
+  (comint-prompt-read-only t)
+  (comint-buffer-maximum-size 4096)
+  (comint-move-point-for-output t)
+  (comint-scroll-to-bottom-on-output t)
+  (comint-scroll-to-bottom-on-input t)
+
+  ;; Tramp
+  (tramp-verbose 1)
+  (remote-file-name-inhibit-cache 50)
+  (remote-file-name-inhibit-locks t)
+  (remote-file-name-inhibit-auto-save-visited t)
+
+  ;; VC
+  (vc-git-print-log-follow t)
+  (vc-git-diff-switches '("--histogram"))
+
+  ;; Compilation
+  (compilation-ask-about-save t)
+  (compilation-always-kill t)
+  (compilation-max-output-line-length 2048)
+  (compilation-scroll-output 'first-error)
+
+  ;; Auto-revert
+  (global-auto-revert-non-file-buffers t)
+  (global-auto-revert-ignore-modes '(Buffer-menu-mode))
+
+  ;; Recent files
+  (recentf-max-saved-items 210)
+  (recentf-max-menu-items 15)
+
+  ;; Remember cursor position
+  (save-place-file (expand-file-name "saveplace" user-emacs-directory))
+
+  ;; Frames and windows
+  (resize-mini-windows 'grow-only)
+  (max-mini-window-height 0.33)
+  (window-divider-default-bottom-width 1)
+  (window-divider-default-places t)
+  (window-divider-default-right-width 1)
+
+  ;; Scrolling
+  (fast-but-imprecise-scrolling t)
+  (scroll-error-top-bottom t)
+  (scroll-preserve-screen-position t)
+  (scroll-conservatively 11)
+  (auto-window-vscroll nil)
+  (hscroll-margin 2)
+  (hscroll-step 1)
+
+  ;; Editing and completion
+  (truncate-partial-width-windows nil)
+  (tab-always-indent 'complete)
+  (tab-first-completion 'word-or-paren-or-punct)
+  (read-extended-command-predicate
+   #'command-completion-default-include-p)
+
+  ;; Comments and formatting
+  (comment-multi-line t)
+  (comment-empty-lines t)
+  (sentence-end-double-space nil)
+  (require-final-newline t)
+  (lazy-highlight-initial-delay 0.1)
+  (tabify-regexp (rx line-start (zero-or-more ?\t) ?\s
+                     (one-or-more blank)))
+  (fill-nobreak-invisible t)
+  (global-text-scale-adjust-resizes-frames nil)
+  (delete-pair-blink-delay 0.03)
+
+  ;; Default text behavior
+  (cursor-in-non-selected-windows nil)
+  (word-wrap t)
+  (truncate-lines t)
+  (electric-indent-chars '(?\n ?\^?))
+  (indent-tabs-mode nil)
+  (tab-width 4)
+  (fill-column 80)
+
+  ;; Filetype
+  (python-indent-guess-indent-offset-verbose nil)
+  (sh-indent-after-continuation 'always)
+
+  ;; Dired and ls-lisp
+  (dired-free-space nil)
+  (dired-deletion-confirmer 'y-or-n-p)
+  (dired-filter-verbose nil)
+  (dired-recursive-deletes 'top)
+  (dired-recursive-copies 'always)
+  (dired-vc-rename-file t)
+  (dired-create-destination-dirs 'ask)
+  (dired-clean-confirm-killing-deleted-buffers nil)
+  (auto-revert-remote-files nil)
+  (dired-auto-revert-buffer 'dired-directory-changed-p)
+  (dired-use-ls-dired nil)
+  (ls-lisp-use-insert-directory-program nil)
+  (ls-lisp-dirs-first t)
+  (ls-lisp-verbosity nil)
+  (ls-lisp-ignore-case t)
+
+  ;; Ediff
+  (ediff-window-setup-function 'ediff-setup-windows-plain)
+  (ediff-split-window-function 'split-window-horizontally)
+
+  ;; Diff
+  (diff-font-lock-prettify t)
+
+  ;; Help
+  (apropos-do-all t)
+  (help-enable-completion-autoload nil)
+  (help-enable-autoload nil)
+  (help-enable-symbol-autoload nil)
+  (help-clean-buttons t)
+  (help-window-select t)
+
+  ;; Eglot
+  (eglot-autoshutdown t)
+  (eglot-sync-connect 0)
+  (eglot-extend-to-xref t)
+  (eglot-code-action-indications '(eldoc-hint))
+
+  ;; Flymake
+  (flymake-show-diagnostics-at-end-of-line nil)
+  (flymake-wrap-around nil)
+
+  ;; hl-line-mode
+  (hl-line-sticky-flag nil)
+  (global-hl-line-sticky-flag nil)
+
+  ;; Icomplete
+  (icomplete-compute-delay 0.01)
+
+  ;; Flyspell
+  (flyspell-issue-message-flag nil)
+  (flyspell-issue-welcome-flag nil)
+
+  ;; Ispell
+  (text-mode-ispell-word-completion nil)
+  (ispell-silently-savep t)
+
+  ;; Ibuffer
+  (ibuffer-formats
+   '((mark modified read-only locked
+           " " (name 55 55 :left :elide)
+           " " (size 8 -1 :right)
+           " " (mode 18 18 :left :elide)
+           " " filename-and-process)
+     (mark " " (name 16 -1) " " filename)))
+
+  ;; Xref
+  (xref-show-definitions-function 'xref-show-definitions-completing-read)
+  (xref-show-xrefs-function 'xref-show-definitions-completing-read)
+
+  ;; Abbrev
+  (abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory))
+  (save-abbrevs 'silently)
+
+  ;; Dabbrev
+  (dabbrev-upcase-means-case-search t)
+  (dabbrev-ignored-buffer-modes
+   '(archive-mode image-mode docview-mode
+     tags-table-mode pdf-view-mode))
+  (dabbrev-ignored-buffer-regexps
+   '("\\` "
+     "\\(?:\\(?:[EG]?\\|GR\\)TAGS\\|e?tags\\|GPATH\\)\\(<[0-9]+>\\)?"))
+  
+  (ispell-program-name "aspell")
+  (ispell-dictionary "en")
+
+  :hook
+  (after-init . recentf-mode)
+  (after-init . delete-selection-mode)
+  (after-init . save-place-mode)
+  (after-init . savehist-mode)
+  (after-init . global-auto-revert-mode)
+  (after-init . window-divider-mode)
+  (after-init . show-paren-mode)
+  (after-init . column-number-mode)
+  (after-init . electric-pair-mode)
+  (after-init . prettify-symbols-mode)
+  (minibuffer-setup . cursor-intangible-mode)
+  (prog-mode . show-paren-mode)
+  (prog-mode . visual-line-mode)
+  (text-mode . visual-line-mode)
+  (text-moide. variable-pitch-mode)
+  (compilation-filter . ansi-color-compilation-filter)
+  
+  :config
+  ;; Colors
+  (load-theme 'modus-operandi t)
+  
+  ;; Noninteractive emacs or batch mode
   (when noninteractive
     (setq enable-dir-local-variables nil)
     (setq-default case-fold-search nil))
-  (setq
-   auto-save-include-big-deletions t
-   auto-save-list-file-prefix (expand-file-name "auto-save/" user-emacs-directory)
-   tramp-auto-save-directory (expand-file-name "tramp-autosave/" user-emacs-directory))
 
-  ;; Undo
-  (setq undo-limit (* 13 160000)
-        undo-strong-limit (* 13 240000)
-        undo-outer-limit (* 13 24000000))
+  ;; Turn off blink cursor mode
+  (blink-cursor-mode -1)
 
-  ;;; Show-paren
-  (setq show-paren-delay 0.1
-        show-paren-highlight-openparen t
-        show-paren-when-point-inside-paren t
-        show-paren-when-point-in-periphery t)
-
-  ;; Buffers
-  (setq custom-buffer-done-kill t
-        next-line-add-newlines nil
-        bookmark-save-flag 1
-        uniquify-buffer-name-style 'forward
-        redisplay-skip-fontification-on-input t)
-
-  ;; Imenu
-  (setq-default imenu-auto-rescan t)
-  (setq imenu-max-item-length 160)
-
-  ;; Comint
-  (setq ansi-color-for-comint-mode t
-        comint-prompt-read-only t
-        comint-buffer-maximum-size 4096
-        comint-move-point-for-output t
-        comint-scroll-to-bottom-on-output t
-        comint-scroll-to-bottom-on-input t)
-
-  ;;; Tramp
-  (setq tramp-verbose 1
-        remote-file-name-inhibit-cache 50
-        remote-file-name-inhibit-locks t
-        remote-file-name-inhibit-auto-save-visited t)
-
-  ;; VC
-  (setq vc-git-print-log-follow t
-        vc-handled-backends '(Git SVN Hg RCS)
-        vc-git-diff-switches '("--histogram"))
-
-  ;;; Compilation
-  (setq compilation-ask-about-save nil
-        compilation-always-kill t
-        compilation-max-output-line-length 2048
-        compilation-scroll-output 'first-error
-        confirm-nonexistent-file-or-buffer nil)
-
-  (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
-
-  (defun setup-auto-save-transforms ()
-    "Configure `auto-save-file-name-transforms' for local and remote files.
-This should be called after changing `auto-save-list-file-prefix'."
-    (setq auto-save-file-name-transforms
-          `(("\\`/[^/]*:\\([^/]*/\\)*\\([^/]*\\)\\'"
-             ,(file-name-concat auto-save-list-file-prefix "tramp-\\2-") sha1)
-            ("\\`/\\([^/]+/\\)*\\([^/]+\\)\\'"
-             ,(file-name-concat auto-save-list-file-prefix "\\2-") sha1)))
-    (when (memq system-type '(windows-nt cygwin ms-dos))
-      (push `("\\`\\(/\\|[a-zA-Z]:/\\|//\\)\\([^/]+/\\)*\\([^/]+\\)\\'"
-              ,(file-name-concat auto-save-list-file-prefix "\\3-") sha1)
-            auto-save-file-name-transforms)))
-
-  (setup-auto-save-transforms)
-
-  (when auto-save-default
-    (let ((auto-save-dir (file-name-directory auto-save-list-file-prefix)))
-      (unless (file-exists-p auto-save-dir)
-        (with-file-modes #o700
-          (make-directory auto-save-dir t)))))
-
-  (setq kill-buffer-delete-auto-save-files t
-        kill-do-not-save-duplicates t
-        save-interprogram-paste-before-kill t)
-
-  ;; Revert other buffers
-  (setq global-auto-revert-non-file-buffers t
-        global-auto-revert-ignore-modes '(Buffer-menu-mode))
-
-  ;; Recentf
-  (setq recentf-max-saved-items 210
-        recentf-max-menu-items 15)
-
-  ;; Saveplace
-  (setq save-place-file (expand-file-name "saveplace" user-emacs-directory))
-
-
-  ;; Savehist
-  (setq history-length 300
-        savehist-additional-variables
-        '(register-alist 
-          mark-ring global-mark-ring 
-          search-ring regexp-search-ring))
-
-  ;; Frames and windows
-  (setq resize-mini-windows 'grow-only
-        max-mini-window-height 0.33
-        window-divider-default-bottom-width 1
-        window-divider-default-places t
-        window-divider-default-right-width 1)
-
-  ;; Scrolling
-  (setq fast-but-imprecise-scrolling t
-        scroll-error-top-bottom t
-        scroll-preserve-screen-position t
-        scroll-conservatively 11
-        auto-window-vscroll nil
-        hscroll-margin 2
-        hscroll-step 1)
-
-  ;; Cursor
-  (when (bound-and-true-p blink-cursor-mode)
-    (blink-cursor-mode -1))
-  (setq
-   blink-matching-paren nil
-   highlight-nonselected-windows nil)
-
-  ;; Text editing, indent, font, and formatting
-  (setq truncate-partial-width-windows nil
-        tab-always-indent 'complete
-        tab-first-completion 'word-or-paren-or-punct
-        read-extended-command-predicate #'command-completion-default-include-p
-        comment-multi-line t
-        comment-empty-lines t
-        sentence-end-double-space nil
-        require-final-newline t
-        lazy-highlight-initial-delay 0
-        tabify-regexp (rx line-start (zero-or-more ?\t) ?\s (one-or-more blank))
-        fill-nobreak-invisible t
-        global-text-scale-adjust-resizes-frames nil
-        delete-pair-blink-delay 0.03)
-  (setq-default cursor-in-non-selected-windows nil
-                word-wrap t
-                truncate-lines t
-                electric-indent-chars '(?\n ?\^?)
-                indent-tabs-mode nil
-                tab-width 4
-                fill-column 80)
-
-  ;; Filetype
-  (setq python-indent-guess-indent-offset-verbose nil
-        sh-indent-after-continuation 'always)
-
-  ;; Dired and ls-lisp
-  (setq dired-free-space nil
-        dired-deletion-confirmer 'y-or-n-p
-        dired-filter-verbose nil
-        dired-recursive-deletes 'top
-        dired-recursive-copies 'always
-        dired-vc-rename-file t
-        dired-create-destination-dirs 'ask
-        dired-clean-confirm-killing-deleted-buffers nil
-        auto-revert-remote-files nil
-        dired-auto-revert-buffer 'dired-directory-changed-p)
-
-  (defun local-dir-p (dir)
-    "Return non-nil if DIR is a local directory."
-    (not (file-remote-p dir)))
-
-  (setq dired-do-revert-buffer #'local-dir-p
-        dired-omit-verbose nil
-        dired-omit-files "\\`[.]\\'"
-
-        ls-lisp-verbosity nil
-        ls-lisp-dirs-first t)
-
-  ;; Ediff
-  (setq ediff-window-setup-function 'ediff-setup-windows-plain
-        ediff-split-window-function 'split-window-horizontally)
-
-  ;; Diff
-  (setq diff-font-lock-prettify t)
-
-  ;; Help
-  (setq apropos-do-all t
-        help-enable-completion-autoload nil
-        help-enable-autoload nil
-        help-enable-symbol-autoload nil
-        help-clean-buttons t
-        help-window-select t)
-
-  ;; Eglot
-  (setq eglot-report-progress init-file-debug
-        eglot-autoshutdown t
-        eglot-sync-connect 0
-        eglot-extend-to-xref t
-        eglot-code-action-indications '(eldoc-hint))
-
-  (if init-file-debug
-      (setq eglot-events-buffer-config '(:size 2000000 :format full))
-    (with-no-warnings
-      (setq eglot-events-buffer-size 0))
-    (setq jsonrpc-event-hook nil
-          eglot-events-buffer-config '(:size 0 :format short)))
-
-  ;; Flymake
-  (setq flymake-show-diagnostics-at-end-of-line nil
-        flymake-wrap-around nil)
-
-  ;; hl-line-mode
-  (setq hl-line-sticky-flag nil
-        global-hl-line-sticky-flag nil)
-
-  ;; icomplete
-  (setq icomplete-compute-delay 0.01)
-
-  ;; flyspell
-  (setq flyspell-issue-message-flag nil
-        flyspell-issue-welcome-flag nil)
-
-  ;; ispell
-  (setq text-mode-ispell-word-completion nil
-        ispell-silently-savep t)
-
-  ;; ibuffer
-  (setq ibuffer-formats
-        '((mark modified read-only locked
-                " " (name 55 55 :left :elide)
-                " " (size 8 -1 :right)
-                " " (mode 18 18 :left :elide) " " filename-and-process)
-          (mark " " (name 16 -1) " " filename)))
-
-  ;; xref
-  (setq xref-show-definitions-function 'xref-show-definitions-completing-read
-        xref-show-xrefs-function 'xref-show-definitions-completing-read)
-
-  ;; abbrev
-  (setq
-   abbrev-file-name (expand-file-name "abbrev_defs" user-emacs-directory)
-   save-abbrevs 'silently)
-
-  ;; dabbrev
-  (setq dabbrev-upcase-means-case-search t
-
-        dabbrev-ignored-buffer-modes
-        '(archive-mode image-mode docview-mode tags-table-mode
-                       pdf-view-mode tags-table-mode)
-
-        dabbrev-ignored-buffer-regexps
-        '("\\` "
-          "\\(?:\\(?:[EG]?\\|GR\\)TAGS\\|e?tags\\|GPATH\\)\\(<[0-9]+>\\)?"))
+  ;; Load custom if it exists
+  (load custom-file t)
 
   ;; Remove warnings from narrow-to-region, upcase-region...
   (dolist (cmd '(list-timers narrow-to-region narrow-to-page
@@ -342,19 +332,6 @@ This should be called after changing `auto-save-list-file-prefix'."
                              list-threads erase-buffer scroll-left
                              dired-find-alternate-file set-goal-column))
     (put cmd 'disabled nil))
-
-  ;; Prog hook
-  (add-hook 'prog-mode-hook
-	    (lambda ()
-	      (display-line-numbers-mode -1)
-	      (visual-line-mode 1)))
-
-  ;; Text hook
-  (add-hook 'text-mode-hook
-	    (lambda ()
-	      (display-line-numbers-mode -1)
-	      (variable-pitch-mode 1)
-	      (visual-line-mode 1)))
 
   ;; Fonts
   (set-face-attribute 'default nil :family "Inconsolata Medium" :height 120)  
@@ -379,18 +356,7 @@ This should be called after changing `auto-save-list-file-prefix'."
     (bookmark-store (car bm) `((filename . ,(cdr bm))) nil))
   (add-hook 'bookmark-after-jump-hook
             (lambda ()
-              (call-interactively #'find-file)))
-
-  (savehist-mode 1)
-  (save-place-mode 1)
-  (recentf-mode 1)
-  (global-auto-revert-mode 1)
-  (window-divider-mode 1)
-
-  ;; Spelling
-  (setq ispell-program-name "aspell")
-  (setq ispell-dictionary "en"))
-
+              (call-interactively #'find-file))))
 
 ;;; Org mode
 (use-package org
@@ -449,7 +415,7 @@ This should be called after changing `auto-save-list-file-prefix'."
 (use-package adaptive-wrap
   :hook (prog-mode . adaptive-wrap-prefix-mode))
 
-;; Vertical menu
+;; Completion
 (use-package vertico
   :init
   (vertico-mode))
@@ -461,48 +427,24 @@ This should be called after changing `auto-save-list-file-prefix'."
   (completion-category-defaults nil)
   (completion-pcm-leading-wildcard t))
 
-
 ;;; Pdf-tools
 (use-package pdf-tools
   :ensure t
   :pin melpa
+  :mode ("\\.pdf\\'" . pdf-view-mode)
+  :custom
+  (pdf-view-display-size 'fit-page)
+  (pdf-annot-activate-created-annotations t)
   :config
   (pdf-tools-install)
-  (setq-default pdf-view-display-size 'fit-page)
-  (setq pdf-annot-activate-created-annotations t)
-  (save-place-mode 1)
-  :bind (:map pdf-view-mode-map
-              ("=" . pdf-view-fit-page-to-window)))
+  :bind
+  (:map pdf-view-mode-map
+        ("=" . pdf-view-fit-page-to-window)))
 
+;;; Devil mode
+(use-package devil :config (global-devil-mode 1))
 
-;;; Colors
-(use-package nordic-night-theme
-  :config
-  (let ((bg (face-background 'default)))
-    (dolist (f '(window-divider
-                 window-divider-first-pixel
-                 window-divider-last-pixel))
-      (set-face-attribute f nil :foreground bg :background bg)))
-
-  (set-face-attribute 'line-number nil
-                      :inherit '(font-lock-comment-face fixed-pitch))
-  (set-face-attribute 'line-number-current-line nil
-                      :inherit '(font-lock-comment-face fixed-pitch))
-  (dolist (face '(font-lock-comment-face
-                  font-lock-comment-delimiter-face
-                  font-lock-doc-face))
-    (set-face-attribute face nil
-                        :weight 'normal)))
-
-(load-theme 'modus-operandi t)
-
-(use-package devil
-  :ensure t
-  :config
-  (global-devil-mode 1))
-
-;; Local variables:
-;; byte-compile-warnings: (not free-vars)
-;; End:
+;;; Persistent undo
+(use-package undo-fu-session :hook (after-init . undo-fu-session-global-mode))
 
 ;;; init.el ends here
