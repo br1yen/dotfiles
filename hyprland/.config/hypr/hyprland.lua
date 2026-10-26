@@ -56,8 +56,8 @@ hl.config({
     no_warps = true,
     no_hardware_cursors = false,
   },
-g
-  decoration = {
+
+    decoration = {
     rounding = 0,
     rounding_power = 0,
 
