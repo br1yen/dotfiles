@@ -25,6 +25,7 @@
         x-underline-at-descent-line t
         truncate-string-ellipsis "..."
         display-time-default-load-average nil
+        dired-mouse-drag-file t
         mouse-yank-at-point t)
 
   ;; Line numbers mode
@@ -384,7 +385,11 @@ This should be called after changing `auto-save-list-file-prefix'."
   (save-place-mode 1)
   (recentf-mode 1)
   (global-auto-revert-mode 1)
-  (window-divider-mode 1))
+  (window-divider-mode 1)
+
+  ;; Spelling
+  (setq ispell-program-name "aspell")
+  (setq ispell-dictionary "en"))
 
 
 ;;; Org mode
@@ -405,12 +410,12 @@ This should be called after changing `auto-save-list-file-prefix'."
   (org-todo-keywords '((sequence "TODO(t)" "|" "DONE(d)")))
 
   ;; appearance
-  (org-startup-indented nil)
+  (org-startup-indented t)
   (org-adapt-indentation nil)
   (org-hide-emphasis-markers t)
   (org-pretty-entities t)
   (org-ellipsis " ...")
-  (org-startup-folded 'content)
+  (org-startup-folded 'overview)
   (org-tags-column 0)
 
   ;; editing
@@ -456,68 +461,23 @@ This should be called after changing `auto-save-list-file-prefix'."
   (completion-category-defaults nil)
   (completion-pcm-leading-wildcard t))
 
-;;; Evil
-;; (use-package evil
-;;   :init
-;;   (setq evil-respect-visual-line-mode t)
-;;   (setq evil-want-integration t)
-;;   (setq evil-want-keybinding nil)
-;;   (setq evil-undo-system 'undo-redo)
-;;   (setq evil-want-C-u-scroll t)
-;;   (setq evil-want-C-u-delete t)
-;;   (setq evil-want-Y-yank-to-eol t)
-;;   (setq evil-search-module 'evil-search)
-;;   (setq evil-flash-delay 0)
-;;   (setq evil-ex-hl-update-delay 0.00)
-;;   (setq evil-shift-width 4)
-;;   (setq evil-v$-excludes-newline t)
-;;   (setq evil-split-window-below t)
-;;   (setq evil-vsplit-window-right t)
-;;   (setq evil-echo-state nil)
-;;   :config
-;;   (evil-set-leader '(normal motion) (kbd "SPC"))
-;; 
-;;   (advice-add 'evil-force-normal-state :after #'evil-ex-nohighlight)
-;; 
-;;   (evil-define-key 'normal 'global (kbd "<leader>;") 'execute-extended-command)
 
-;;   (evil-define-key 'normal 'global (kbd "<leader>f") 'find-file)
-;;   (evil-define-key 'normal 'global (kbd "<leader>e") 'dired-jump)
-;;   (evil-define-key 'normal 'global (kbd "<leader>b") 'buffer-menu)
-;; 
-;;   (evil-define-key 'normal 'global (kbd "<leader>oa") #'org-agenda)
-;;   (evil-define-key 'normal 'global (kbd "<leader>oc") #'org-capture)
-;; 
-;;   (evil-define-key 'normal 'global (kbd "<leader>j") #'bookmark-jump)
-;; 
-;;   (evil-mode)
-;; 
-;;   (add-hook 'eshell-mode-hook
-;; 	    (lambda ()
-;; 	      (evil-local-set-key 'insert (kbd "RET") #'eshell-send-input)
-;; 	      (evil-local-set-key 'insert (kbd "<return>") #'eshell-send-input))))
-
-;; (use-package evil-collection
-;;   :after evil
-;;   :init
-;;   (setq evil-collection-key-blacklist '("SPC"))
-;;   :custom
-;;   (evil-collection-setup-minibuffer t)
-;;   (evil-collection-calendar-want-org-bindings t)
-;;   (evil-collection-bind-tab-p t)
-;;   :config
-;;   (evil-collection-init))
-
-;; (use-package evil-commentary
-;;   :after evil
-;;   :config (evil-commentary-mode))
+;;; Pdf-tools
+(use-package pdf-tools
+  :ensure t
+  :pin melpa
+  :config
+  (pdf-tools-install)
+  (setq-default pdf-view-display-size 'fit-page)
+  (setq pdf-annot-activate-created-annotations t)
+  (save-place-mode 1)
+  :bind (:map pdf-view-mode-map
+              ("=" . pdf-view-fit-page-to-window)))
 
 
 ;;; Colors
 (use-package nordic-night-theme
   :config
-  (load-theme 'nordic-night t)
-
   (let ((bg (face-background 'default)))
     (dolist (f '(window-divider
                  window-divider-first-pixel
@@ -533,6 +493,13 @@ This should be called after changing `auto-save-list-file-prefix'."
                   font-lock-doc-face))
     (set-face-attribute face nil
                         :weight 'normal)))
+
+(load-theme 'modus-operandi t)
+
+(use-package devil
+  :ensure t
+  :config
+  (global-devil-mode 1))
 
 ;; Local variables:
 ;; byte-compile-warnings: (not free-vars)
