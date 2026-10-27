@@ -1,4 +1,4 @@
---- Options
+-- Options
 -- faster startup by caching compile Lua modules
 vim.loader.enable()
 
@@ -10,11 +10,9 @@ vim.opt.termguicolors = true
 vim.opt.background = "dark"
 vim.g.have_nerd_font = true
 vim.opt.winborder = "none"
-vim.opt.number = true
 vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
 vim.opt.laststatus = 3
-vim.opt.cursorline = true
 vim.opt.showmode = false
 vim.opt.cursorlineopt = "line"
 
@@ -22,7 +20,7 @@ vim.opt.tabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.softtabstop = 4
 vim.opt.expandtab = true
-vim.opt.breakindent = true
+vim.opt.wrap = false
 vim.opt.smartindent = true
 vim.opt.linebreak = true
 vim.opt.showbreak = "↪ "
@@ -34,12 +32,12 @@ vim.opt.undofile = true
 vim.opt.swapfile = false
 
 vim.opt.updatetime = 250
-vim.opt.timeoutlen = 300
 
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 
 vim.opt.scrolloff = 999
+vim.opt.sidescrolloff = 999
 vim.opt.smoothscroll = true
 
 vim.opt.confirm = true
@@ -52,7 +50,7 @@ vim.schedule(function()
     vim.opt.clipboard = "unnamedplus"
 end)
 
--- Colors
+--- Colors
 vim.pack.add({ "https://github.com/ramojus/mellifluous.nvim" })
 require("mellifluous").setup({
     flat_background = {
@@ -70,19 +68,6 @@ require("mellifluous").setup({
     },
 })
 vim.cmd.colorscheme("mellifluous")
-
--- Netrw
-vim.api.nvim_create_autocmd("FileType", {
-    pattern = "netrw",
-    callback = function()
-        local opts = { buffer = true, remap = true, silent = true }
-        vim.keymap.set("n", "h", "-", opts)
-        vim.keymap.set("n", "l", "<CR>", opts)
-        vim.keymap.set("n", "f", "%", opts)
-        vim.opt_local.relativenumber = true
-    end,
-})
-vim.g.netrw_banner = 0
 
 --- Autocmds
 vim.api.nvim_create_autocmd("TextYankPost", {
@@ -215,6 +200,13 @@ vim.lsp.enable({ "lua_ls" })
 vim.pack.add({ "https://github.com/mfussenegger/nvim-jdtls" })
 
 -- Typst
+vim.lsp.config("tinymist", {
+    settings = {
+        formatterMode = "typstyle",
+        formatterPrintWidth = 80,
+        formatterProseWrap = true,
+    },
+})
 vim.lsp.enable({ "tinymist" })
 
 -- Markdown
@@ -344,13 +336,31 @@ require("telescope").setup({
 })
 pcall(require("telescope").load_extension, "fzf")
 
+--- Org
+vim.pack.add({ "https://github.com/nvim-orgmode/orgmode" })
+require("orgmode").setup({
+    org_agenda_files = "~/sync/org/**/*",
+    org_default_notes_file = "~/sync/org/inbox.org",
+})
+vim.lsp.enable("org")
+
+--- Oil
+vim.pack.add({ "https://github.com/stevearc/oil.nvim" })
+require("oil").setup({
+    default_file_explorer = true,
+    delete_to_trash = true,
+    skip_confirm_for_simple_edits = true,
+    view_options = { show_hidden = true },
+})
+
 --- Keybinds / keymaps
 for i = 1, 9 do
     vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to tab number" })
 end
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Write" })
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
-vim.keymap.set("n", "-", "<cmd>e %:p:h<cr>", { desc = "Netrw in folder" })
+vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open file explorer" })
+vim.keymap.set("n", "<leader>;", "q/", { desc = "Command line window" })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 vim.keymap.set("t", "<A-l>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
@@ -367,7 +377,6 @@ vim.keymap.set("n", "<leader>br", require("dap").repl.open, { desc = "Debug: Ope
 vim.keymap.set("n", "<leader>bl", require("dap").run_last, { desc = "Debug: Run last configuration" })
 vim.keymap.set("n", "<leader>bv", "<cmd>DapViewToggle<CR>", { desc = "Debug: Toggle view" })
 vim.keymap.set("n", "<leader>f", require("telescope.builtin").find_files, { desc = "Find files" })
-
 vim.keymap.set("n", "<leader>g", require("telescope.builtin").live_grep, { desc = "Live grep" })
 vim.keymap.set("n", "<leader>l", require("telescope.builtin").buffers, { desc = "Buffers" })
 vim.keymap.set("n", "<leader>h", require("telescope.builtin").help_tags, { desc = "Help tags" })

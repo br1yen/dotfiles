@@ -39,20 +39,9 @@ HISTSIZE=50000
 SAVEHIST=50000
 setopt SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
 
-# nnn
-export NNN_OPTS="Hezx"
-export NNN_BMS="d:$HOME/Downloads;s:$HOME/sync;c:$HOME/.config"
-export NNN_TRASH="trash-put"
-export NNN_OPENER="$HOME/.config/nnn/opener"
-export NNN_TERMINAL='ghostty'
-export NNN_COLORS='4444'
-export NNN_FCOLORS='000000000000'
-
 # aliases
 alias grep='grep --color=auto'
 alias diff='diff --color=auto'
-
-alias em='emacsclient -nw'
 
 alias gs='git status'
 alias ga='git add'
