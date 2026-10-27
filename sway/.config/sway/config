@@ -87,7 +87,7 @@ bar {
     height 19
     font pango:Inconsolata Medium 11
 
-    status_command while date +'%Y-%m-%d %X'; do sleep 1; done
+    status_command ~/.config/sway/status.sh
 
     colors {
         statusline #dadada
