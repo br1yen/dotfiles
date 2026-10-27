@@ -64,6 +64,8 @@ require("mellifluous").setup({
             highlighter.set("PmenuExtra", { fg = colors.fg })
             highlighter.set("NormalFloat", { fg = colors.fg, bg = colors.bg })
             highlighter.set("FloatBorder", { fg = colors.fg, bg = colors.bg })
+            highlighter.set("@org.agenda.scheduled", { fg = colors.fg })
+            highlighter.set("@org.agenda.scheduled_past", { fg = colors.fg })
         end,
     },
 })

@@ -103,9 +103,9 @@ bar {
     }
 }
 
-font pango:Inconsolata Medium 10
-default_border pixel 2
-default_floating_border pixel 2
+font pango:Inconsolata Medium 9
+default_border pixel 1
+default_floating_border pixel 1
 
 client.focused          #9c6995 #9c6995 #ffffff #9c6995 #9c6995
 client.focused_inactive #2d2d2d #2d2d2d #dadada #2d2d2d #2d2d2d
