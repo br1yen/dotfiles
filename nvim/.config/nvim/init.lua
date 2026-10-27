@@ -16,9 +16,9 @@ vim.opt.laststatus = 3
 vim.opt.showmode = false
 vim.opt.cursorlineopt = "line"
 
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
-vim.opt.softtabstop = 4
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.softtabstop = 2
 vim.opt.expandtab = true
 vim.opt.wrap = false
 vim.opt.smartindent = true
@@ -47,154 +47,154 @@ vim.opt.pumheight = 10
 vim.opt.path:append("**")
 
 vim.schedule(function()
-    vim.opt.clipboard = "unnamedplus"
+  vim.opt.clipboard = "unnamedplus"
 end)
 
---- Colors
+-- Colors
 vim.pack.add({ "https://github.com/ramojus/mellifluous.nvim" })
 require("mellifluous").setup({
-    flat_background = {
-        line_numbers = true,
-        cursor_line_number = true,
-    },
-    highlight_overrides = {
-        dark = function(highlighter, colors)
-            highlighter.set("Pmenu", { fg = colors.fg })
-            highlighter.set("PmenuKind", { fg = colors.fg })
-            highlighter.set("PmenuExtra", { fg = colors.fg })
-            highlighter.set("NormalFloat", { fg = colors.fg, bg = colors.bg })
-            highlighter.set("FloatBorder", { fg = colors.fg, bg = colors.bg })
-            highlighter.set("@org.agenda.scheduled", { fg = colors.fg })
-            highlighter.set("@org.agenda.scheduled_past", { fg = colors.fg })
-        end,
-    },
+  flat_background = {
+    line_numbers = true,
+    cursor_line_number = true,
+  },
+  highlight_overrides = {
+    dark = function(highlighter, colors)
+      highlighter.set("Pmenu", { fg = colors.fg })
+      highlighter.set("PmenuKind", { fg = colors.fg })
+      highlighter.set("PmenuExtra", { fg = colors.fg })
+      highlighter.set("NormalFloat", { fg = colors.fg, bg = colors.bg })
+      highlighter.set("FloatBorder", { fg = colors.fg, bg = colors.bg })
+      highlighter.set("@org.agenda.scheduled", { fg = colors.fg })
+      highlighter.set("@org.agenda.scheduled_past", { fg = colors.fg })
+    end,
+  },
 })
 vim.cmd.colorscheme("mellifluous")
 
 --- Autocmds
 vim.api.nvim_create_autocmd("TextYankPost", {
-    desc = "Highlight when yanking text",
-    group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
-    callback = function()
-        vim.hl.on_yank()
-    end,
+  desc = "Highlight when yanking text",
+  group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
+  callback = function()
+    vim.hl.on_yank()
+  end,
 })
 
 vim.api.nvim_create_autocmd("PackChanged", {
-    callback = function(ev)
-        local name = ev.data.spec.name
-        local kind = ev.data.kind
+  callback = function(ev)
+    local name = ev.data.spec.name
+    local kind = ev.data.kind
 
-        if kind ~= "install" and kind ~= "update" then
-            return
-        end
+    if kind ~= "install" and kind ~= "update" then
+      return
+    end
 
-        if name == "nvim-treesitter" then
-            if not ev.data.active then
-                vim.cmd.packadd("nvim-treesitter")
-            end
-            vim.cmd("TSUpdate")
-            return
-        end
+    if name == "nvim-treesitter" then
+      if not ev.data.active then
+        vim.cmd.packadd("nvim-treesitter")
+      end
+      vim.cmd("TSUpdate")
+      return
+    end
 
-        if name == "telescope-fzf-native.nvim" then
-            vim.system({ "make" }, { cwd = ev.data.path }):wait()
-            return
-        end
-    end,
+    if name == "telescope-fzf-native.nvim" then
+      vim.system({ "make" }, { cwd = ev.data.path }):wait()
+      return
+    end
+  end,
 })
 
 --- Local functions
 local function pack_clean()
-    local unused_plugins = {}
+  local unused_plugins = {}
 
-    for _, plugin in ipairs(vim.pack.get()) do
-        if not plugin.active then
-            table.insert(unused_plugins, plugin.spec.name)
-        end
+  for _, plugin in ipairs(vim.pack.get()) do
+    if not plugin.active then
+      table.insert(unused_plugins, plugin.spec.name)
     end
+  end
 
-    if #unused_plugins == 0 then
-        print("No unused plugins.")
-        return
-    end
+  if #unused_plugins == 0 then
+    print("No unused plugins.")
+    return
+  end
 
-    local choice = vim.fn.confirm("Remove unused plugins?\n" .. table.concat(unused_plugins, "\n"), "&Yes\n&No", 2)
-    if choice == 1 then
-        vim.pack.del(unused_plugins)
-    end
+  local choice = vim.fn.confirm("Remove unused plugins?\n" .. table.concat(unused_plugins, "\n"), "&Yes\n&No", 2)
+  if choice == 1 then
+    vim.pack.del(unused_plugins)
+  end
 end
 
 local group = vim.api.nvim_create_augroup("AutoRead", { clear = true })
 vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI", "TermLeave" }, {
-    desc = "Update buffer when file changes",
-    group = group,
-    callback = function()
-        if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then
-            vim.cmd("silent! checktime")
-        end
-    end,
+  desc = "Update buffer when file changes",
+  group = group,
+  callback = function()
+    if vim.fn.mode() ~= "c" and vim.fn.getcmdwintype() == "" then
+      vim.cmd("silent! checktime")
+    end
+  end,
 })
 vim.api.nvim_create_autocmd("FileChangedShellPost", {
-    group = group,
-    callback = function()
-        vim.notify("Buffer reloaded: file changed on disk", vim.log.levels.INFO)
-    end,
+  group = group,
+  callback = function()
+    vim.notify("Buffer reloaded: file changed on disk", vim.log.levels.INFO)
+  end,
 })
 
 -- Debug
 vim.pack.add({
-    "https://github.com/mfussenegger/nvim-dap",
-    {
-        src = "https://github.com/igorlfs/nvim-dap-view",
-        version = vim.version.range("1.*"),
-    },
-    "https://github.com/theHamsta/nvim-dap-virtual-text",
+  "https://github.com/mfussenegger/nvim-dap",
+  {
+    src = "https://github.com/igorlfs/nvim-dap-view",
+    version = vim.version.range("1.*"),
+  },
+  "https://github.com/theHamsta/nvim-dap-virtual-text",
 })
 require("dap-view").setup()
 require("nvim-dap-virtual-text").setup({
-    commented = true,
-    highlight_changed_variables = true,
+  commented = true,
+  highlight_changed_variables = true,
 })
 
 -- Mason
 vim.pack.add({
-    "https://github.com/mason-org/mason.nvim",
-    "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
+  "https://github.com/mason-org/mason.nvim",
+  "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
 })
 
 require("mason").setup()
 
 require("mason-tool-installer").setup({
-    ensure_installed = {
-        -- LSP servers
-        "lua-language-server",
-        "jdtls",
-        "tinymist",
-        "marksman",
-        -- formatters
-        "stylua",
-        "google-java-format",
-        "typstyle",
-        "prettier",
-        -- debug
-        "java-debug-adapter",
-    },
+  ensure_installed = {
+    -- LSP servers
+    "lua-language-server",
+    "jdtls",
+    "tinymist",
+    "marksman",
+    -- formatters
+    "stylua",
+    "google-java-format",
+    "typstyle",
+    "prettier",
+    -- debug
+    "java-debug-adapter",
+  },
 })
 --- LSP
 vim.pack.add({ "https://github.com/neovim/nvim-lspconfig" })
 
 -- Lua
 vim.lsp.config("lua_ls", {
-    settings = {
-        Lua = {
-            runtime = { version = "LuaJIT" },
-            workspace = {
-                checkThirdParty = false,
-                library = { vim.env.VIMRUNTIME },
-            },
-        },
+  settings = {
+    Lua = {
+      runtime = { version = "LuaJIT" },
+      workspace = {
+        checkThirdParty = false,
+        library = { vim.env.VIMRUNTIME },
+      },
     },
+  },
 })
 vim.lsp.enable({ "lua_ls" })
 
@@ -203,11 +203,11 @@ vim.pack.add({ "https://github.com/mfussenegger/nvim-jdtls" })
 
 -- Typst
 vim.lsp.config("tinymist", {
-    settings = {
-        formatterMode = "typstyle",
-        formatterPrintWidth = 80,
-        formatterProseWrap = true,
-    },
+  settings = {
+    formatterMode = "typstyle",
+    formatterPrintWidth = 80,
+    formatterProseWrap = true,
+  },
 })
 vim.lsp.enable({ "tinymist" })
 
@@ -216,25 +216,25 @@ vim.lsp.enable({ "marksman" })
 
 -- Configuration
 vim.diagnostic.config({
-    update_in_insert = false,
-    severity_sort = true,
-    virtual_text = true,
-    underline = { severity = { min = vim.diagnostic.severity.WARN } },
-    jump = {
-        on_jump = function(_, bufnr)
-            vim.diagnostic.open_float({
-                bufnr = bufnr,
-                scope = "cursor",
-                focus = false,
-            })
-        end,
-    },
+  update_in_insert = false,
+  severity_sort = true,
+  virtual_text = true,
+  underline = { severity = { min = vim.diagnostic.severity.WARN } },
+  jump = {
+    on_jump = function(_, bufnr)
+      vim.diagnostic.open_float({
+        bufnr = bufnr,
+        scope = "cursor",
+        focus = false,
+      })
+    end,
+  },
 })
 
 vim.api.nvim_create_autocmd("LspAttach", {
-    callback = function(ev)
-        vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, { autotrigger = true })
-    end,
+  callback = function(ev)
+    vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, { autotrigger = true })
+  end,
 })
 
 -- Treesitter
@@ -242,11 +242,11 @@ vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter", ver
 local parsers = { "lua", "typst", "java", "query" }
 require("nvim-treesitter").install(parsers)
 vim.api.nvim_create_autocmd("FileType", {
-    pattern = { "lua", "java", "typst" },
-    callback = function()
-        pcall(vim.treesitter.start)
-        vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
-    end,
+  pattern = { "lua", "java", "typst" },
+  callback = function()
+    pcall(vim.treesitter.start)
+    vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
+  end,
 })
 vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
@@ -254,20 +254,20 @@ vim.opt.foldenable = false
 
 -- Treesitter text objects
 vim.pack.add({
-    { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" },
+  { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" },
 })
 
 require("nvim-treesitter-textobjects").setup({
-    select = { lookahead = true },
-    move = { set_jumps = true },
+  select = { lookahead = true },
+  move = { set_jumps = true },
 })
 
 -- Select
 local ts_select = require("nvim-treesitter-textobjects.select")
 local function sel(lhs, query)
-    vim.keymap.set({ "x", "o" }, lhs, function()
-        ts_select.select_textobject(query, "textobjects")
-    end)
+  vim.keymap.set({ "x", "o" }, lhs, function()
+    ts_select.select_textobject(query, "textobjects")
+  end)
 end
 sel("af", "@function.outer")
 sel("if", "@function.inner")
@@ -279,9 +279,9 @@ sel("ia", "@parameter.inner")
 -- Move
 local move = require("nvim-treesitter-textobjects.move")
 local function mv(lhs, fn, query)
-    vim.keymap.set({ "n", "x", "o" }, lhs, function()
-        move[fn](query, "textobjects")
-    end)
+  vim.keymap.set({ "n", "x", "o" }, lhs, function()
+    move[fn](query, "textobjects")
+  end)
 end
 mv("]f", "goto_next_start", "@function.outer")
 mv("[f", "goto_previous_start", "@function.outer")
@@ -290,74 +290,74 @@ mv("[F", "goto_previous_end", "@function.outer")
 
 local swap = require("nvim-treesitter-textobjects.swap")
 vim.keymap.set("n", "<leader>a", function()
-    swap.swap_next("@parameter.inner")
+  swap.swap_next("@parameter.inner")
 end)
 vim.keymap.set("n", "<leader>A", function()
-    swap.swap_previous("@parameter.inner")
+  swap.swap_previous("@parameter.inner")
 end)
 
 -- Autoformat
 vim.pack.add({ "https://github.com/stevearc/conform.nvim" })
 
 require("conform").setup({
-    formatters_by_ft = {
-        lua = { "stylua" },
-        java = { "google-java-format" },
-        typst = { "typstyle" },
-        markdown = { "prettier" },
-    },
-    format_on_save = {
-        timeout_ms = 500,
-        lsp_format = "fallback",
-    },
+  formatters_by_ft = {
+    lua = { "stylua" },
+    java = { "google-java-format" },
+    typst = { "typstyle" },
+    markdown = { "prettier" },
+  },
+  format_on_save = {
+    timeout_ms = 500,
+    lsp_format = "fallback",
+  },
 })
 
 --- Typst
 vim.pack.add({ "https://github.com/chomosuke/typst-preview.nvim" })
 require("typst-preview").setup({
-    dependencies_bin = { tinymist = "tinymist", websocat = "websocat" },
+  dependencies_bin = { tinymist = "tinymist", websocat = "websocat" },
 })
 
 --- Telescope
 vim.pack.add({
-    "https://github.com/nvim-lua/plenary.nvim",
-    "https://github.com/nvim-telescope/telescope.nvim",
-    "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
+  "https://github.com/nvim-lua/plenary.nvim",
+  "https://github.com/nvim-telescope/telescope.nvim",
+  "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
 })
 
 require("telescope").setup({
-    defaults = {
-        layout_strategy = "flex",
-        sorting_strategy = "ascending",
-        layout_config = {
-            prompt_position = "top",
-            width = { padding = 0 },
-            height = { padding = 0 },
-        },
+  defaults = {
+    layout_strategy = "flex",
+    sorting_strategy = "ascending",
+    layout_config = {
+      prompt_position = "top",
+      width = { padding = 0 },
+      height = { padding = 0 },
     },
+  },
 })
 pcall(require("telescope").load_extension, "fzf")
 
 --- Org
 vim.pack.add({ "https://github.com/nvim-orgmode/orgmode" })
 require("orgmode").setup({
-    org_agenda_files = "~/sync/org/**/*",
-    org_default_notes_file = "~/sync/org/inbox.org",
+  org_agenda_files = "~/sync/org/**/*",
+  org_default_notes_file = "~/sync/org/inbox.org",
 })
 vim.lsp.enable("org")
 
 --- Oil
 vim.pack.add({ "https://github.com/stevearc/oil.nvim" })
 require("oil").setup({
-    default_file_explorer = true,
-    delete_to_trash = true,
-    skip_confirm_for_simple_edits = true,
-    view_options = { show_hidden = true },
+  default_file_explorer = true,
+  delete_to_trash = true,
+  skip_confirm_for_simple_edits = true,
+  view_options = { show_hidden = true },
 })
 
 --- Keybinds / keymaps
 for i = 1, 9 do
-    vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to tab number" })
+  vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to tab number" })
 end
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Write" })
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
@@ -384,3 +384,40 @@ vim.keymap.set("n", "<leader>l", require("telescope.builtin").buffers, { desc = 
 vim.keymap.set("n", "<leader>h", require("telescope.builtin").help_tags, { desc = "Help tags" })
 vim.keymap.set("n", "<leader>r", require("telescope.builtin").oldfiles, { desc = "Recent files" })
 vim.keymap.set("n", "<leader>s", require("telescope.builtin").lsp_document_symbols, { desc = "Document symbols" })
+
+local notes_dir = vim.fn.expand("~/sync/notes")
+
+local function create_note(title)
+  if not title or title:match("^%s*$") then
+    return
+  end
+  vim.fn.mkdir(notes_dir, "p")
+
+  local name = vim.trim(title):lower():gsub("%.txt$", ""):gsub("%s+", "-"):gsub("[/\\]", "")
+  local path = ("%s/%s.txt"):format(notes_dir, name)
+
+  vim.cmd.edit(vim.fn.fnameescape(path))
+  vim.cmd.startinsert({ bang = true })
+end
+
+vim.keymap.set("n", "<leader>nd", "<cmd>e ~/sync/notes/<cr>", { desc = "Notes dir" })
+vim.keymap.set("n", "<leader>ng", function()
+  require("telescope.builtin").live_grep({ cwd = notes_dir, prompt_title = "Grep Notes" })
+end)
+vim.keymap.set("n", "<leader>nf", function()
+  require("telescope.builtin").find_files({
+    cwd = notes_dir,
+    prompt_title = "Find Notes",
+    attach_mappings = function(prompt_bufnr, map)
+      local function new_from_prompt()
+        local line = require("telescope.actions.state").get_current_line()
+        require("telescope.actions").close(prompt_bufnr)
+        vim.schedule(function()
+          create_note(line)
+        end)
+      end
+      map({ "i", "n" }, "<C-e>", new_from_prompt)
+      return true
+    end,
+  })
+end, { desc = "Find notes" })
