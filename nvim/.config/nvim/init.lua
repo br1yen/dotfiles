@@ -425,7 +425,7 @@ function _G.TasksQfText(info)
 end
 
 vim.keymap.set("n", "<leader>nd", "<cmd>e ~/sync/notes/<cr>", { desc = "Notes dir" })
-vim.keymap.set("n", "<leader>nt", "<cmd>e ~/sync/notes/tasks.txt<cr>", { desc = "Open tasks" })
+vim.keymap.set("n", "<leader>nt", "<cmd>e ~/sync/notes/gtd/other-tasks.txt<cr>", { desc = "Open tasks" })
 
 vim.keymap.set("n", "<leader>x", function()
   local line = vim.api.nvim_get_current_line()
@@ -452,7 +452,7 @@ vim.keymap.set("n", "<leader>nf", function()
           create_note(line)
         end)
       end
-      map({ "i", "n" }, "<C-e>", new_from_prompt)
+      map({ "i", "n" }, "<C-enter>", new_from_prompt)
       return true
     end,
   })
