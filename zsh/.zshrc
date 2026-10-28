@@ -8,6 +8,8 @@ export EDITOR=nvim
 export VISUAL=nvim
 
 bindkey -e
+bindkey -r '\e'"'"
+bindkey -r '\e"'
 
 # nvim as man pager
 export MANPAGER='nvim +Man!'
