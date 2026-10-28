@@ -45,15 +45,15 @@ bindsym $mod+Shift+8 move container to workspace number 8
 bindsym $mod+Shift+9 move container to workspace number 9
 bindsym $mod+Shift+0 move container to workspace number 10
 
-bindsym $mod+b splith
-bindsym $mod+v splitv
-bindsym $mod+s layout stacking
+bindsym $mod+v splith
+bindsym $mod+s splitv
+bindsym $mod+Shift+semicolon layout stacking
 bindsym $mod+w layout tabbed
-bindsym $mod+x layout toggle split
+bindsym $mod+semicolon layout toggle split
 bindsym $mod+Shift+f floating toggle
 bindsym $mod+f focus mode_toggle
 bindsym $mod+a focus parent
-bindsym $mod+z focus child
+bindsym $mod+c focus child
 
 bindsym $mod+Shift+minus move scratchpad
 bindsym $mod+minus scratchpad show
@@ -68,6 +68,10 @@ mode "resize" {
     bindsym Escape mode "default"
 }
 bindsym $mod+r mode "resize"
+
+set $shots ~/Pictures/Screenshots
+bindsym $mod+p exec grim -g "$(slurp)" - | wl-copy
+bindsym $mod+Shift+p exec mkdir -p $shots && grim -g "$(slurp)" "$shots/$(date +%y%m%d-%H%M%S).png"
 
 bindsym --locked XF86AudioMute exec pactl set-sink-mute \@DEFAULT_SINK@ toggle
 bindsym --locked XF86AudioLowerVolume exec pactl set-sink-volume \@DEFAULT_SINK@ -5%

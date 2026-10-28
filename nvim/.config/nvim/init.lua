@@ -14,6 +14,7 @@ vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
 vim.opt.laststatus = 3
 vim.opt.showmode = false
+vim.opt.colorcolumn = "80"
 vim.opt.cursorlineopt = "line"
 
 vim.opt.tabstop = 2
@@ -66,6 +67,8 @@ require("mellifluous").setup({
       highlighter.set("FloatBorder", { fg = colors.fg, bg = colors.bg })
       highlighter.set("@org.agenda.scheduled", { fg = colors.fg })
       highlighter.set("@org.agenda.scheduled_past", { fg = colors.fg })
+      highlighter.set("Folded", { bg = colors.bg })
+      highlighter.set("FoldColumn", { bg = colors.bg })
     end,
   },
 })
@@ -237,7 +240,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
--- Treesitter
+--- Treesitter
 vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" } })
 local parsers = { "lua", "typst", "java", "query" }
 require("nvim-treesitter").install(parsers)
@@ -252,7 +255,7 @@ vim.opt.foldmethod = "expr"
 vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.opt.foldenable = false
 
--- Treesitter text objects
+--- Treesitter text objects
 vim.pack.add({
   { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" },
 })
@@ -296,7 +299,7 @@ vim.keymap.set("n", "<leader>A", function()
   swap.swap_previous("@parameter.inner")
 end)
 
--- Autoformat
+--- Autoformat
 vim.pack.add({ "https://github.com/stevearc/conform.nvim" })
 
 require("conform").setup({
@@ -343,6 +346,15 @@ vim.pack.add({ "https://github.com/nvim-orgmode/orgmode" })
 require("orgmode").setup({
   org_agenda_files = "~/sync/org/**/*",
   org_default_notes_file = "~/sync/org/inbox.org",
+})
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "org",
+  callback = function()
+    vim.schedule(function()
+      vim.opt_local.foldenable = true
+      vim.opt_local.foldlevel = 0
+    end)
+  end,
 })
 vim.lsp.enable("org")
 
