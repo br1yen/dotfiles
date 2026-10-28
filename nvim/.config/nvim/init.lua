@@ -14,7 +14,7 @@ vim.opt.relativenumber = true
 vim.opt.signcolumn = "yes"
 vim.opt.laststatus = 3
 vim.opt.showmode = false
-vim.opt.colorcolumn = "80"
+vim.opt.colorcolumn = "0"
 vim.opt.cursorlineopt = "line"
 
 vim.opt.tabstop = 2
