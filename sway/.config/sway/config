@@ -8,6 +8,7 @@ exec nm-applet
 
 bindsym $mod+Return exec footclient
 bindsym $mod+q kill
+bindsym $mod+b exec helium-browser
 set $menu wmenu-run -f "Inconsolata Medium 12" -N 1a1a1a -n dadada -M 9c6995 -m ffffff -S a8a1be -s 1a1a1a
 bindsym $mod+d exec $menu
 floating_modifier $mod normal
