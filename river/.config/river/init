@@ -1,0 +1,8 @@
+#!/bin/sh
+export XDG_CURRENT_DESKTOP=river
+export XDG_SESSION_TYPE=wayland
+
+dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+
+wlr-randr --output DP-3 --mode 1920x1080@179.998001Hz
+exec /home/br1yen/tinyrwm/c/build/tinyrwm

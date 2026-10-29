@@ -2,6 +2,11 @@ set $mod Mod1
 output DP-3 mode 1920x1080@179.998Hz bg #1a1a1a solid_color
 output eDP-1 mode 1920x1080@60.012Hz bg #1a1a1a solid_color
 
+input type:pointer {
+    accel_profile flat
+    pointer_accel 0
+}
+
 exec steam -silent
 exec foot --server
 exec nm-applet
@@ -119,7 +124,7 @@ client.urgent           #d29393 #d29393 #1a1a1a #d29393 #d29393
 client.placeholder      #1a1a1a #1a1a1a #dadada #1a1a1a #1a1a1a
 client.background       #1a1a1a
 
-for_window [class="^(cs2|steam_app_.*)$"] fullscreen enable, allow_tearing yes
-for_window [app_id="^(cs2|steam_app_.*)$"] fullscreen enable, allow_tearing yes
+for_window [class="^(cs2|steam_app_.*)$"] fullscreen enable, allow_tearing yes, max_render_time off
+for_window [app_id="^(cs2|steam_app_.*)$"] fullscreen enable, allow_tearing yes, max_render_time off
 
 include /etc/sway/config.d/*
