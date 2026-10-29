@@ -9,8 +9,8 @@ case "$(uname -n)" in
   lovetrain) wlr-randr --output eDP-1 --mode 1920x1080@60.012001Hz ;;
 esac
 
-nm-applet
-steam --silent
-sfwbar
+nm-applet &
+steam --silent &
+sfwbar &
     
 exec /home/br1yen/tinyrwm/c/build/tinyrwm
