@@ -7,7 +7,6 @@ vim.g.maplocalleader = " "
 vim.opt.mouse = "a"
 
 vim.opt.termguicolors = true
-vim.opt.background = "dark"
 vim.g.have_nerd_font = true
 vim.opt.winborder = "none"
 vim.opt.relativenumber = true
@@ -15,7 +14,6 @@ vim.opt.signcolumn = "yes"
 vim.opt.laststatus = 3
 vim.opt.showmode = false
 vim.opt.colorcolumn = "0"
-vim.opt.cursorlineopt = "line"
 
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
@@ -368,9 +366,6 @@ require("oil").setup({
 })
 
 --- Keybinds / keymaps
-for i = 1, 9 do
-  vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to tab number" })
-end
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Write" })
 vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
 vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open file explorer" })
