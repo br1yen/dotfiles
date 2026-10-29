@@ -72,6 +72,9 @@ require("mellifluous").setup({
 })
 vim.cmd.colorscheme("mellifluous")
 
+vim.pack.add({ "https://github.com/sainnhe/gruvbox-material" })
+vim.cmd.colorscheme("gruvbox-material")
+
 --- Autocmds
 vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Highlight when yanking text",
