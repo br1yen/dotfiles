@@ -26,3 +26,5 @@ bookmarks.eld
 # Shell and remote state
 eshell/
 tramp
+scripts/.local/bin/wmenu
+scripts/.local/bin/wmenu-run

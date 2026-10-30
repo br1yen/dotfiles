@@ -1,0 +1,32 @@
+diff --git a/render.c b/render.c
+index e86d93b..72d9838 100644
+--- a/render.c
++++ b/render.c
+@@ -50,6 +50,19 @@ static void cairo_set_source_u32(cairo_t *cairo, uint32_t color) {
+ 		(color >> (0*8) & 0xFF) / 255.0);
+ }
+ 
++#define BORDER_WIDTH 1
++#define BORDER_COLOR 0x000000ff // 0xRRGGBBAA
++
++// Strokes a border around the whole menu surface.
++static void render_border(struct menu *menu, cairo_t *cairo) {
++	cairo_set_operator(cairo, CAIRO_OPERATOR_SOURCE);
++	cairo_set_source_u32(cairo, BORDER_COLOR);
++	cairo_set_line_width(cairo, BORDER_WIDTH);
++	cairo_rectangle(cairo, BORDER_WIDTH / 2.0, BORDER_WIDTH / 2.0,
++		menu->width - BORDER_WIDTH, menu->height - BORDER_WIDTH);
++	cairo_stroke(cairo);
++}
++
+ // Renders text to cairo.
+ static int render_text(struct menu *menu, cairo_t *cairo, const char *str,
+ 		int x, int y, int width, uint32_t bg_color, uint32_t fg_color,
+@@ -201,6 +214,7 @@ void render_menu(struct menu *menu) {
+ 	cairo_set_font_options(shm, fo);
+ 	cairo_font_options_destroy(fo);
+ 	render_to_cairo(menu, shm);
++	render_border(menu, shm);
+ 
+ 	struct wl_surface *surface = context_get_surface(context);
+ 	wl_surface_set_buffer_scale(surface, scale);
