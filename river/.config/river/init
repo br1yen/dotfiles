@@ -12,5 +12,4 @@ esac
 nm-applet &
 steam -silent &
 
-export PATH="$HOME/.local/bin:$PATH"
 exec /home/br1yen/tinyrwm/c/build/tinyrwm

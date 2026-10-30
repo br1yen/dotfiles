@@ -1,0 +1,30 @@
+pkgname=wmenu-border
+_name=wmenu
+pkgver=0.2.0
+pkgrel=1
+pkgdesc='wmenu with a border around the menu'
+arch=(x86_64)
+url='https://codeberg.org/adnano/wmenu'
+license=(MIT)
+depends=(libcairo.so=2-64  libxkbcommon.so=0-64  libpango-1.0.so=0-64  libwayland-client.so=0-64)
+makedepends=(git meson wayland-protocols scdoc)
+provides=("wmenu=$pkgver")
+conflicts=(wmenu)
+source=("git+$url#tag=$pkgver"
+        border.patch)
+sha256sums=(SKIP SKIP)
+
+prepare() {
+  cd "$_name"
+  patch -Np1 -i "$srcdir/border.patch"
+}
+
+build() {
+  arch-meson "$_name" build
+  meson compile -C build
+}
+
+package() {
+  meson install -C build --destdir "$pkgdir"
+  install -Dm644 "$_name/LICENSE" "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+}
