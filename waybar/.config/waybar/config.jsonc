@@ -7,6 +7,6 @@
 	"modules-left": ["hyprland/window"],
 	"modules-right": ["clock", "battery"],
 	"hyprland/window": { "format": "{title}" },
-	"clock": { "format": "{:%m-%d-%y %H:%M}" },
-	"battery": { "format": "{capacity}%" }
+	"clock": { "format": "{:%m-%d-%y, %H:%M}" },
+	"battery": { "format": "      {capacity}%" }
 }
