@@ -1,6 +1,5 @@
--- Options
--- faster startup by caching compile Lua modules
-vim.loader.enable()
+--- Options
+vim.loader.enable() -- faster startup by caching compile Lua modules
 
 vim.g.mapleader = " "
 vim.g.maplocalleader = " "
@@ -471,10 +470,10 @@ vim.api.nvim_create_autocmd("FileType", {
 })
 
 --- Keybinds / keymaps
-vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Write" })
-vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
+for i = 1, 9 do
+  vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to tab " .. i })
+end
 vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open file explorer" })
-vim.keymap.set("n", "<leader>;", "q/", { desc = "Command line window" })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
 vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 vim.keymap.set("t", "<C-[>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
@@ -496,3 +495,7 @@ vim.keymap.set("n", "<leader>l", require("telescope.builtin").buffers, { desc = 
 vim.keymap.set("n", "<leader>h", require("telescope.builtin").help_tags, { desc = "Help tags" })
 vim.keymap.set("n", "<leader>r", require("telescope.builtin").oldfiles, { desc = "Recent files" })
 vim.keymap.set("n", "<leader>s", require("telescope.builtin").lsp_document_symbols, { desc = "Document symbols" })
+vim.keymap.set("n", "<leader>wh", "<C-w>h", { desc = "Move to left window" })
+vim.keymap.set("n", "<leader>wj", "<C-w>j", { desc = "Move to below window" })
+vim.keymap.set("n", "<leader>wk", "<C-w>k", { desc = "Move to above window" })
+vim.keymap.set("n", "<leader>wl", "<C-w>l", { desc = "Move to right window" })
