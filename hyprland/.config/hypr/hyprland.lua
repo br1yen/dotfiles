@@ -1,7 +1,7 @@
 ---@diagnostic disable: undefined-global
 
-hl.monitor({ output = "DP-3", mode = "1920x1080@180", position = "0x0", scale = 1.0 })
-hl.monitor({ output = "eDP-1", mode = "1920x1080@60", position = "0x0", scale = 1.0 })
+hl.monitor({ output = "DP-3", mode = "1920x1080@180.00Hz", position = "0x0", scale = 1.0 })
+hl.monitor({ output = "eDP-1", mode = "1920x1080@60.00Hz", position = "0x0", scale = 1.0 })
 
 hl.on("hyprland.start", function()
 	hl.exec_cmd("foot --server")
@@ -15,9 +15,8 @@ end)
 
 hl.env("XCURSOR_SIZE", "24")
 hl.env("HYPRCURSOR_SIZE", "24")
--- or "Hackneyed" or "ComixCursors"
-hl.env("XCURSOR_THEME", "ComixCursors")
-hl.env("HYPRCURSOR_THEME", "ComixCursors")
+hl.env("XCURSOR_THEME", "ComixCursors-White")
+hl.env("HYPRCURSOR_THEME", "ComixCursors-White")
 
 hl.config({
 	general = {
@@ -30,6 +29,7 @@ hl.config({
 		},
 		allow_tearing = true,
 		layout = "dwindle",
+		resize_on_border = true,
 	},
 
 	dwindle = {
@@ -38,11 +38,6 @@ hl.config({
 
 	render = {
 		direct_scanout = 2,
-	},
-
-	cursor = {
-		no_warps = true,
-		no_hardware_cursors = false,
 	},
 
 	decoration = {
@@ -54,11 +49,11 @@ hl.config({
 
 		shadow = {
 			enabled = true,
-			color = "0x88000000",
-			color_inactive = "0x44000000",
+			color = "0x80000000",
+			color_inactive = "0x40000000",
 			offset = { 0, 2 },
-			range = 24,
-			render_power = 3,
+			range = 22,
+			render_power = 4,
 			scale = 1.0,
 			sharp = false,
 		},
@@ -99,6 +94,7 @@ hl.config({
 		disable_splash_rendering = true,
 		disable_hyprland_logo = true,
 		bell_sound = "none",
+		vrr = 0,
 	},
 
 	input = {
@@ -107,8 +103,6 @@ hl.config({
 		kb_model = "",
 		kb_options = "ctrl:nocaps",
 		kb_rules = "",
-
-		follow_mouse = 2,
 
 		sensitivity = 0,
 		accel_profile = "flat",
