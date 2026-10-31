@@ -146,6 +146,16 @@ hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "right", gro
 hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up", group_aware = true }))
 hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down", group_aware = true }))
 
+hl.bind(mainMod .. " + TAB", function()
+	hl.dispatch(hl.dsp.window.cycle_next())
+	hl.dispatch(hl.dsp.window.bring_to_top())
+end)
+
+hl.bind(mainMod .. " + SHIFT + TAB", function()
+	hl.dispatch(hl.dsp.window.cycle_next({ next = false }))
+	hl.dispatch(hl.dsp.window.bring_to_top())
+end)
+
 for i = 1, 4 do
 	hl.workspace_rule({ workspace = tostring(i), persistent = true })
 end
