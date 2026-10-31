@@ -103,8 +103,10 @@ hl.config({
 		kb_layout = "us",
 		kb_variant = "",
 		kb_model = "",
-		kb_options = "ctrl:nocaps",
+		kb_options = "caps:none",
 		kb_rules = "",
+		repeat_rate = 50,
+		repeat_delay = 250,
 
 		sensitivity = 0,
 		accel_profile = "flat",
@@ -154,8 +156,10 @@ end
 
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 
-hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
-hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
+hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true })
+hl.bind("SUPER + CTRL_L", hl.dsp.window.drag(), { mouse = true })
+hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
+hl.bind("SUPER + ALT_L", hl.dsp.window.resize(), { mouse = true })
 
 hl.bind(
 	"XF86AudioRaiseVolume",
