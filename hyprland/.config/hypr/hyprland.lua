@@ -4,13 +4,15 @@ hl.monitor({ output = "DP-3", mode = "1920x1080@180.00Hz", position = "0x0", sca
 hl.monitor({ output = "eDP-1", mode = "1920x1080@60.01Hz", position = "0x0", scale = 1.0 })
 
 hl.on("hyprland.start", function()
-	hl.exec_cmd("foot --server")
-	hl.exec_cmd("waybar")
 	hl.exec_cmd("hyprpaper")
+	hl.exec_cmd("hyprsunset")
+	hl.exec_cmd("hypridle")
 	hl.exec_cmd("hyprctl hyprpaper wallpaper ',~/sync/pictures/oak-bg.png,'")
-	hl.exec_cmd("steam -silent")
+	hl.exec_cmd("foot --server")
 	hl.exec_cmd("wl-paste --type text --watch cliphist store")
 	hl.exec_cmd("wl-paste --type image --watch cliphist store")
+	hl.exec_cmd("steam -silent")
+	hl.exec_cmd("waybar")
 end)
 
 hl.env("XCURSOR_SIZE", "24")
@@ -180,6 +182,7 @@ hl.bind(
 	hl.dsp.exec_cmd('grim -g "$(slurp)" ~/Pictures/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png')
 )
 hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("~/.config/hypr/scripts/clipmenu.sh"))
+hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("~/.config/hypr/scripts/fzfpdf.sh"))
 hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("~/.config/hypr/scripts/power.sh"))
 
 --- Window rules
