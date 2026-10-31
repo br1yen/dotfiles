@@ -20,9 +20,11 @@ vim.opt.shiftwidth = 2
 vim.opt.softtabstop = 2
 vim.opt.expandtab = true
 vim.opt.wrap = false
+vim.opt.autoindent = true
 vim.opt.smartindent = true
 vim.opt.linebreak = true
 vim.opt.showbreak = "↪ "
+vim.opt.colorcolumn = "80"
 
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
@@ -365,33 +367,6 @@ require("oil").setup({
   view_options = { show_hidden = true },
 })
 
---- Keybinds / keymaps
-vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Write" })
-vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
-vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open file explorer" })
-vim.keymap.set("n", "<leader>;", "q/", { desc = "Command line window" })
-vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-vim.keymap.set("t", "<C-[>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
-vim.keymap.set("n", "<leader>pc", pack_clean, { desc = "Pack: clean unused" })
-vim.keymap.set("n", "<leader>d", vim.diagnostic.setloclist, { desc = "Diagnostics (loclist)" })
-vim.keymap.set("n", "<leader>D", vim.diagnostic.setqflist, { desc = "Diagnostics (quickfix)" })
-vim.keymap.set("n", "gbb", require("dap").toggle_breakpoint, { desc = "Debug: Toggle breakpoint" })
-vim.keymap.set("n", "gbc", require("dap").continue, { desc = "Debug: Continue" })
-vim.keymap.set("n", "gbn", require("dap").step_over, { desc = "Debug: Step over" })
-vim.keymap.set("n", "gbi", require("dap").step_into, { desc = "Debug: Step into" })
-vim.keymap.set("n", "gbo", require("dap").step_out, { desc = "Debug: Step out" })
-vim.keymap.set("n", "gbt", require("dap").terminate, { desc = "Debug: Terminate" })
-vim.keymap.set("n", "<leader>br", require("dap").repl.open, { desc = "Debug: Open REPL" })
-vim.keymap.set("n", "<leader>bl", require("dap").run_last, { desc = "Debug: Run last configuration" })
-vim.keymap.set("n", "<leader>bv", "<cmd>DapViewToggle<CR>", { desc = "Debug: Toggle view" })
-vim.keymap.set("n", "<leader>f", require("telescope.builtin").find_files, { desc = "Find files" })
-vim.keymap.set("n", "<leader>g", require("telescope.builtin").live_grep, { desc = "Live grep" })
-vim.keymap.set("n", "<leader>l", require("telescope.builtin").buffers, { desc = "Buffers" })
-vim.keymap.set("n", "<leader>h", require("telescope.builtin").help_tags, { desc = "Help tags" })
-vim.keymap.set("n", "<leader>r", require("telescope.builtin").oldfiles, { desc = "Recent files" })
-vim.keymap.set("n", "<leader>s", require("telescope.builtin").lsp_document_symbols, { desc = "Document symbols" })
-
 --- Notes
 local notes_dir = vim.fn.expand("~/sync/notes")
 
@@ -494,3 +469,30 @@ vim.api.nvim_create_autocmd("FileType", {
     end, { buffer = ev.buf, desc = "Check off task" })
   end,
 })
+
+--- Keybinds / keymaps
+vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Write" })
+vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
+vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open file explorer" })
+vim.keymap.set("n", "<leader>;", "q/", { desc = "Command line window" })
+vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
+vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.keymap.set("t", "<C-[>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.keymap.set("n", "<leader>pc", pack_clean, { desc = "Pack: clean unused" })
+vim.keymap.set("n", "<leader>d", vim.diagnostic.setloclist, { desc = "Diagnostics (loclist)" })
+vim.keymap.set("n", "<leader>D", vim.diagnostic.setqflist, { desc = "Diagnostics (quickfix)" })
+vim.keymap.set("n", "gbb", require("dap").toggle_breakpoint, { desc = "Debug: Toggle breakpoint" })
+vim.keymap.set("n", "gbc", require("dap").continue, { desc = "Debug: Continue" })
+vim.keymap.set("n", "gbn", require("dap").step_over, { desc = "Debug: Step over" })
+vim.keymap.set("n", "gbi", require("dap").step_into, { desc = "Debug: Step into" })
+vim.keymap.set("n", "gbo", require("dap").step_out, { desc = "Debug: Step out" })
+vim.keymap.set("n", "gbt", require("dap").terminate, { desc = "Debug: Terminate" })
+vim.keymap.set("n", "<leader>br", require("dap").repl.open, { desc = "Debug: Open REPL" })
+vim.keymap.set("n", "<leader>bl", require("dap").run_last, { desc = "Debug: Run last configuration" })
+vim.keymap.set("n", "<leader>bv", "<cmd>DapViewToggle<CR>", { desc = "Debug: Toggle view" })
+vim.keymap.set("n", "<leader>f", require("telescope.builtin").find_files, { desc = "Find files" })
+vim.keymap.set("n", "<leader>g", require("telescope.builtin").live_grep, { desc = "Live grep" })
+vim.keymap.set("n", "<leader>l", require("telescope.builtin").buffers, { desc = "Buffers" })
+vim.keymap.set("n", "<leader>h", require("telescope.builtin").help_tags, { desc = "Help tags" })
+vim.keymap.set("n", "<leader>r", require("telescope.builtin").oldfiles, { desc = "Recent files" })
+vim.keymap.set("n", "<leader>s", require("telescope.builtin").lsp_document_symbols, { desc = "Document symbols" })
