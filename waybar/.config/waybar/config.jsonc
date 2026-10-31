@@ -5,8 +5,12 @@
   "margin" : 0,
   "spacing": 0,
 	"modules-left": ["hyprland/window"],
-	"modules-right": ["clock", "battery"],
+	"modules-right": ["clock", "custom/battery"],
 	"hyprland/window": { "format": "{title}" },
-	"clock": { "format": "{:%m-%d-%y, %H:%M}" },
-	"battery": { "format": "      {capacity}%" }
+	"clock": { "format": "{:%m-%d-%y, %H:%M}         " },
+  "custom/battery": {
+      "exec": "~/.config/waybar/scripts/battery.sh",
+      "interval": 30,
+      "tooltip": false
+  }
 }
