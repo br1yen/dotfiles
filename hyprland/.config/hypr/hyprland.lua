@@ -1,7 +1,7 @@
 ---@diagnostic disable: undefined-global
 
 hl.monitor({ output = "DP-3", mode = "1920x1080@180.00Hz", position = "0x0", scale = 1.0 })
-hl.monitor({ output = "eDP-1", mode = "1920x1080@60.00Hz", position = "0x0", scale = 1.0 })
+hl.monitor({ output = "eDP-1", mode = "1920x1080@60.01Hz", position = "0x0", scale = 1.0 })
 
 hl.on("hyprland.start", function()
 	hl.exec_cmd("foot --server")
