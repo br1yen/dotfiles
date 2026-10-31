@@ -167,9 +167,8 @@ end
 hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 
 hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true })
-hl.bind("SUPER + CTRL_L", hl.dsp.window.drag(), { mouse = true })
 hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
-hl.bind("SUPER + ALT_L", hl.dsp.window.resize(), { mouse = true })
+hl.bind("SUPER + CTRL_L", hl.dsp.window.resize(), { mouse = true })
 
 hl.bind(
 	"XF86AudioRaiseVolume",
