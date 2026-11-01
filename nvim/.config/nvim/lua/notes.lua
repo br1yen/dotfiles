@@ -97,3 +97,100 @@ vim.api.nvim_create_autocmd("FileType", {
     end, { buffer = ev.buf, desc = "Check off task" })
   end,
 })
+
+local markers = { "*", "+", "-" }
+
+-- Re-indent a bullet line by `delta` levels and set the marker for that depth.
+local function reindent(delta)
+  local line = vim.api.nvim_get_current_line()
+  local indent, marker, rest = line:match("^(%s*)([*+-])(%s.*)$")
+  if not marker then
+    return false
+  end
+  local sw = vim.fn.shiftwidth()
+  local depth = math.max(0, math.floor(#indent / sw) + delta)
+  local new = string.rep(" ", depth * sw) .. markers[depth % 3 + 1] .. rest
+  local col = vim.fn.col(".") - 1 + (#new - #line)
+  vim.api.nvim_set_current_line(new)
+  vim.api.nvim_win_set_cursor(0, { vim.fn.line("."), math.max(0, col) })
+  return true
+end
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "text",
+  callback = function(ev)
+    vim.bo.shiftwidth = 2
+    vim.bo.tabstop = 2
+    vim.bo.softtabstop = -1
+    vim.bo.expandtab = true
+    vim.bo.autoindent = true
+    vim.bo.comments = "b:*,b:+,b:-" -- no "f" flag, so Enter repeats the bullet
+    vim.opt_local.formatoptions:append({ "r", "o" })
+
+    vim.cmd("syntax enable")
+
+    vim.cmd([[
+      " Use silent! to prevent errors if the groups don't exist yet
+      silent! syntax clear txtBullet
+      silent! syntax clear txtTodo
+      silent! syntax clear txtDone
+
+      " Use [-*+] so the dash is treated as a literal, not a range
+      syntax match txtBullet /^\s*\zs[-*+]/
+      syntax match txtTodo /^\s*[-*+]\s\+\zs\[ \]/
+      syntax match txtDone /^\s*[-*+]\s\+\zs\[x\]/
+
+      highlight default link txtBullet Title
+      highlight default link txtTodo Todo
+      highlight default link txtDone Comment
+    ]])
+
+    vim.keymap.set("i", "<C-t>", function()
+      if not reindent(1) then
+        vim.api.nvim_feedkeys(vim.keycode("<C-t>"), "n", false)
+      end
+    end, { buffer = ev.buf })
+
+    vim.keymap.set("i", "<C-d>", function()
+      if not reindent(-1) then
+        vim.api.nvim_feedkeys(vim.keycode("<C-d>"), "n", false)
+      end
+    end, { buffer = ev.buf })
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "text",
+  callback = function()
+    vim.opt_local.suffixesadd:append(".txt") -- `learning` finds learning.txt
+    vim.opt_local.path:append("**") -- search subfolders of the cwd
+  end,
+})
+
+vim.keymap.set("i", "<C-l>", function()
+  require("fzf-lua").files({
+    cwd = notes_dir,
+    prompt = "Insert Note> ",
+    actions = {
+      ["default"] = function(selected)
+        if not selected or not selected[1] then
+          return
+        end
+
+        local file = selected[1]
+        -- Extract just the filename (e.g., "gdb.txt")
+        local name = vim.fn.fnamemodify(file, ":t")
+
+        -- Insert text exactly at the cursor position
+        local row, col = unpack(vim.api.nvim_win_get_cursor(0))
+        vim.api.nvim_buf_set_text(0, row - 1, col, row - 1, col, { name })
+
+        -- Move cursor to the end of the inserted text
+        vim.api.nvim_win_set_cursor(0, { row, col + #name })
+
+        -- Force Neovim back into insert mode (fzf-lua sometimes drops you to normal)
+        vim.cmd("startinsert")
+      end,
+    },
+  })
+end, { desc = "Insert note filename" })

@@ -44,6 +44,8 @@ vim.o.pumheight = 10
 
 vim.opt.path:append("**")
 
+vim.opt.guicursor:remove({ "t:block-blinkon500-blinkoff500-TermCursor" })
+
 vim.api.nvim_create_autocmd("UIEnter", {
   callback = function()
     vim.o.clipboard = "unnamedplus"
@@ -74,7 +76,7 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   desc = "Highlight when yanking text",
   group = vim.api.nvim_create_augroup("highlight-yank", { clear = true }),
   callback = function()
-    vim.hl.on_yank()
+    vim.hl.hl_op()
   end,
 })
 
@@ -168,6 +170,7 @@ require("mason-tool-installer").setup({
     "stylua",
     "google-java-format",
     "typstyle",
+    "prettier",
     -- debug
     "java-debug-adapter",
   },
@@ -196,7 +199,7 @@ vim.pack.add({ "https://github.com/mfussenegger/nvim-jdtls" })
 vim.lsp.config("tinymist", {
   settings = {
     formatterMode = "typstyle",
-    formatterPrintWidth = 80,
+    -- formatterPrintWidth = 80,
     formatterProseWrap = true,
   },
 })
@@ -341,3 +344,14 @@ vim.keymap.set({ "x", "o" }, "an", function() -- Treeselect
     opts = require("leap.user").with_traversal_keys("n", "N"),
   })
 end)
+vim.keymap.set("i", "<CR>", function()
+  if vim.fn.pumvisible() == 1 then
+    return "<C-e><CR>"
+  end
+  return "<CR>"
+end, { expr = true, desc = "Newline without accepting completion" })
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(ev)
+    vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf })
+  end,
+})
