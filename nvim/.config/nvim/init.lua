@@ -9,8 +9,7 @@ vim.o.relativenumber = true
 vim.o.signcolumn = "yes"
 vim.o.laststatus = 3
 vim.o.showmode = false
-vim.o.list = true
-vim.o.cursorline = true
+vim.o.cursorline = false
 vim.o.winborder = "none"
 
 vim.o.tabstop = 2
@@ -39,7 +38,7 @@ vim.o.scrolloff = 999
 vim.o.sidescrolloff = 10
 vim.o.smoothscroll = true
 vim.o.confirm = true
-vim.o.completeopt = "menuone,noinsert,fuzzy"
+vim.o.completeopt = "menuone,noinsert,noselect,fuzzy"
 vim.o.pumheight = 10
 
 vim.opt.path:append("**")
@@ -339,14 +338,3 @@ vim.keymap.set({ "x", "o" }, "an", function() -- Treeselect
     opts = require("leap.user").with_traversal_keys("n", "N"),
   })
 end)
-vim.keymap.set("i", "<CR>", function()
-  if vim.fn.pumvisible() == 1 then
-    return "<C-e><CR>"
-  end
-  return "<CR>"
-end, { expr = true, desc = "Newline without accepting completion" })
-vim.api.nvim_create_autocmd("LspAttach", {
-  callback = function(ev)
-    vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = ev.buf })
-  end,
-})
