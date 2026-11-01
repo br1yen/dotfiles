@@ -2,53 +2,53 @@
 vim.loader.enable() -- faster startup by caching compile Lua modules
 
 vim.g.mapleader = " "
-vim.g.maplocalleader = " "
+
 vim.opt.mouse = "a"
+vim.o.termguicolors = true
+vim.o.relativenumber = true
+vim.o.signcolumn = "yes"
+vim.o.laststatus = 3
+vim.o.showmode = false
+vim.o.colorcolumn = "0"
+vim.o.list = true
+vim.o.cursorline = true
 
-vim.opt.termguicolors = true
-vim.g.have_nerd_font = true
-vim.opt.winborder = "none"
-vim.opt.relativenumber = true
-vim.opt.signcolumn = "yes"
-vim.opt.laststatus = 3
-vim.opt.showmode = false
-vim.opt.colorcolumn = "0"
+vim.o.tabstop = 2
+vim.o.shiftwidth = 2
+vim.o.softtabstop = 2
+vim.o.expandtab = true
+vim.o.wrap = false
+vim.o.autoindent = true
+vim.o.smartindent = true
+vim.o.linebreak = true
+vim.o.showbreak = "↪ "
+vim.o.colorcolumn = "80"
 
-vim.opt.tabstop = 2
-vim.opt.shiftwidth = 2
-vim.opt.softtabstop = 2
-vim.opt.expandtab = true
-vim.opt.wrap = false
-vim.opt.autoindent = true
-vim.opt.smartindent = true
-vim.opt.linebreak = true
-vim.opt.showbreak = "↪ "
-vim.opt.colorcolumn = "80"
+vim.o.ignorecase = true
+vim.o.smartcase = true
 
-vim.opt.ignorecase = true
-vim.opt.smartcase = true
+vim.o.undofile = true
+vim.o.swapfile = false
 
-vim.opt.undofile = true
-vim.opt.swapfile = false
+vim.o.updatetime = 250
 
-vim.opt.updatetime = 250
+vim.o.splitright = true
+vim.o.splitbelow = true
 
-vim.opt.splitright = true
-vim.opt.splitbelow = true
-
-vim.opt.scrolloff = 999
-vim.opt.sidescrolloff = 999
-vim.opt.smoothscroll = true
-
-vim.opt.confirm = true
-vim.opt.completeopt = "menu,fuzzy,menuone,noinsert,popup,preview"
-vim.opt.pumheight = 10
+vim.o.scrolloff = 999
+vim.o.sidescrolloff = 10
+vim.o.smoothscroll = true
+vim.o.confirm = true
+vim.o.completeopt = "menu,fuzzy,menuone,noinsert,popup,preview"
+vim.o.pumheight = 10
 
 vim.opt.path:append("**")
 
-vim.schedule(function()
-  vim.opt.clipboard = "unnamedplus"
-end)
+vim.api.nvim_create_autocmd("UIEnter", {
+  callback = function()
+    vim.o.clipboard = "unnamedplus"
+  end,
+})
 
 -- Colors
 vim.pack.add({ "https://github.com/ramojus/mellifluous.nvim" })
@@ -173,12 +173,10 @@ require("mason-tool-installer").setup({
     "lua-language-server",
     "jdtls",
     "tinymist",
-    "marksman",
     -- formatters
     "stylua",
     "google-java-format",
     "typstyle",
-    "prettier",
     -- debug
     "java-debug-adapter",
   },
@@ -213,9 +211,6 @@ vim.lsp.config("tinymist", {
 })
 vim.lsp.enable({ "tinymist" })
 
--- Markdown
-vim.lsp.enable({ "marksman" })
-
 -- Configuration
 vim.diagnostic.config({
   update_in_insert = false,
@@ -238,6 +233,10 @@ vim.api.nvim_create_autocmd("LspAttach", {
     vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, { autotrigger = true })
   end,
 })
+
+--- Completion
+vim.pack.add({ "https://github.com/nvim-mini/mini.completion" })
+require("mini.completion").setup({})
 
 --- Treesitter
 vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" } })
@@ -366,6 +365,17 @@ require("oil").setup({
   view_options = { show_hidden = true },
 })
 
+--- Quicker
+vim.pack.add({ "https://github.com/stevearc/quicker.nvim" })
+require("quicker").setup({})
+
+--- Git
+vim.api.nvim_create_user_command("GitBlameLine", function()
+  local line_number = vim.fn.line(".")
+  local filename = vim.api.nvim_buf_get_name(0)
+  print(vim.system({ "git", "blame", "-L", line_number .. ",+1", filename }):wait().stdout)
+end, { desc = "Print the git blame for the current line" })
+
 --- Notes
 local notes_dir = vim.fn.expand("~/sync/notes")
 
@@ -475,7 +485,7 @@ for i = 1, 9 do
 end
 vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open file explorer" })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 vim.keymap.set("t", "<C-[>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 vim.keymap.set("n", "<leader>pc", pack_clean, { desc = "Pack: clean unused" })
 vim.keymap.set("n", "<leader>d", vim.diagnostic.setloclist, { desc = "Diagnostics (loclist)" })
@@ -495,7 +505,11 @@ vim.keymap.set("n", "<leader>l", require("telescope.builtin").buffers, { desc = 
 vim.keymap.set("n", "<leader>h", require("telescope.builtin").help_tags, { desc = "Help tags" })
 vim.keymap.set("n", "<leader>r", require("telescope.builtin").oldfiles, { desc = "Recent files" })
 vim.keymap.set("n", "<leader>s", require("telescope.builtin").lsp_document_symbols, { desc = "Document symbols" })
-vim.keymap.set("n", "<leader>wh", "<C-w>h", { desc = "Move to left window" })
-vim.keymap.set("n", "<leader>wj", "<C-w>j", { desc = "Move to below window" })
-vim.keymap.set("n", "<leader>wk", "<C-w>k", { desc = "Move to above window" })
-vim.keymap.set("n", "<leader>wl", "<C-w>l", { desc = "Move to right window" })
+vim.keymap.set({ "t", "i" }, "<A-h>", "<C-\\><C-n><C-w>h")
+vim.keymap.set({ "t", "i" }, "<A-j>", "<C-\\><C-n><C-w>j")
+vim.keymap.set({ "t", "i" }, "<A-k>", "<C-\\><C-n><C-w>k")
+vim.keymap.set({ "t", "i" }, "<A-l>", "<C-\\><C-n><C-w>l")
+vim.keymap.set({ "n" }, "<A-h>", "<C-w>h")
+vim.keymap.set({ "n" }, "<A-j>", "<C-w>j")
+vim.keymap.set({ "n" }, "<A-k>", "<C-w>k")
+vim.keymap.set({ "n" }, "<A-l>", "<C-w>l")

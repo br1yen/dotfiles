@@ -146,15 +146,15 @@ hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up", group_
 hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down", group_aware = true }))
 
 hl.bind(mainMod .. " + TAB", function()
+	hl.dispatch(hl.dsp.window.float({ action = "enable" }))
 	hl.dispatch(hl.dsp.window.cycle_next())
 	hl.dispatch(hl.dsp.window.bring_to_top())
-	hl.dispatch(hl.dsp.window.float({ action = "enable" }))
 end)
 
 hl.bind(mainMod .. " + SHIFT + TAB", function()
+	hl.dispatch(hl.dsp.window.float({ action = "enable" }))
 	hl.dispatch(hl.dsp.window.cycle_next({ next = false }))
 	hl.dispatch(hl.dsp.window.bring_to_top())
-	hl.dispatch(hl.dsp.window.float({ action = "enable" }))
 end)
 
 hl.bind(mainMod .. " + BACKSPACE", function()
