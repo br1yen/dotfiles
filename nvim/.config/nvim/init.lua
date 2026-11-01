@@ -221,6 +221,13 @@ vim.diagnostic.config({
 
 --- Completion
 vim.pack.add({ "https://github.com/nvim-mini/mini.completion" })
+require("mini.completion").setup({})
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "text",
+  callback = function(args)
+    vim.b[args.buf].minicompletion_disable = true
+  end,
+})
 
 --- Treesitter
 vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" } })
@@ -257,7 +264,6 @@ vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
 require("fzf-lua").setup({
   winopts = { border = "none", fullscreen = true },
 })
-require("fzf-lua").register_ui_select()
 
 --- Oil
 vim.pack.add({ "https://github.com/stevearc/oil.nvim" })
@@ -275,7 +281,7 @@ require("quicker").setup({})
 --- Leap
 vim.pack.add({ "https://codeberg.org/andyg/leap.nvim.git" })
 
-require("mini.completion").setup({})
+--- Notes
 require("notes")
 
 --- Keybinds / keymaps
