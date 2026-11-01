@@ -54,8 +54,8 @@ hl.config({
 			color = "0x80000000",
 			color_inactive = "0x40000000",
 			offset = { 0, 2 },
-			range = 22,
-			render_power = 4,
+			range = 24,
+			render_power = 3,
 			scale = 1.0,
 			sharp = false,
 		},
@@ -89,6 +89,11 @@ hl.config({
 
 	binds = {
 		movefocus_cycles_groupfirst = true,
+		drag_threshold = 10,
+	},
+
+	cursor = {
+		no_warps = true,
 	},
 
 	misc = {
