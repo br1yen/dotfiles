@@ -221,7 +221,6 @@ vim.diagnostic.config({
 
 --- Completion
 vim.pack.add({ "https://github.com/nvim-mini/mini.completion" })
-require("mini.completion").setup({})
 
 --- Treesitter
 vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" } })
@@ -234,53 +233,9 @@ vim.api.nvim_create_autocmd("FileType", {
     vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
   end,
 })
-vim.opt.foldmethod = "expr"
-vim.opt.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-vim.opt.foldenable = false
-
---- Treesitter text objects
-vim.pack.add({
-  { src = "https://github.com/nvim-treesitter/nvim-treesitter-textobjects", version = "main" },
-})
-
-require("nvim-treesitter-textobjects").setup({
-  select = { lookahead = true },
-  move = { set_jumps = true },
-})
-
--- Select
-local ts_select = require("nvim-treesitter-textobjects.select")
-local function sel(lhs, query)
-  vim.keymap.set({ "x", "o" }, lhs, function()
-    ts_select.select_textobject(query, "textobjects")
-  end)
-end
-sel("af", "@function.outer")
-sel("if", "@function.inner")
-sel("ac", "@class.outer")
-sel("ic", "@class.inner")
-sel("aa", "@parameter.outer")
-sel("ia", "@parameter.inner")
-
--- Move
-local move = require("nvim-treesitter-textobjects.move")
-local function mv(lhs, fn, query)
-  vim.keymap.set({ "n", "x", "o" }, lhs, function()
-    move[fn](query, "textobjects")
-  end)
-end
-mv("]f", "goto_next_start", "@function.outer")
-mv("[f", "goto_previous_start", "@function.outer")
-mv("]F", "goto_next_end", "@function.outer")
-mv("[F", "goto_previous_end", "@function.outer")
-
-local swap = require("nvim-treesitter-textobjects.swap")
-vim.keymap.set("n", "<leader>a", function()
-  swap.swap_next("@parameter.inner")
-end)
-vim.keymap.set("n", "<leader>A", function()
-  swap.swap_previous("@parameter.inner")
-end)
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+vim.o.foldenable = false
 
 --- Autoformat
 vim.pack.add({ "https://github.com/stevearc/conform.nvim" })
@@ -290,18 +245,11 @@ require("conform").setup({
     lua = { "stylua" },
     java = { "google-java-format" },
     typst = { "typstyle" },
-    markdown = { "prettier" },
   },
   format_on_save = {
     timeout_ms = 500,
     lsp_format = "fallback",
   },
-})
-
---- Typst
-vim.pack.add({ "https://github.com/chomosuke/typst-preview.nvim" })
-require("typst-preview").setup({
-  dependencies_bin = { tinymist = "tinymist", websocat = "websocat" },
 })
 
 --- Fzf-lua
@@ -324,106 +272,11 @@ require("oil").setup({
 vim.pack.add({ "https://github.com/stevearc/quicker.nvim" })
 require("quicker").setup({})
 
---- Notes
-local notes_dir = vim.fn.expand("~/sync/notes")
+--- Leap
+vim.pack.add({ "https://codeberg.org/andyg/leap.nvim.git" })
 
-local function create_note(title)
-  if not title or title:match("^%s*$") then
-    return
-  end
-  vim.fn.mkdir(notes_dir, "p")
-
-  local name = vim.trim(title):lower():gsub("%.txt$", ""):gsub("%s+", "-"):gsub("[/\\]", "")
-  local path = ("%s/%s.txt"):format(notes_dir, name)
-
-  vim.cmd.edit(vim.fn.fnameescape(path))
-  vim.cmd.startinsert({ bang = true })
-end
-
-function _G.TasksQfText(info)
-  local items = vim.fn.getqflist({ id = info.id, items = 1 }).items
-  local lines = {}
-  for i = info.start_idx, info.end_idx do
-    local item = items[i]
-    local name = vim.fn.fnamemodify(vim.fn.bufname(item.bufnr), ":t")
-    lines[#lines + 1] = name .. "  " .. vim.trim(item.text)
-  end
-  return lines
-end
-
-vim.keymap.set("n", "<leader>nd", "<cmd>e ~/sync/notes/<cr>", { desc = "Notes dir" })
-vim.keymap.set("n", "<leader>nt", "<cmd>e ~/sync/notes/gtd/other-tasks.txt<cr>", { desc = "Open tasks" })
-
-vim.keymap.set("n", "<leader>x", function()
-  local line = vim.api.nvim_get_current_line()
-  local new, n = line:gsub("%- %[ %]", "- [x]", 1)
-  if n == 0 then
-    new = line:gsub("%- %[x%]", "- [ ]", 1)
-  end
-  vim.api.nvim_set_current_line(new)
-end, { desc = "Toggle task" })
-
-vim.keymap.set("n", "<leader>ng", function()
-  require("fzf-lua").live_grep({ cwd = notes_dir, prompt = "Grep Notes> " })
-end, { desc = "Grep notes" })
-
-vim.keymap.set("n", "<leader>nf", function()
-  require("fzf-lua").files({
-    cwd = notes_dir,
-    prompt = "Find Notes> ",
-    actions = {
-      -- create a new note from whatever is typed in the prompt
-      ["alt-enter"] = function()
-        local query = require("fzf-lua").get_last_query()
-        vim.schedule(function()
-          create_note(query)
-        end)
-      end,
-    },
-  })
-end, { desc = "Find notes" })
-
-vim.keymap.set("n", "<leader>nq", function()
-  local out = vim.fn.systemlist({ "rg", "--vimgrep", "-F", "--", "- [ ]", notes_dir })
-  vim.fn.setqflist({}, " ", {
-    title = "Tasks",
-    lines = out,
-    quickfixtextfunc = "v:lua.TasksQfText",
-  })
-  vim.cmd("copen")
-end, { desc = "Open tasks in quickfix" })
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "qf",
-  callback = function(ev)
-    vim.keymap.set("n", "x", function()
-      if vim.fn.getqflist({ title = 1 }).title ~= "Tasks" then
-        return
-      end
-
-      local idx = vim.fn.line(".")
-      local items = vim.fn.getqflist()
-      local item = items[idx]
-      if not item or item.bufnr == 0 then
-        return
-      end
-
-      -- check it off in the source file and save
-      vim.fn.bufload(item.bufnr)
-      local lnum = item.lnum - 1
-      local line = vim.api.nvim_buf_get_lines(item.bufnr, lnum, lnum + 1, false)[1]
-      local new = (line:gsub("%[ %]", "[x]", 1))
-      vim.api.nvim_buf_set_lines(item.bufnr, lnum, lnum + 1, false, { new })
-      vim.api.nvim_buf_call(item.bufnr, function()
-        vim.cmd("silent write")
-      end)
-
-      -- drop it from the list, keep cursor position
-      table.remove(items, idx)
-      vim.fn.setqflist({}, "r", { items = items, idx = math.min(idx, #items) })
-    end, { buffer = ev.buf, desc = "Check off task" })
-  end,
-})
+require("mini.completion").setup({})
+require("notes")
 
 --- Keybinds / keymaps
 for i = 1, 9 do
@@ -459,3 +312,26 @@ vim.keymap.set({ "n" }, "<A-h>", "<C-w>h")
 vim.keymap.set({ "n" }, "<A-j>", "<C-w>j")
 vim.keymap.set({ "n" }, "<A-k>", "<C-w>k")
 vim.keymap.set({ "n" }, "<A-l>", "<C-w>l")
+vim.keymap.set({ "n", "x", "o" }, "s", "<Plug>(leap)")
+vim.keymap.set("n", "S", "<Plug>(leap-from-window)")
+vim.keymap.set({ "n", "x", "o" }, "gs", "<Plug>(leap-visit)")
+vim.keymap.set({ "x", "o" }, "ar", "<Plug>(leap-visit-text-object)")
+vim.keymap.set({ "x", "o" }, "ir", "<Plug>(leap-visit-inner-text-object)")
+vim.keymap.set("o", "rr", function() -- "visit line" shortcut
+  return (vim.v.count == 0 and "1" or "") .. "<Plug>(leap-visit)"
+end, { expr = true })
+
+vim.api.nvim_create_autocmd("User", { -- automatic paste on return
+  pattern = "VisitDone",
+  group = vim.api.nvim_create_augroup("Visit", {}),
+  callback = function(event)
+    if (event.data.mode:match("^[vV\22]") or (vim.v.operator == "y")) and event.data.register == '"' then
+      vim.cmd("normal! p")
+    end
+  end,
+})
+vim.keymap.set({ "x", "o" }, "an", function() -- Treeselect
+  require("leap.treesitter").select({
+    opts = require("leap.user").with_traversal_keys("n", "N"),
+  })
+end)
