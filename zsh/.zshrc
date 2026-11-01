@@ -1,7 +1,7 @@
 # PATH (typeset -U dedupes entries)
 typeset -U path PATH
 path=(~/.local/bin $path)
-export PATH
+export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
 
 # Default editor
 export EDITOR=nvim
