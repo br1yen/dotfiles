@@ -277,10 +277,6 @@ require("oil").setup({
   view_options = { show_hidden = true },
 })
 
---- Quicker
-vim.pack.add({ "https://github.com/stevearc/quicker.nvim" })
-require("quicker").setup({})
-
 --- Leap
 vim.pack.add({ "https://codeberg.org/andyg/leap.nvim.git" })
 
@@ -329,7 +325,6 @@ vim.keymap.set({ "x", "o" }, "ir", "<Plug>(leap-visit-inner-text-object)")
 vim.keymap.set("o", "rr", function() -- "visit line" shortcut
   return (vim.v.count == 0 and "1" or "") .. "<Plug>(leap-visit)"
 end, { expr = true })
-
 vim.api.nvim_create_autocmd("User", { -- automatic paste on return
   pattern = "VisitDone",
   group = vim.api.nvim_create_augroup("Visit", {}),
