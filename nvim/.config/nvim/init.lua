@@ -9,9 +9,9 @@ vim.o.relativenumber = true
 vim.o.signcolumn = "yes"
 vim.o.laststatus = 3
 vim.o.showmode = false
-vim.o.colorcolumn = "0"
 vim.o.list = true
 vim.o.cursorline = true
+vim.o.winborder = "none"
 
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
@@ -39,7 +39,7 @@ vim.o.scrolloff = 999
 vim.o.sidescrolloff = 10
 vim.o.smoothscroll = true
 vim.o.confirm = true
-vim.o.completeopt = "menu,fuzzy,menuone,noinsert,popup,preview"
+vim.o.completeopt = "menuone,noinsert,fuzzy"
 vim.o.pumheight = 10
 
 vim.opt.path:append("**")
@@ -96,11 +96,6 @@ vim.api.nvim_create_autocmd("PackChanged", {
         vim.cmd.packadd("nvim-treesitter")
       end
       vim.cmd("TSUpdate")
-      return
-    end
-
-    if name == "telescope-fzf-native.nvim" then
-      vim.system({ "make" }, { cwd = ev.data.path }):wait()
       return
     end
   end,
@@ -228,12 +223,6 @@ vim.diagnostic.config({
   },
 })
 
-vim.api.nvim_create_autocmd("LspAttach", {
-  callback = function(ev)
-    vim.lsp.completion.enable(true, ev.data.client_id, ev.buf, { autotrigger = true })
-  end,
-})
-
 --- Completion
 vim.pack.add({ "https://github.com/nvim-mini/mini.completion" })
 require("mini.completion").setup({})
@@ -319,42 +308,12 @@ require("typst-preview").setup({
   dependencies_bin = { tinymist = "tinymist", websocat = "websocat" },
 })
 
---- Telescope
-vim.pack.add({
-  "https://github.com/nvim-lua/plenary.nvim",
-  "https://github.com/nvim-telescope/telescope.nvim",
-  "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
+--- Fzf-lua
+vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
+require("fzf-lua").setup({
+  winopts = { border = "none", fullscreen = true },
 })
-
-require("telescope").setup({
-  defaults = {
-    layout_strategy = "flex",
-    sorting_strategy = "ascending",
-    layout_config = {
-      prompt_position = "top",
-      width = { padding = 0 },
-      height = { padding = 0 },
-    },
-  },
-})
-pcall(require("telescope").load_extension, "fzf")
-
---- Org
-vim.pack.add({ "https://github.com/nvim-orgmode/orgmode" })
-require("orgmode").setup({
-  org_agenda_files = "~/sync/org/**/*",
-  org_default_notes_file = "~/sync/org/inbox.org",
-})
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "org",
-  callback = function()
-    vim.schedule(function()
-      vim.opt_local.foldenable = true
-      vim.opt_local.foldlevel = 0
-    end)
-  end,
-})
-vim.lsp.enable("org")
+require("fzf-lua").register_ui_select()
 
 --- Oil
 vim.pack.add({ "https://github.com/stevearc/oil.nvim" })
@@ -368,13 +327,6 @@ require("oil").setup({
 --- Quicker
 vim.pack.add({ "https://github.com/stevearc/quicker.nvim" })
 require("quicker").setup({})
-
---- Git
-vim.api.nvim_create_user_command("GitBlameLine", function()
-  local line_number = vim.fn.line(".")
-  local filename = vim.api.nvim_buf_get_name(0)
-  print(vim.system({ "git", "blame", "-L", line_number .. ",+1", filename }):wait().stdout)
-end, { desc = "Print the git blame for the current line" })
 
 --- Notes
 local notes_dir = vim.fn.expand("~/sync/notes")
@@ -416,24 +368,22 @@ vim.keymap.set("n", "<leader>x", function()
 end, { desc = "Toggle task" })
 
 vim.keymap.set("n", "<leader>ng", function()
-  require("telescope.builtin").live_grep({ cwd = notes_dir, prompt_title = "Grep Notes" })
-end)
+  require("fzf-lua").live_grep({ cwd = notes_dir, prompt = "Grep Notes> " })
+end, { desc = "Grep notes" })
 
 vim.keymap.set("n", "<leader>nf", function()
-  require("telescope.builtin").find_files({
+  require("fzf-lua").files({
     cwd = notes_dir,
-    prompt_title = "Find Notes",
-    attach_mappings = function(prompt_bufnr, map)
-      local function new_from_prompt()
-        local line = require("telescope.actions.state").get_current_line()
-        require("telescope.actions").close(prompt_bufnr)
+    prompt = "Find Notes> ",
+    actions = {
+      -- create a new note from whatever is typed in the prompt
+      ["alt-enter"] = function()
+        local query = require("fzf-lua").get_last_query()
         vim.schedule(function()
-          create_note(line)
+          create_note(query)
         end)
-      end
-      map({ "i", "n" }, "<C-enter>", new_from_prompt)
-      return true
-    end,
+      end,
+    },
   })
 end, { desc = "Find notes" })
 
@@ -499,12 +449,12 @@ vim.keymap.set("n", "gbt", require("dap").terminate, { desc = "Debug: Terminate"
 vim.keymap.set("n", "<leader>br", require("dap").repl.open, { desc = "Debug: Open REPL" })
 vim.keymap.set("n", "<leader>bl", require("dap").run_last, { desc = "Debug: Run last configuration" })
 vim.keymap.set("n", "<leader>bv", "<cmd>DapViewToggle<CR>", { desc = "Debug: Toggle view" })
-vim.keymap.set("n", "<leader>f", require("telescope.builtin").find_files, { desc = "Find files" })
-vim.keymap.set("n", "<leader>g", require("telescope.builtin").live_grep, { desc = "Live grep" })
-vim.keymap.set("n", "<leader>l", require("telescope.builtin").buffers, { desc = "Buffers" })
-vim.keymap.set("n", "<leader>h", require("telescope.builtin").help_tags, { desc = "Help tags" })
-vim.keymap.set("n", "<leader>r", require("telescope.builtin").oldfiles, { desc = "Recent files" })
-vim.keymap.set("n", "<leader>s", require("telescope.builtin").lsp_document_symbols, { desc = "Document symbols" })
+vim.keymap.set("n", "<leader>f", "<cmd>FzfLua files<cr>", { desc = "Find files" })
+vim.keymap.set("n", "<leader>g", "<cmd>FzfLua live_grep<cr>", { desc = "Live grep" })
+vim.keymap.set("n", "<leader>l", "<cmd>FzfLua buffers<cr>", { desc = "Buffers" })
+vim.keymap.set("n", "<leader>h", "<cmd>FzfLua helptags<cr>", { desc = "Help tags" })
+vim.keymap.set("n", "<leader>r", "<cmd>FzfLua oldfiles<cr>", { desc = "Recent files" })
+vim.keymap.set("n", "<leader>s", "<cmd>FzfLua lsp_document_symbols<cr>", { desc = "Document symbols" })
 vim.keymap.set({ "t", "i" }, "<A-h>", "<C-\\><C-n><C-w>h")
 vim.keymap.set({ "t", "i" }, "<A-j>", "<C-\\><C-n><C-w>j")
 vim.keymap.set({ "t", "i" }, "<A-k>", "<C-\\><C-n><C-w>k")
