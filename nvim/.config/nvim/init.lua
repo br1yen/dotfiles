@@ -282,6 +282,13 @@ vim.pack.add({ "https://codeberg.org/andyg/leap.nvim.git" })
 --- Notes
 require("notes")
 
+--- Commands
+vim.api.nvim_create_user_command("Termnew", function()
+  vim.cmd.tabnew()
+  vim.cmd.term()
+end)
+vim.cmd.cabbrev("termnew", "Termnew")
+
 --- Keybinds / keymaps
 for i = 1, 9 do
   vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to tab " .. i })
