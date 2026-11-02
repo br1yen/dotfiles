@@ -100,20 +100,56 @@ vim.api.nvim_create_autocmd("FileType", {
 
 local markers = { "*", "+", "-" }
 
--- Re-indent a bullet line by `delta` levels and set the marker for that depth.
-local function reindent(delta)
-  local line = vim.api.nvim_get_current_line()
+-- Re-indent bullet line `lnum` by `delta` levels and set the marker for that
+-- depth. Returns the change in line length, or nil if it isn't a bullet line.
+local function reindent_line(lnum, delta)
+  local line = vim.api.nvim_buf_get_lines(0, lnum - 1, lnum, false)[1]
   local indent, marker, rest = line:match("^(%s*)([*+-])(%s.*)$")
   if not marker then
-    return false
+    return nil
   end
   local sw = vim.fn.shiftwidth()
   local depth = math.max(0, math.floor(#indent / sw) + delta)
   local new = string.rep(" ", depth * sw) .. markers[depth % 3 + 1] .. rest
-  local col = vim.fn.col(".") - 1 + (#new - #line)
-  vim.api.nvim_set_current_line(new)
-  vim.api.nvim_win_set_cursor(0, { vim.fn.line("."), math.max(0, col) })
+  vim.api.nvim_buf_set_lines(0, lnum - 1, lnum, false, { new })
+  return #new - #line
+end
+
+-- Insert mode: reindent current line and keep the cursor in place.
+local function reindent(delta)
+  local lnum = vim.fn.line(".")
+  local col = vim.fn.col(".") - 1
+  local diff = reindent_line(lnum, delta)
+  if not diff then
+    return false
+  end
+  vim.api.nvim_win_set_cursor(0, { lnum, math.max(0, col + diff) })
   return true
+end
+
+-- Normal/visual mode: shift a range of lines. Non-bullet lines get the
+-- regular >/< behaviour.
+local function shift_range(first, last, delta)
+  for lnum = first, last do
+    if not reindent_line(lnum, delta) then
+      vim.cmd(("silent %d%s"):format(lnum, delta > 0 and ">" or "<"))
+    end
+  end
+end
+
+-- operatorfunc targets (must be global for v:lua)
+function _G.BulletIndentOp()
+  shift_range(vim.fn.line("'["), vim.fn.line("']"), 1)
+end
+function _G.BulletDedentOp()
+  shift_range(vim.fn.line("'["), vim.fn.line("']"), -1)
+end
+
+local function op_map(mode, lhs, func, suffix)
+  vim.keymap.set(mode, lhs, function()
+    vim.o.operatorfunc = "v:lua." .. func
+    return "g@" .. suffix
+  end, { buffer = true, expr = true, desc = "Shift bullets" })
 end
 
 vim.api.nvim_create_autocmd("FileType", {
@@ -156,6 +192,14 @@ vim.api.nvim_create_autocmd("FileType", {
         vim.api.nvim_feedkeys(vim.keycode("<C-d>"), "n", false)
       end
     end, { buffer = ev.buf })
+
+    -- normal: >> << (with counts), > / < + motion; visual: > <
+    op_map("n", ">>", "BulletIndentOp", "_")
+    op_map("n", "<<", "BulletDedentOp", "_")
+    op_map("n", ">", "BulletIndentOp", "")
+    op_map("n", "<", "BulletDedentOp", "")
+    op_map("x", ">", "BulletIndentOp", "")
+    op_map("x", "<", "BulletDedentOp", "")
   end,
 })
 
