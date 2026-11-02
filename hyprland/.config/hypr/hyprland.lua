@@ -158,6 +158,13 @@ hl.bind(mainMod .. " + P", hl.dsp.group.next({ false }))
 hl.bind(mainMod .. " + SHIFT + N", hl.dsp.group.move_window({ true, true }))
 hl.bind(mainMod .. " + SHIFT + P", hl.dsp.group.move_window({ true, false }))
 
+hl.workspace_rule({
+	workspace = "special:scratchpad",
+	on_created_empty = "helium-browser --app=https://excalidraw.com",
+})
+hl.bind(mainMod .. " + SHIFT + X", hl.dsp.window.move({ workspace = "special:scratchpad" }))
+hl.bind(mainMod .. " + X", hl.dsp.workspace.toggle_special("scratchpad"))
+
 hl.bind("SUPER + G", hl.dsp.submap("group_management"), { description = "Enter a group management submap" })
 
 local map = function(key, action, description)
@@ -285,4 +292,12 @@ hl.window_rule({
 	match = { class = "cs2" },
 	immediate = true,
 	fullscreen = true,
+})
+
+hl.window_rule({
+	name = "excalidraw-pad",
+	match = { class = "^chrome-excalidraw.com__-Default$" },
+	float = true,
+	center = true,
+	size = { 800, 800 },
 })
