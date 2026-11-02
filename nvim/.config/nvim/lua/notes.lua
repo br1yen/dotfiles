@@ -181,9 +181,9 @@ vim.api.nvim_create_autocmd("FileType", {
       highlight default link txtDone Comment
     ]])
 
-    vim.keymap.set("i", "<C-t>", function()
+    vim.keymap.set("i", "<C-i>", function()
       if not reindent(1) then
-        vim.api.nvim_feedkeys(vim.keycode("<C-t>"), "n", false)
+        vim.api.nvim_feedkeys(vim.keycode("<C-i>"), "n", false)
       end
     end, { buffer = ev.buf })
 

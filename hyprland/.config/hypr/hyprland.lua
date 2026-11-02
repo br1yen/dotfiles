@@ -32,6 +32,7 @@ hl.config({
 		allow_tearing = true,
 		layout = "dwindle",
 		resize_on_border = true,
+		no_focus_fallback = true,
 	},
 
 	dwindle = {
@@ -39,7 +40,7 @@ hl.config({
 	},
 
 	render = {
-		direct_scanout = 2,
+		direct_scanout = 0,
 	},
 
 	decoration = {
@@ -50,13 +51,13 @@ hl.config({
 		inactive_opacity = 1.0,
 
 		shadow = {
-			enabled = true,
+			enabled = false,
 			color = "0x80000000",
 			color_inactive = "0x40000000",
 			offset = { 0, 2 },
 			range = 24,
 			render_power = 3,
-			scale = 1.0,
+			scale = 1.03,
 			sharp = false,
 		},
 
@@ -146,10 +147,10 @@ hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }))
 
-hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ direction = "left" }))
-hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "right" }))
-hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up" }))
-hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down" }))
+hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ direction = "left", group_aware = true }))
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "right", group_aware = true }))
+hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up", group_aware = true }))
+hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down", group_aware = true }))
 
 hl.bind(mainMod .. " + W", hl.dsp.group.toggle())
 hl.bind(mainMod .. " + N", hl.dsp.group.next({ true }))
@@ -157,26 +158,59 @@ hl.bind(mainMod .. " + P", hl.dsp.group.next({ false }))
 hl.bind(mainMod .. " + SHIFT + N", hl.dsp.group.move_window({ true, true }))
 hl.bind(mainMod .. " + SHIFT + P", hl.dsp.group.move_window({ true, false }))
 
+hl.bind("SUPER + G", hl.dsp.submap("group_management"), { description = "Enter a group management submap" })
+
+local map = function(key, action, description)
+	hl.bind(key, function()
+		hl.dispatch(action)
+		hl.dispatch(hl.dsp.submap("reset"))
+	end, { description = description })
+end
+
+hl.define_submap("group_management", function()
+	map("g", hl.dsp.group.toggle(), "Toggle window group")
+
+	map("h", hl.dsp.window.move({ into_group = "l" }), "Move window into a group on the left")
+	map("j", hl.dsp.window.move({ into_group = "d" }), "Move window into a group on the bottom")
+	map("k", hl.dsp.window.move({ into_group = "u" }), "Move window into a group on the top")
+	map("l", hl.dsp.window.move({ into_group = "r" }), "Move window into a group on the right")
+
+	map("e", hl.dsp.window.move({ out_of_group = true }), "Move window out of group")
+
+	map("n", hl.dsp.group.next(), "Next window in group")
+	map("p", hl.dsp.group.prev(), "Previous window in group")
+
+	map("f", hl.dsp.group.move_window(), "Move window forward in the group order")
+	map("b", hl.dsp.group.move_window({ forward = false }), "Move window backward in the group order")
+
+	map("t", hl.dsp.group.lock_active(), "Toggle group lock")
+
+	for i = 1, 10 do
+		map(tostring(i % 10), hl.dsp.group.active({ index = i }), "Focus window " .. i .. " in a group")
+	end
+
+	hl.bind("escape", hl.dsp.submap("reset"), { description = "Quit submap" })
+end)
+
+hl.bind("SUPER + space", function()
+	local window = hl.get_active_window()
+	if not window then
+		return
+	end
+	hl.dispatch(hl.dsp.window.cycle_next({
+		floating = not window.floating,
+		tiled = window.floating,
+	}))
+end, { description = "Switch focus between tiled and floating windows" })
+
+hl.bind(mainMod .. " + SHIFT + SPACE", hl.dsp.window.float({ action = "toggle" }))
+
 hl.bind(mainMod .. " + TAB", function()
-	hl.dispatch(hl.dsp.window.float({ action = "enable" }))
 	hl.dispatch(hl.dsp.window.cycle_next())
 	hl.dispatch(hl.dsp.window.bring_to_top())
 end)
 
 hl.bind(mainMod .. " + SHIFT + TAB", function()
-	hl.dispatch(hl.dsp.window.float({ action = "enable" }))
-	hl.dispatch(hl.dsp.window.cycle_next({ next = false }))
-	hl.dispatch(hl.dsp.window.bring_to_top())
-end)
-
-hl.bind(mainMod .. " + BACKSPACE", function()
-	hl.dispatch(hl.dsp.window.float({ action = "disable" }))
-	hl.dispatch(hl.dsp.window.cycle_next())
-	hl.dispatch(hl.dsp.window.bring_to_top())
-end)
-
-hl.bind(mainMod .. " + SHIFT + BACKSPACE", function()
-	hl.dispatch(hl.dsp.window.float({ action = "disable" }))
 	hl.dispatch(hl.dsp.window.cycle_next({ next = false }))
 	hl.dispatch(hl.dsp.window.bring_to_top())
 end)
