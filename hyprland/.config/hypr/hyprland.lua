@@ -88,7 +88,7 @@ hl.config({
 	},
 
 	binds = {
-		movefocus_cycles_groupfirst = true,
+		movefocus_cycles_groupfirst = false,
 		drag_threshold = 10,
 	},
 
@@ -137,7 +137,6 @@ hl.bind(mainMod .. " + ALT + L", hl.dsp.layout("preselect r"))
 hl.bind(mainMod .. " + ALT + K", hl.dsp.layout("preselect u"))
 hl.bind(mainMod .. " + ALT + J", hl.dsp.layout("preselect d"))
 
-hl.bind(mainMod .. " + W", hl.dsp.group.toggle())
 hl.bind(mainMod .. " + E", hl.dsp.layout("togglesplit"))
 hl.bind(mainMod .. " + minus", hl.dsp.layout("splitratio -0.1"), { repeating = true })
 hl.bind(mainMod .. " + equal", hl.dsp.layout("splitratio +0.1"), { repeating = true })
@@ -147,10 +146,16 @@ hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
 hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }))
 hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }))
 
-hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ direction = "left", group_aware = true }))
-hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "right", group_aware = true }))
-hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up", group_aware = true }))
-hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down", group_aware = true }))
+hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ direction = "left" }))
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "right" }))
+hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up" }))
+hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down" }))
+
+hl.bind(mainMod .. " + W", hl.dsp.group.toggle())
+hl.bind(mainMod .. " + N", hl.dsp.group.next({ true }))
+hl.bind(mainMod .. " + P", hl.dsp.group.next({ false }))
+hl.bind(mainMod .. " + SHIFT + N", hl.dsp.group.move_window({ true, true }))
+hl.bind(mainMod .. " + SHIFT + P", hl.dsp.group.move_window({ true, false }))
 
 hl.bind(mainMod .. " + TAB", function()
 	hl.dispatch(hl.dsp.window.float({ action = "enable" }))

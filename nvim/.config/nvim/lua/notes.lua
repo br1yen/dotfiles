@@ -167,7 +167,7 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
-vim.keymap.set("i", "<C-l>", function()
+vim.keymap.set("i", "<C-f>", function()
   require("fzf-lua").files({
     cwd = notes_dir,
     prompt = "Insert Note> ",
