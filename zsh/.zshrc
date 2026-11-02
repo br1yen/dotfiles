@@ -34,6 +34,17 @@ function zle-line-finish {
 }
 zle -N zle-line-finish
 
+# Commands you run get a bar (otherwise they inherit the block from normal mode)
+preexec() { print -n '\e[6 q' }
+
+# Keep Ctrl-L working in both modes
+bindkey -M viins '^L' clear-screen
+bindkey -M vicmd '^L' clear-screen
+bindkey -M viins '^?' backward-delete-char
+bindkey -M viins '^H' backward-delete-char
+bindkey -M viins '^W' backward-kill-word
+bindkey -M viins '^U' backward-kill-line
+
 # nvim as man pager
 export MANPAGER='nvim +Man!'
 
