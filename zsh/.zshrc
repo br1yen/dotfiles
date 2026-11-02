@@ -7,9 +7,32 @@ export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
 export EDITOR=nvim
 export VISUAL=nvim
 
-bindkey -e
-bindkey -r '\e'"'"
-bindkey -r '\e"'
+# Enable vi mode
+bindkey -v
+
+# Cut the mode-switch delay (default 400ms is noticeable on Esc)
+export KEYTIMEOUT=1
+
+# Cursor shape: beam in insert mode, block in normal mode
+function zle-keymap-select {
+  case $KEYMAP in
+    vicmd)      print -n '\e[2 q' ;;  # block
+    viins|main) print -n '\e[6 q' ;;  # beam
+  esac
+}
+zle -N zle-keymap-select
+
+# Start each new prompt with a beam cursor
+function zle-line-init {
+  print -n '\e[6 q'
+}
+zle -N zle-line-init
+
+# Reset to beam before running a command, so programs don't inherit a block cursor
+function zle-line-finish {
+  print -n '\e[6 q'
+}
+zle -N zle-line-finish
 
 # nvim as man pager
 export MANPAGER='nvim +Man!'
