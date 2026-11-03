@@ -74,7 +74,7 @@ hl.config({
 			font_family = "Inconsolata Medium",
 			font_size = 14,
 			gaps_in = 4,
-			gaps_out = 4,
+			gaps_out = 2,
 			indicator_height = 0,
 			text_color = "0xffffffff",
 			text_color_inactive = "0xffb3b393",
@@ -155,8 +155,8 @@ hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down", grou
 hl.bind(mainMod .. " + W", hl.dsp.group.toggle())
 hl.bind(mainMod .. " + N", hl.dsp.group.next())
 hl.bind(mainMod .. " + P", hl.dsp.group.prev())
-hl.bind(mainMod .. " + SHIFT + N", hl.dsp.group.move_window({ true, true }))
-hl.bind(mainMod .. " + SHIFT + P", hl.dsp.group.move_window({ true, false }))
+hl.bind(mainMod .. " + SHIFT + N", hl.dsp.group.move_window())
+hl.bind(mainMod .. " + SHIFT + P", hl.dsp.group.move_window({ forward = false }))
 
 hl.workspace_rule({
 	workspace = "special:scratchpad",
@@ -164,26 +164,6 @@ hl.workspace_rule({
 })
 hl.bind(mainMod .. " + SHIFT + X", hl.dsp.window.move({ workspace = "special:scratchpad" }))
 hl.bind(mainMod .. " + X", hl.dsp.workspace.toggle_special("scratchpad"))
-
-hl.bind("SUPER + G", hl.dsp.submap("group_management"), { description = "Enter a group management submap" })
-
-local map = function(key, action, description)
-	hl.bind(key, function()
-		hl.dispatch(action)
-		hl.dispatch(hl.dsp.submap("reset"))
-	end, { description = description })
-end
-
-hl.define_submap("group_management", function()
-	map("g", hl.dsp.group.toggle(), "Toggle window group")
-
-	for i = 1, 9 do
-		map(tostring(i % 10), hl.dsp.group.active({ index = i }), "Focus window " .. i .. " in a group")
-	end
-
-	hl.bind("escape", hl.dsp.submap("reset"), { description = "Quit submap" })
-	hl.bind("q", hl.dsp.submap("reset"), { description = "Quit submap" })
-end)
 
 hl.bind("SUPER + space", function()
 	local window = hl.get_active_window()
