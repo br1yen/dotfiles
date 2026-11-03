@@ -8,7 +8,7 @@ vim.o.termguicolors = true
 vim.o.relativenumber = true
 vim.o.signcolumn = "yes"
 vim.o.laststatus = 3
-vim.o.showmode = false
+vim.o.showmode = true
 vim.o.cursorline = false
 vim.o.winborder = "none"
 
@@ -43,7 +43,7 @@ vim.o.pumheight = 10
 
 vim.opt.path:append("**")
 
-vim.opt.guicursor:remove({ "t:block-blinkon500-blinkoff500-TermCursor" })
+vim.opt.guicursor = ""
 
 vim.api.nvim_create_autocmd("UIEnter", {
   callback = function()
