@@ -73,11 +73,11 @@ hl.config({
 			enabled = true,
 			font_family = "Inconsolata Medium",
 			font_size = 14,
-			gaps_in = 0,
-			gaps_out = 0,
+			gaps_in = 4,
+			gaps_out = 4,
 			indicator_height = 0,
 			text_color = "0xffffffff",
-			text_color_inactive = "0xffa8a1be",
+			text_color_inactive = "0xffb3b393",
 			text_color_locked_active = "0xff000000",
 		},
 		col = {
@@ -153,8 +153,8 @@ hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up", group_
 hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down", group_aware = true }))
 
 hl.bind(mainMod .. " + W", hl.dsp.group.toggle())
-hl.bind(mainMod .. " + N", hl.dsp.group.next({ true }))
-hl.bind(mainMod .. " + P", hl.dsp.group.next({ false }))
+hl.bind(mainMod .. " + N", hl.dsp.group.next())
+hl.bind(mainMod .. " + P", hl.dsp.group.prev())
 hl.bind(mainMod .. " + SHIFT + N", hl.dsp.group.move_window({ true, true }))
 hl.bind(mainMod .. " + SHIFT + P", hl.dsp.group.move_window({ true, false }))
 
@@ -177,26 +177,12 @@ end
 hl.define_submap("group_management", function()
 	map("g", hl.dsp.group.toggle(), "Toggle window group")
 
-	map("h", hl.dsp.window.move({ into_group = "l" }), "Move window into a group on the left")
-	map("j", hl.dsp.window.move({ into_group = "d" }), "Move window into a group on the bottom")
-	map("k", hl.dsp.window.move({ into_group = "u" }), "Move window into a group on the top")
-	map("l", hl.dsp.window.move({ into_group = "r" }), "Move window into a group on the right")
-
-	map("e", hl.dsp.window.move({ out_of_group = true }), "Move window out of group")
-
-	map("n", hl.dsp.group.next(), "Next window in group")
-	map("p", hl.dsp.group.prev(), "Previous window in group")
-
-	map("f", hl.dsp.group.move_window(), "Move window forward in the group order")
-	map("b", hl.dsp.group.move_window({ forward = false }), "Move window backward in the group order")
-
-	map("t", hl.dsp.group.lock_active(), "Toggle group lock")
-
-	for i = 1, 10 do
+	for i = 1, 9 do
 		map(tostring(i % 10), hl.dsp.group.active({ index = i }), "Focus window " .. i .. " in a group")
 	end
 
 	hl.bind("escape", hl.dsp.submap("reset"), { description = "Quit submap" })
+	hl.bind("q", hl.dsp.submap("reset"), { description = "Quit submap" })
 end)
 
 hl.bind("SUPER + space", function()
