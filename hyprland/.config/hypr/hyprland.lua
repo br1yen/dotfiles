@@ -158,13 +158,6 @@ hl.bind(mainMod .. " + P", hl.dsp.group.prev())
 hl.bind(mainMod .. " + SHIFT + N", hl.dsp.group.move_window())
 hl.bind(mainMod .. " + SHIFT + P", hl.dsp.group.move_window({ forward = false }))
 
-hl.workspace_rule({
-	workspace = "special:scratchpad",
-	on_created_empty = "helium-browser --app=https://excalidraw.com",
-})
-hl.bind(mainMod .. " + SHIFT + X", hl.dsp.window.move({ workspace = "special:scratchpad" }))
-hl.bind(mainMod .. " + X", hl.dsp.workspace.toggle_special("scratchpad"))
-
 hl.bind("SUPER + space", function()
 	local window = hl.get_active_window()
 	if not window then
@@ -254,8 +247,12 @@ hl.window_rule({
 })
 
 hl.window_rule({
-	-- Enable tearing and direct scanout in cs2
 	match = { class = "cs2" },
+	immediate = true,
+})
+
+hl.window_rule({
+	match = { class = "gamescope" },
 	immediate = true,
 })
 
