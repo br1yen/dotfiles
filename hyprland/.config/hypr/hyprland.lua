@@ -169,7 +169,7 @@ hl.bind("SUPER + space", function()
 	}))
 end, { description = "Switch focus between tiled and floating windows" })
 
-hl.bind(mainMod .. " + SHIFT + SPACE", hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + F", hl.dsp.window.float({ action = "toggle" }))
 
 hl.bind(mainMod .. " + TAB", function()
 	hl.dispatch(hl.dsp.window.cycle_next())
@@ -189,7 +189,7 @@ for i = 1, 4 do
 	hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i }))
 end
 
-hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
+hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen())
 
 hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
@@ -254,12 +254,4 @@ hl.window_rule({
 hl.window_rule({
 	match = { class = "gamescope" },
 	immediate = true,
-})
-
-hl.window_rule({
-	name = "excalidraw-pad",
-	match = { class = "^chrome-excalidraw.com__-Default$" },
-	float = true,
-	center = true,
-	size = { 800, 800 },
 })
