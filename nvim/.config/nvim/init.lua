@@ -38,7 +38,7 @@ vim.o.scrolloff = 999
 vim.o.sidescrolloff = 10
 vim.o.smoothscroll = true
 vim.o.confirm = true
-vim.o.completeopt = "menuone,noinsert,noselect,fuzzy"
+vim.o.completeopt = "menuone,noselect,fuzzy"
 vim.o.pumheight = 10
 
 vim.opt.path:append("**")

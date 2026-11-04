@@ -1,4 +1,4 @@
-local notes_dir = vim.fn.expand("~/sync/notes")
+local notes_dir = vim.fn.expand("~/Documents/notes")
 
 local function create_note(title)
   if not title or title:match("^%s*$") then

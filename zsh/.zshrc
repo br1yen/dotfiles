@@ -2,6 +2,8 @@
 typeset -U path PATH
 path=(~/.local/bin $path)
 export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
+export PATH="$HOME/.config/emacs/bin:$PATH"
+export EMACSDIR="$HOME/.config/emacs/"
 
 # Default editor
 export EDITOR=nvim
