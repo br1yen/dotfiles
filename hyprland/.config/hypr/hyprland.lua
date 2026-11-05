@@ -7,8 +7,6 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("hyprpaper")
 	hl.exec_cmd("hyprsunset")
 	hl.exec_cmd("hypridle")
-	hl.exec_cmd("hyprctl hyprpaper wallpaper ',~/Pictures/synced/oak-bg.png,'")
-	hl.exec_cmd("foot --server")
 	hl.exec_cmd("wl-paste --type text --watch cliphist store")
 	hl.exec_cmd("wl-paste --type image --watch cliphist store")
 	hl.exec_cmd("steam -silent -no-browser")
@@ -130,7 +128,7 @@ local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("~/.config/hypr/scripts/wmenu.sh"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("helium-browser"))
-hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("footclient"))
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("foot"))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 hl.bind(mainMod .. " + ALT + H", hl.dsp.layout("preselect l"))
