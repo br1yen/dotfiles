@@ -20,8 +20,8 @@ hl.env("HYPRCURSOR_THEME", "ComixCursors-White")
 
 hl.config({
 	general = {
-		gaps_out = 20,
-		gaps_in = 8,
+		gaps_out = 0,
+		gaps_in = 0,
 		border_size = 1,
 		col = {
 			active_border = "#000000",

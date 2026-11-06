@@ -282,6 +282,14 @@ vim.pack.add({ "https://codeberg.org/andyg/leap.nvim.git" })
 --- Notes
 require("notes")
 
+--- Org
+vim.pack.add({ "https://github.com/xheisenbugx/org.nvim" })
+require("org").setup({
+  org_directory = "~/Documents/org",
+  agenda_files = { "~/Documents/org/**/*.org" },
+  default_notes_file = "~/Documents/org/refile.org",
+})
+
 --- Commands
 vim.api.nvim_create_user_command("Termnew", function()
   vim.cmd.tabnew()
