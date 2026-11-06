@@ -14,18 +14,21 @@ local function create_note(title)
 end
 
 function _G.TasksQfText(info)
-  local items = vim.fn.getqflist({ id = info.id, items = 1 }).items
+  local items = vim.fn.getqflist({ id = info.id, items = 1 }).items or {}
   local lines = {}
   for i = info.start_idx, info.end_idx do
     local item = items[i]
-    local name = vim.fn.fnamemodify(vim.fn.bufname(item.bufnr), ":t")
-    lines[#lines + 1] = name .. "  " .. vim.trim(item.text)
+    if item then
+      local name = vim.fn.fnamemodify(vim.fn.bufname(item.bufnr), ":t")
+      lines[#lines + 1] = name .. "  " .. vim.trim(item.text or "")
+    else
+      lines[#lines + 1] = ""
+    end
   end
   return lines
 end
 
-vim.keymap.set("n", "<leader>nd", "<cmd>e ~/sync/notes/<cr>", { desc = "Notes dir" })
-vim.keymap.set("n", "<leader>nt", "<cmd>e ~/sync/notes/gtd/other-tasks.txt<cr>", { desc = "Open tasks" })
+vim.keymap.set("n", "<leader>nd", "<cmd>e " .. notes_dir .. "<cr>", { desc = "Notes dir" })
 
 vim.keymap.set("n", "<leader>x", function()
   local line = vim.api.nvim_get_current_line()
@@ -152,16 +155,89 @@ local function op_map(mode, lhs, func, suffix)
   end, { buffer = true, expr = true, desc = "Shift bullets" })
 end
 
+-- Folding: only a top-level "* " starts a fold, everything indented under it
+-- (including nested + and - bullets) stays inside.
+function _G.BulletFold(lnum)
+  local line = vim.fn.getline(lnum)
+  if line:match("^%*%s") then
+    return ">1" -- top-level bullet starts a fold
+  end
+  if line:match("^%s*$") or line:match("^%s") then
+    return "=" -- blanks and indented lines stay in the current fold
+  end
+  return 0 -- anything else at column 0 ends the fold
+end
+
+-- Last non-blank line of the block under the heading at `lnum`: the heading
+-- plus every indented line below it, stopping at the next column-0 line.
+local function block_end(lnum)
+  local stop = lnum
+  for l = lnum + 1, vim.fn.line("$") do
+    local text = vim.fn.getline(l)
+    if text:match("^%S") then
+      break
+    end
+    if text:match("%S") then
+      stop = l
+    end
+  end
+  return stop
+end
+
+local function jump_heading(backward)
+  vim.fn.setpos("''", vim.fn.getpos(".")) -- so <C-o> returns
+  for _ = 1, vim.v.count1 do
+    vim.fn.search([[^\*\s]], backward and "bW" or "W")
+  end
+end
+
+-- Insert a blank line and a fresh "* " heading after the block that starts at
+-- heading `lnum`. Returns the new heading's line number.
+local function add_heading_below(lnum)
+  local stop = block_end(lnum)
+  local new = { "", "* " }
+  if vim.fn.getline(stop + 1):match("%S") then
+    new[#new + 1] = "" -- keep a gap before the heading that follows
+  end
+  vim.api.nvim_buf_set_lines(0, stop, stop, false, new)
+  return stop + 2
+end
+
+-- Insert a fresh "* " heading above heading `lnum`, with a blank line between
+-- the two. Returns the new heading's line number.
+local function add_heading_above(lnum)
+  local new = { "* ", "" }
+  if lnum > 1 and vim.fn.getline(lnum - 1):match("%S") then
+    table.insert(new, 1, "") -- keep a gap after whatever sits above
+  end
+  vim.api.nvim_buf_set_lines(0, lnum - 1, lnum - 1, false, new)
+  return lnum + #new - 2
+end
+
+-- o / O: on a top-level heading, open a new heading (below skips the children).
+-- Anywhere else, or with a count, fall back to the native o / O.
+local function open_line(above)
+  local lnum = vim.fn.line(".")
+  if vim.v.count == 0 and vim.fn.getline(lnum):match("^%*%s+%S") then
+    local row = above and add_heading_above(lnum) or add_heading_below(lnum)
+    vim.api.nvim_win_set_cursor(0, { row, 2 })
+    vim.cmd.startinsert({ bang = true })
+  else
+    vim.api.nvim_feedkeys(vim.v.count1 .. (above and "O" or "o"), "n", false)
+  end
+end
+
 vim.api.nvim_create_autocmd("FileType", {
   pattern = "text",
   callback = function(ev)
-    vim.bo.shiftwidth = 2
-    vim.bo.tabstop = 2
     vim.bo.softtabstop = -1
-    vim.bo.expandtab = true
-    vim.bo.autoindent = true
-    vim.bo.comments = "b:*,b:+,b:-" -- no "f" flag, so Enter repeats the bullet
-    vim.opt_local.formatoptions:append({ "r", "o" })
+    vim.bo.comments = "b:*,b:+,b:-"
+    vim.cmd.setlocal("formatoptions+=ro")
+    vim.cmd.setlocal("suffixesadd+=.txt") -- `learning` finds learning.txt
+    vim.cmd.setlocal("path+=**") -- search subfolders of the cwd
+    vim.wo.foldmethod = "expr"
+    vim.wo.foldexpr = "v:lua.BulletFold(v:lnum)"
+    vim.wo.foldlevel = 0
 
     vim.cmd("syntax enable")
 
@@ -181,9 +257,9 @@ vim.api.nvim_create_autocmd("FileType", {
       highlight default link txtDone Comment
     ]])
 
-    vim.keymap.set("i", "<C-i>", function()
+    vim.keymap.set("i", "<C-t>", function()
       if not reindent(1) then
-        vim.api.nvim_feedkeys(vim.keycode("<C-i>"), "n", false)
+        vim.api.nvim_feedkeys(vim.keycode("<C-t>"), "n", false)
       end
     end, { buffer = ev.buf })
 
@@ -193,6 +269,35 @@ vim.api.nvim_create_autocmd("FileType", {
       end
     end, { buffer = ev.buf })
 
+    -- Enter: native bullet continuation, except on an empty bullet, which
+    -- dedents (or clears it at top level).
+    vim.keymap.set("i", "<CR>", function()
+      local lnum = vim.fn.line(".")
+      local empty_indent = vim.api.nvim_get_current_line():match("^(%s*)[*+-]%s+$")
+      if not empty_indent then
+        vim.api.nvim_feedkeys(vim.keycode("<CR>"), "n", false)
+      elseif #empty_indent < vim.fn.shiftwidth() then
+        vim.api.nvim_set_current_line("")
+        vim.api.nvim_win_set_cursor(0, { lnum, 0 })
+      else
+        reindent(-1)
+      end
+    end, { buffer = ev.buf })
+
+    vim.keymap.set({ "n", "x", "o" }, "]h", function()
+      jump_heading(false)
+    end, { buffer = ev.buf, desc = "Next top-level heading" })
+    vim.keymap.set({ "n", "x", "o" }, "[h", function()
+      jump_heading(true)
+    end, { buffer = ev.buf, desc = "Previous top-level heading" })
+
+    vim.keymap.set("n", "o", function()
+      open_line(false)
+    end, { buffer = ev.buf, desc = "New heading below / open line" })
+    vim.keymap.set("n", "O", function()
+      open_line(true)
+    end, { buffer = ev.buf, desc = "New heading above / open line" })
+
     -- normal: >> << (with counts), > / < + motion; visual: > <
     op_map("n", ">>", "BulletIndentOp", "_")
     op_map("n", "<<", "BulletDedentOp", "_")
@@ -200,14 +305,6 @@ vim.api.nvim_create_autocmd("FileType", {
     op_map("n", "<", "BulletDedentOp", "")
     op_map("x", ">", "BulletIndentOp", "")
     op_map("x", "<", "BulletDedentOp", "")
-  end,
-})
-
-vim.api.nvim_create_autocmd("FileType", {
-  pattern = "text",
-  callback = function()
-    vim.opt_local.suffixesadd:append(".txt") -- `learning` finds learning.txt
-    vim.opt_local.path:append("**") -- search subfolders of the cwd
   end,
 })
 
