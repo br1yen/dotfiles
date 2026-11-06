@@ -13,8 +13,8 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("waybar")
 end)
 
-hl.env("XCURSOR_SIZE", "24")
-hl.env("HYPRCURSOR_SIZE", "24")
+hl.env("XCURSOR_SIZE", "26")
+hl.env("HYPRCURSOR_SIZE", "26")
 hl.env("XCURSOR_THEME", "ComixCursors-White")
 hl.env("HYPRCURSOR_THEME", "ComixCursors-White")
 
