@@ -2,14 +2,10 @@
 typeset -U path PATH
 path=(~/.local/bin $path)
 export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
-export PATH="$HOME/.config/emacs/bin:$PATH"
-export EMACSDIR="$HOME/.config/emacs/"
 
 # Default editor
-export EDITOR=nvim
-export VISUAL=nvim
-
-# Enable vi mode
+export EDITOR="emacsclient -nw"
+export VISUAL="emacsclient -nw"
 bindkey -e
 
 # nvim as man pager
@@ -52,11 +48,11 @@ alias gc='git commit'
 alias gps='git push'
 alias gpl='git pull'
 
-alias t="tmux"            
-alias tls="tmux ls"        
-alias tn="tmux new -s"      
-alias ta="tmux attach -t"    
-alias td="tmux detach"        
+alias t="tmux"
+alias tls="tmux ls"
+alias tn="tmux new -s"
+alias ta="tmux attach -t"
+alias td="tmux detach"
 alias tk="tmux kill-session -t"
-alias tka="tmux kill-server"    
+alias tka="tmux kill-server"
 alias tm="tmux new-session -A -s"

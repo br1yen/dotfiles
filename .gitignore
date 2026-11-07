@@ -1,2 +1,25 @@
 # Package lockfile
 nvim-pack-lock.json
+
+# OS & System Junk
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Secrets & Credentials
+.env
+.env.*
+*.pem
+*.key
+*.p12
+.ssh/
+.gnupg/
+
+# Emacs
+*~
+\#*\#
+.\#*
+elpa/
+autosave/
+var/
+custom.el
