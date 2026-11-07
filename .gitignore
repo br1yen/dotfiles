@@ -16,9 +16,6 @@ desktop.ini
 .gnupg/
 
 # Emacs
-*~
-\#*\#
-.\#*
 elpa/
 autosave/
 var/
