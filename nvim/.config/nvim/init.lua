@@ -187,7 +187,6 @@ vim.pack.add({ "https://github.com/mfussenegger/nvim-jdtls" })
 vim.lsp.config("tinymist", {
   settings = {
     formatterMode = "typstyle",
-    -- formatterPrintWidth = 80,
     formatterProseWrap = true,
   },
 })
@@ -273,9 +272,6 @@ require("oil").setup({
 --- Leap
 vim.pack.add({ "https://codeberg.org/andyg/leap.nvim.git" })
 
---- Notes
-require("notes")
-
 --- Zk
 vim.pack.add({ "https://github.com/zk-org/zk-nvim" })
 require("zk").setup({
@@ -329,6 +325,20 @@ vim.keymap.set("n", "<leader>l", "<cmd>FzfLua buffers<cr>", { desc = "Buffers" }
 vim.keymap.set("n", "<leader>h", "<cmd>FzfLua helptags<cr>", { desc = "Help tags" })
 vim.keymap.set("n", "<leader>r", "<cmd>FzfLua oldfiles<cr>", { desc = "Recent files" })
 vim.keymap.set("n", "<leader>s", "<cmd>FzfLua lsp_document_symbols<cr>", { desc = "Document symbols" })
+vim.keymap.set("n", "<leader>nf", "<cmd>ZkNotes<cr>", { desc = "Find notes" })
+vim.keymap.set("n", "<leader>nt", "<cmd>ZkTags<cr>", { desc = "Find tags" })
+vim.keymap.set("n", "<leader>nl", "<cmd>ZkInsertLink<cr>", { desc = "Insert link" })
+vim.keymap.set("n", "<leader>nb", "<cmd>ZkBacklinks<cr>", { desc = "Insert link" })
+vim.keymap.set("n", "<leader>ng", function()
+  require("fzf-lua").live_grep({ cwd = "/Sync/Notes" })
+end, { desc = "Search notes" })
+vim.keymap.set("n", "<leader>nn", function()
+  local input = vim.fn.input("Note title: ")
+  if input == "" then
+    return
+  end
+  vim.cmd(("ZkNew { title = %q }"):format(input))
+end, { desc = "New zk note from input" })
 vim.keymap.set({ "t", "i" }, "<A-h>", "<C-\\><C-n><C-w>h")
 vim.keymap.set({ "t", "i" }, "<A-j>", "<C-\\><C-n><C-w>j")
 vim.keymap.set({ "t", "i" }, "<A-k>", "<C-\\><C-n><C-w>k")
