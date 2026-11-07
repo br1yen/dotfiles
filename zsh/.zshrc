@@ -2,7 +2,7 @@
 typeset -U path PATH
 path=(~/.local/bin $path)
 export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
-export ZK_NOTEBOOK_DIR="$HOME/Documents/notes"
+export ZK_NOTEBOOK_DIR="$HOME/Sync/Notes"
 
 # Default editor
 export EDITOR="nvim"
