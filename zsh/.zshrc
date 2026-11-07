@@ -2,10 +2,11 @@
 typeset -U path PATH
 path=(~/.local/bin $path)
 export PATH="$HOME/.local/share/bob/nvim-bin:$PATH"
+export ZK_NOTEBOOK_DIR="$HOME/Documents/notes"
 
 # Default editor
-export EDITOR="emacsclient -nw"
-export VISUAL="emacsclient -nw"
+export EDITOR="nvim"
+export VISUAL="nvim"
 bindkey -e
 
 # nvim as man pager
@@ -41,18 +42,3 @@ setopt SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
 # aliases
 alias grep='grep --color=auto'
 alias diff='diff --color=auto'
-
-alias gs='git status'
-alias ga='git add'
-alias gc='git commit'
-alias gps='git push'
-alias gpl='git pull'
-
-alias t="tmux"
-alias tls="tmux ls"
-alias tn="tmux new -s"
-alias ta="tmux attach -t"
-alias td="tmux detach"
-alias tk="tmux kill-session -t"
-alias tka="tmux kill-server"
-alias tm="tmux new-session -A -s"

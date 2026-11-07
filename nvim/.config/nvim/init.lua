@@ -159,7 +159,6 @@ require("mason-tool-installer").setup({
     "stylua",
     "google-java-format",
     "typstyle",
-    "prettier",
     -- debug
     "java-debug-adapter",
   },
@@ -223,7 +222,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 --- Treesitter
 vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" } })
-local parsers = { "lua", "typst", "java", "query" }
+local parsers = { "lua", "typst", "java" }
 require("nvim-treesitter").install(parsers)
 vim.api.nvim_create_autocmd("FileType", {
   pattern = { "lua", "java", "typst" },
@@ -277,6 +276,25 @@ vim.pack.add({ "https://codeberg.org/andyg/leap.nvim.git" })
 --- Notes
 require("notes")
 
+--- Zk
+vim.pack.add({ "https://github.com/zk-org/zk-nvim" })
+require("zk").setup({
+  picker = "fzf_lua",
+  lsp = {
+    config = {
+      name = "zk",
+      cmd = { "zk", "lsp" },
+      filetypes = { "markdown" },
+    },
+    auto_attach = {
+      enabled = true,
+    },
+    tags = {
+      multi_select_strategy = "AND",
+    },
+  },
+})
+
 --- Commands
 vim.api.nvim_create_user_command("Termnew", function()
   vim.cmd.tabnew()
@@ -289,6 +307,7 @@ for i = 1, 9 do
   vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to tab " .. i })
 end
 vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open file explorer" })
+vim.keymap.set("n", "<C-[>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 vim.keymap.set("t", "<C-[>", "<C-\\><C-n>", { desc = "Exit terminal mode" })

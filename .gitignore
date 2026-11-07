@@ -14,9 +14,3 @@ desktop.ini
 *.p12
 .ssh/
 .gnupg/
-
-# Emacs
-elpa/
-autosave/
-var/
-custom.el
