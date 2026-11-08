@@ -1,5 +1,5 @@
 --- Options
-vim.loader.enable() -- faster startup by caching compile Lua modules
+vim.loader.enable()
 
 vim.g.mapleader = " "
 
@@ -51,7 +51,7 @@ vim.api.nvim_create_autocmd("UIEnter", {
   end,
 })
 
--- Colors
+--- Colors
 vim.pack.add({ "https://github.com/ramojus/mellifluous.nvim" })
 require("mellifluous").setup({
   flat_background = {
@@ -126,7 +126,7 @@ vim.api.nvim_create_autocmd("FileChangedShellPost", {
   end,
 })
 
--- Debug
+--- Debug
 vim.pack.add({
   "https://github.com/mfussenegger/nvim-dap",
   {
@@ -167,6 +167,9 @@ require("mason-tool-installer").setup({
 })
 --- LSP
 vim.pack.add({ "https://github.com/neovim/nvim-lspconfig" })
+
+-- Markdown
+vim.lsp.config("marksman", { filetypes = { "markdown" } })
 vim.lsp.enable("marksman")
 
 -- Lua
@@ -191,6 +194,7 @@ vim.lsp.config("tinymist", {
   settings = {
     formatterMode = "typstyle",
     formatterProseWrap = true,
+    formatterPrintWidth = 80,
   },
 })
 vim.lsp.enable({ "tinymist" })
@@ -244,11 +248,10 @@ require("conform").setup({
   formatters_by_ft = {
     lua = { "stylua" },
     java = { "google-java-format" },
-    typst = { "typstyle" },
     markdown = { "prettier" },
   },
   format_on_save = {
-    timeout_ms = 500,
+    timeout_ms = 1000,
     lsp_format = "fallback",
   },
 })
@@ -275,13 +278,6 @@ require("oil").setup({
 
 --- Leap
 vim.pack.add({ "https://codeberg.org/andyg/leap.nvim.git" })
-
---- Commands
-vim.api.nvim_create_user_command("Termnew", function()
-  vim.cmd.tabnew()
-  vim.cmd.term()
-end)
-vim.cmd.cabbrev("termnew", "Termnew")
 
 --- Keybinds / keymaps
 for i = 1, 9 do
