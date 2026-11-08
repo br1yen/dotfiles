@@ -1,6 +1,6 @@
 ---@diagnostic disable: undefined-global
 
-hl.monitor({ output = "DP-3", mode = "1920x1080@180.00Hz" })
+hl.monitor({ output = "DP-3", mode = "1920x1080@180.00Hz", cm = "srgb", bitdepth = 8 })
 hl.monitor({ output = "eDP-1", mode = "1920x1080@60.01Hz", scale = 1.0 })
 
 hl.on("hyprland.start", function()
@@ -40,6 +40,7 @@ hl.config({
 
 	render = {
 		direct_scanout = 2,
+		cm_auto_hdr = 0,
 	},
 
 	decoration = {
