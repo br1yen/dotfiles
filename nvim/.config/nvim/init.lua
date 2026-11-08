@@ -155,16 +155,19 @@ require("mason-tool-installer").setup({
     "lua-language-server",
     "jdtls",
     "tinymist",
+    "marksman",
     -- formatters
     "stylua",
     "google-java-format",
     "typstyle",
+    "prettier",
     -- debug
     "java-debug-adapter",
   },
 })
 --- LSP
 vim.pack.add({ "https://github.com/neovim/nvim-lspconfig" })
+vim.lsp.enable("marksman")
 
 -- Lua
 vim.lsp.config("lua_ls", {
@@ -221,10 +224,10 @@ vim.api.nvim_create_autocmd("FileType", {
 
 --- Treesitter
 vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" } })
-local parsers = { "lua", "typst", "java" }
+local parsers = { "lua", "typst", "java", "markdown", "markdown_inline" }
 require("nvim-treesitter").install(parsers)
 vim.api.nvim_create_autocmd("FileType", {
-  pattern = { "lua", "java", "typst" },
+  pattern = { "lua", "java", "typst", "markdown" },
   callback = function()
     pcall(vim.treesitter.start)
     vim.bo.indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
@@ -234,7 +237,7 @@ vim.o.foldmethod = "expr"
 vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.o.foldenable = false
 
---- Autoformat
+--- Format
 vim.pack.add({ "https://github.com/stevearc/conform.nvim" })
 
 require("conform").setup({
@@ -242,6 +245,7 @@ require("conform").setup({
     lua = { "stylua" },
     java = { "google-java-format" },
     typst = { "typstyle" },
+    markdown = { "prettier" },
   },
   format_on_save = {
     timeout_ms = 500,
@@ -271,25 +275,6 @@ require("oil").setup({
 
 --- Leap
 vim.pack.add({ "https://codeberg.org/andyg/leap.nvim.git" })
-
---- Zk
-vim.pack.add({ "https://github.com/zk-org/zk-nvim" })
-require("zk").setup({
-  picker = "fzf_lua",
-  lsp = {
-    config = {
-      name = "zk",
-      cmd = { "zk", "lsp" },
-      filetypes = { "markdown" },
-    },
-    auto_attach = {
-      enabled = true,
-    },
-    tags = {
-      multi_select_strategy = "AND",
-    },
-  },
-})
 
 --- Commands
 vim.api.nvim_create_user_command("Termnew", function()
@@ -325,20 +310,13 @@ vim.keymap.set("n", "<leader>l", "<cmd>FzfLua buffers<cr>", { desc = "Buffers" }
 vim.keymap.set("n", "<leader>h", "<cmd>FzfLua helptags<cr>", { desc = "Help tags" })
 vim.keymap.set("n", "<leader>r", "<cmd>FzfLua oldfiles<cr>", { desc = "Recent files" })
 vim.keymap.set("n", "<leader>s", "<cmd>FzfLua lsp_document_symbols<cr>", { desc = "Document symbols" })
-vim.keymap.set("n", "<leader>nf", "<cmd>ZkNotes<cr>", { desc = "Find notes" })
-vim.keymap.set("n", "<leader>nt", "<cmd>ZkTags<cr>", { desc = "Find tags" })
-vim.keymap.set("n", "<leader>nl", "<cmd>ZkInsertLink<cr>", { desc = "Insert link" })
-vim.keymap.set("n", "<leader>nb", "<cmd>ZkBacklinks<cr>", { desc = "Insert link" })
+vim.keymap.set("n", "<leader>nf", function()
+  require("fzf-lua").files({ cwd = "~/Sync/Notes", cmd = "rg --files --type md" })
+end, { desc = "Find notes" })
+
 vim.keymap.set("n", "<leader>ng", function()
-  require("fzf-lua").live_grep({ cwd = "/Sync/Notes" })
+  require("fzf-lua").live_grep({ cwd = "~/Sync/Notes", cmd = "rg --type md --column --line-number" })
 end, { desc = "Search notes" })
-vim.keymap.set("n", "<leader>nn", function()
-  local input = vim.fn.input("Note title: ")
-  if input == "" then
-    return
-  end
-  vim.cmd(("ZkNew { title = %q }"):format(input))
-end, { desc = "New zk note from input" })
 vim.keymap.set({ "t", "i" }, "<A-h>", "<C-\\><C-n><C-w>h")
 vim.keymap.set({ "t", "i" }, "<A-j>", "<C-\\><C-n><C-w>j")
 vim.keymap.set({ "t", "i" }, "<A-k>", "<C-\\><C-n><C-w>k")
