@@ -6,9 +6,9 @@ vim.g.mapleader = " "
 vim.opt.mouse = "a"
 vim.o.termguicolors = true
 vim.o.relativenumber = true
-vim.o.signcolumn = "yes"
+vim.o.signcolumn = "no"
 vim.o.laststatus = 3
-vim.o.showmode = true
+vim.o.showmode = false
 vim.o.cursorline = false
 vim.o.winborder = "none"
 vim.o.colorcolumn = "80"
@@ -42,7 +42,7 @@ vim.o.updatetime = 250
 vim.o.splitright = true
 vim.o.splitbelow = true
 
-vim.o.scrolloff = 999
+vim.o.scrolloff = 0
 vim.o.sidescrolloff = 10
 vim.o.smoothscroll = true
 vim.o.confirm = true
@@ -149,7 +149,7 @@ require("nvim-dap-virtual-text").setup({
     highlight_changed_variables = true,
 })
 
--- Mason
+--- Mason
 vim.pack.add({
     "https://github.com/mason-org/mason.nvim",
     "https://github.com/WhoIsSethDaniel/mason-tool-installer.nvim",
