@@ -290,6 +290,14 @@ require("oil").setup({
 --- Leap
 vim.pack.add({ "https://codeberg.org/andyg/leap.nvim.git" })
 
+--- Stay-centered
+vim.pack.add({ "https://github.com/arnamak/stay-centered.nvim" })
+require("stay-centered").setup({
+    enabled = true,
+    allow_scroll_move = true,
+    disable_on_mouse = true,
+})
+
 --- Keybinds / keymaps
 for i = 1, 9 do
     vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to tab " .. i })

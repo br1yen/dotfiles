@@ -256,5 +256,3 @@ hl.window_rule({
 	match = { class = "gamescope" },
 	immediate = true,
 })
-
---  LocalWords:  hyprpaper hyprsunset emacs
