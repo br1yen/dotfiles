@@ -4,14 +4,13 @@ hl.monitor({ output = "DP-3", mode = "1920x1080@180.00Hz", cm = "srgb", bitdepth
 hl.monitor({ output = "eDP-1", mode = "1920x1080@60.01Hz", scale = 1.0 })
 
 hl.on("hyprland.start", function()
-	hl.exec_cmd("hyprpaper")
 	hl.exec_cmd("hyprsunset")
-	hl.exec_cmd("emacs --daemon")
 	hl.exec_cmd("hypridle")
 	hl.exec_cmd("wl-paste --type text --watch cliphist store")
 	hl.exec_cmd("wl-paste --type image --watch cliphist store")
 	hl.exec_cmd("steam -silent -no-browser")
 	hl.exec_cmd("waybar")
+	hl.exec_cmd("swaybg -i ~/Sync/Pictures/default.jpg")
 end)
 
 hl.env("XCURSOR_SIZE", "26")
@@ -23,7 +22,7 @@ hl.config({
 	general = {
 		gaps_out = 0,
 		gaps_in = 1,
-		border_size = 0,
+		border_size = 1,
 		col = {
 			active_border = "#000000",
 			inactive_border = "#000000",
@@ -94,7 +93,7 @@ hl.config({
 	},
 
 	cursor = {
-		no_warps = true,
+		no_warps = false,
 	},
 
 	misc = {
@@ -129,9 +128,10 @@ hl.config({
 local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("~/.config/hypr/scripts/wmenu.sh"))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("foot yazi"))
+hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("foot nvim"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("helium-browser"))
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("foot"))
-hl.bind(mainMod .. " + M", hl.dsp.exec_cmd("emacsclient -c"))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 hl.bind(mainMod .. " + ALT + H", hl.dsp.layout("preselect l"))
@@ -143,49 +143,51 @@ hl.bind(mainMod .. " + E", hl.dsp.layout("togglesplit"))
 hl.bind(mainMod .. " + minus", hl.dsp.layout("splitratio -0.1"), { repeating = true })
 hl.bind(mainMod .. " + equal", hl.dsp.layout("splitratio +0.1"), { repeating = true })
 
-hl.bind(mainMod .. " + H", hl.dsp.focus({ direction = "left" }))
-hl.bind(mainMod .. " + L", hl.dsp.focus({ direction = "right" }))
-hl.bind(mainMod .. " + K", hl.dsp.focus({ direction = "up" }))
-hl.bind(mainMod .. " + J", hl.dsp.focus({ direction = "down" }))
+hl.bind(mainMod .. " + H", function()
+	hl.dispatch(hl.dsp.focus({ direction = "left" }))
+	hl.dispatch(hl.dsp.window.bring_to_top())
+end)
+hl.bind(mainMod .. " + J", function()
+	hl.dispatch(hl.dsp.focus({ direction = "down" }))
+	hl.dispatch(hl.dsp.window.bring_to_top())
+end)
+hl.bind(mainMod .. " + K", function()
+	hl.dispatch(hl.dsp.focus({ direction = "up" }))
+	hl.dispatch(hl.dsp.window.bring_to_top())
+end)
+hl.bind(mainMod .. " + L", function()
+	hl.dispatch(hl.dsp.focus({ direction = "right" }))
+	hl.dispatch(hl.dsp.window.bring_to_top())
+end)
 
 hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ direction = "left", group_aware = true }))
 hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "right", group_aware = true }))
 hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up", group_aware = true }))
 hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down", group_aware = true }))
 
-hl.bind(mainMod .. " + W", hl.dsp.group.toggle())
-hl.bind(mainMod .. " + N", hl.dsp.group.next())
-hl.bind(mainMod .. " + P", hl.dsp.group.prev())
-hl.bind(mainMod .. " + SHIFT + N", hl.dsp.group.move_window())
-hl.bind(mainMod .. " + SHIFT + P", hl.dsp.group.move_window({ forward = false }))
+-- hl.bind(mainMod .. " + W", hl.dsp.group.toggle())
+-- hl.bind(mainMod .. " + N", hl.dsp.group.next())
+-- hl.bind(mainMod .. " + P", hl.dsp.group.prev())
+-- hl.bind(mainMod .. " + SHIFT + N", hl.dsp.group.move_window())
+-- hl.bind(mainMod .. " + SHIFT + P", hl.dsp.group.move_window({ forward = false }))
 
-hl.bind("SUPER + space", function()
-	local window = hl.get_active_window()
-	if not window then
-		return
-	end
-	hl.dispatch(hl.dsp.window.cycle_next({
-		floating = not window.floating,
-		tiled = window.floating,
-	}))
-end, { description = "Switch focus between tiled and floating windows" })
+-- hl.bind("SUPER + space", function()
+-- 	local window = hl.get_active_window()
+-- 	if not window then
+-- 		return
+-- 	end
+-- 	hl.dispatch(hl.dsp.window.cycle_next({
+-- 		floating = not window.floating,
+-- 		tiled = window.floating,
+-- 	}))
+-- end, { description = "Switch focus between tiled and floating windows" })
 
-hl.bind(mainMod .. " + F", hl.dsp.window.float({ action = "toggle" }))
+-- hl.bind(mainMod .. " + F", hl.dsp.window.float({ action = "toggle" }))
 
-hl.bind(mainMod .. " + TAB", function()
-	hl.dispatch(hl.dsp.window.cycle_next())
-	hl.dispatch(hl.dsp.window.bring_to_top())
-end)
-
-hl.bind(mainMod .. " + SHIFT + TAB", function()
-	hl.dispatch(hl.dsp.window.cycle_next({ next = false }))
-	hl.dispatch(hl.dsp.window.bring_to_top())
-end)
-
-for i = 1, 4 do
+for i = 1, 2 do
 	hl.workspace_rule({ workspace = tostring(i), persistent = true })
 end
-for i = 1, 4 do
+for i = 1, 2 do
 	hl.bind(mainMod .. " + " .. i, hl.dsp.focus({ workspace = i }))
 	hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i }))
 end
@@ -255,4 +257,9 @@ hl.window_rule({
 hl.window_rule({
 	match = { class = "gamescope" },
 	immediate = true,
+})
+
+hl.window_rule({
+	match = { class = ".*" },
+	float = true,
 })
