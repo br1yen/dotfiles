@@ -262,7 +262,7 @@ require("conform").setup({
         markdown = { "prettier" },
     },
     format_on_save = {
-        timeout_ms = 1000,
+        timeout_ms = 500,
         lsp_format = "fallback",
     },
 })
@@ -303,6 +303,8 @@ for i = 1, 9 do
     vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to tab " .. i })
 end
 vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open file explorer" })
+vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Write" })
+vim.keymap.set("n", "<leader>q", "<cmd>w<cr>", { desc = "Write" })
 vim.keymap.set("n", "<C-[>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
