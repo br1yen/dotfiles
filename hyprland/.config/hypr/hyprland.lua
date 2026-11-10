@@ -110,8 +110,8 @@ hl.config({
 		kb_model = "",
 		kb_options = "caps:none",
 		kb_rules = "",
-		repeat_rate = 50,
-		repeat_delay = 250,
+		repeat_rate = 40,
+		repeat_delay = 300,
 
 		sensitivity = 0,
 		accel_profile = "flat",
@@ -196,6 +196,7 @@ hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen())
 
 hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
+hl.bind("SUPER + ALT_L", hl.dsp.window.drag(), { mouse = true })
 hl.bind("SUPER + CTRL_L", hl.dsp.window.resize(), { mouse = true })
 
 hl.bind(
