@@ -309,7 +309,7 @@ for i = 1, 9 do
 end
 vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open file explorer" })
 vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Write" })
-vim.keymap.set("n", "<leader>q", "<cmd>w<cr>", { desc = "Write" })
+vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
 vim.keymap.set("n", "<C-[>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
@@ -333,11 +333,10 @@ vim.keymap.set("n", "<leader>h", "<cmd>FzfLua helptags<cr>", { desc = "Help tags
 vim.keymap.set("n", "<leader>r", "<cmd>FzfLua oldfiles<cr>", { desc = "Recent files" })
 vim.keymap.set("n", "<leader>s", "<cmd>FzfLua lsp_document_symbols<cr>", { desc = "Document symbols" })
 vim.keymap.set("n", "<leader>nf", function()
-    require("fzf-lua").files({ cwd = "~/Sync/Notes", cmd = "rg --files --type md" })
+    require("fzf-lua").files({ cwd = "~/Sync/Notes" })
 end, { desc = "Find notes" })
-
 vim.keymap.set("n", "<leader>ng", function()
-    require("fzf-lua").live_grep({ cwd = "~/Sync/Notes", cmd = "rg --type md --column --line-number" })
+    require("fzf-lua").live_grep({ cwd = "~/Sync/Notes" })
 end, { desc = "Search notes" })
 vim.keymap.set({ "t", "i" }, "<A-h>", "<C-\\><C-n><C-w>h")
 vim.keymap.set({ "t", "i" }, "<A-j>", "<C-\\><C-n><C-w>j")
