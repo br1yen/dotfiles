@@ -261,6 +261,11 @@ require("conform").setup({
         java = { "google-java-format" },
         markdown = { "prettier" },
     },
+    formatters = {
+        ["google-java-format"] = {
+            prepend_args = { "--aosp" },
+        },
+    },
     format_on_save = {
         timeout_ms = 500,
         lsp_format = "fallback",
