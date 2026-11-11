@@ -22,6 +22,8 @@ zmodload zsh/complist
 zstyle ':completion:*' menu select
 zstyle ':completion:*:default' list-colors "${(s.:.)LS_COLORS}"
 
+setopt EXTENDED_GLOB
+
 autoload -Uz compinit
 if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
     compinit
