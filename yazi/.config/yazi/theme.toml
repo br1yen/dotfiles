@@ -1,0 +1,20 @@
+[mgr]
+border_symbol = " "
+border_style = { fg = "reset" }
+
+[indicator]
+padding = { open = "▐", close = "▌" }
+
+[status]
+sep_left = { open = "█", close = "█" }
+sep_right = { open = "█", close = "█" }
+
+[icon]
+dirs = []
+files = []
+exts = []
+globs = []
+conds = []
+
+[spot]
+border = { fg = "#89b4fa" }

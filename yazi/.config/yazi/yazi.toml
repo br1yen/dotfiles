@@ -1,0 +1,23 @@
+[mgr]
+show_hidden = true
+linemode = "none"
+show_symlink = true
+scrolloff = 200
+
+[preview]
+wrap = "no"
+tab_size = 4
+
+[opener]
+edit = [
+	{ run = 'nvim "$@"', block = true, for = "unix" },
+]
+play = [
+	{ run = 'mpv "$@"', orphan = true, for = "unix" },
+]
+view = [
+	{ run = 'imv "$@"', orphan = true, for = "unix" },
+]
+pdf = [
+	{ run = 'zathura "$@"', orphan = true, for = "unix" },
+]

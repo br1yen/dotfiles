@@ -5,7 +5,6 @@ hl.monitor({ output = "eDP-1", mode = "1920x1080@60.01Hz", scale = 1.0 })
 
 hl.on("hyprland.start", function()
 	hl.exec_cmd("hyprsunset")
-	hl.exec_cmd("hypridle")
 	hl.exec_cmd("wl-paste --type text --watch cliphist store")
 	hl.exec_cmd("wl-paste --type image --watch cliphist store")
 	hl.exec_cmd("waybar")
@@ -29,7 +28,7 @@ hl.config({
 		allow_tearing = true,
 		layout = "dwindle",
 		resize_on_border = true,
-		no_focus_fallback = true,
+		no_focus_fallback = false,
 	},
 
 	dwindle = {
@@ -89,6 +88,7 @@ hl.config({
 	binds = {
 		movefocus_cycles_groupfirst = false,
 		drag_threshold = 10,
+		window_direction_monitor_fallback = false,
 	},
 
 	cursor = {
