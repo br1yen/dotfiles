@@ -303,6 +303,40 @@ require("stay-centered").setup({
     disable_on_mouse = true,
 })
 
+vim.pack.add({ "https://github.com/nvim-orgmode/orgmode" })
+
+require("orgmode").setup({
+    org_agenda_files = "~/Sync/Notes/org/**/*",
+    org_default_notes_file = "~/Sync/Notes/org/refile.org",
+
+    org_todo_keywords = { "TODO(t)", "NEXT(n)", "|", "DONE(d)" },
+    org_startup_folded = "showeverything",
+    org_hide_emphasis_markers = true,
+    org_deadline_warning_days = 7,
+
+    org_capture_templates = {
+        t = {
+            description = "Task",
+            template = "* TODO %?\n",
+            target = "~/Sync/Notes/org/inbox.org",
+            headline = "Tasks",
+        },
+        n = {
+            description = "Note",
+            template = "* %?\n  %U",
+            target = "~/Sync/Notes/org/inbox.org",
+            headline = "Notes",
+        },
+        c = {
+            description = "Calendar",
+            template = "* TODO %?\n  DEADLINE: %^t",
+            target = "~/Sync/Notes/org/calendar.org",
+        },
+    },
+})
+
+vim.lsp.enable("org") -- experimental
+
 --- Keybinds / keymaps
 for i = 1, 9 do
     vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to tab " .. i })
