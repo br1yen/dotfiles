@@ -65,6 +65,12 @@ require("mellifluous").setup({
     flat_background = {
         line_numbers = true,
     },
+    highlight_overrides = {
+        dark = function(highlighter, colors)
+            highlighter.set("@org.agenda.scheduled", { fg = colors.green:lightened(10) })
+            highlighter.set("@org.agenda.scheduled_past", { fg = highlighter.get("LineNr").fg })
+        end,
+    },
 })
 vim.cmd.colorscheme("mellifluous")
 
@@ -258,13 +264,7 @@ vim.pack.add({ "https://github.com/stevearc/conform.nvim" })
 require("conform").setup({
     formatters_by_ft = {
         lua = { "stylua" },
-        java = { "google-java-format" },
         markdown = { "prettier" },
-    },
-    formatters = {
-        ["google-java-format"] = {
-            prepend_args = { "--aosp" },
-        },
     },
     format_on_save = {
         timeout_ms = 500,
@@ -304,12 +304,11 @@ require("stay-centered").setup({
 })
 
 vim.pack.add({ "https://github.com/nvim-orgmode/orgmode" })
-
 require("orgmode").setup({
     org_agenda_files = "~/Sync/Notes/org/**/*",
     org_default_notes_file = "~/Sync/Notes/org/refile.org",
 
-    org_todo_keywords = { "TODO(t)", "NEXT(n)", "|", "DONE(d)" },
+    org_todo_keywords = { "TODO(t)", "|", "DONE(d)" },
     org_startup_folded = "showeverything",
     org_hide_emphasis_markers = true,
     org_deadline_warning_days = 7,
@@ -331,11 +330,11 @@ require("orgmode").setup({
             description = "Calendar",
             template = "* TODO %?\n  DEADLINE: %^t",
             target = "~/Sync/Notes/org/calendar.org",
+            headline = "Planned",
         },
     },
 })
-
-vim.lsp.enable("org") -- experimental
+vim.lsp.enable("org")
 
 --- Keybinds / keymaps
 for i = 1, 9 do
