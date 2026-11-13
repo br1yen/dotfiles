@@ -331,7 +331,7 @@ require("orgmode").setup({
         },
         c = {
             description = "Calendar",
-            template = "* TODO %?\n  SCHEDULED: %^t",
+            template = "* TODO %?\n  %^t",
             target = "~/Sync/Notes/org/calendar.org",
             headline = "Planned",
         },

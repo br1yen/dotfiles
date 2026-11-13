@@ -4,11 +4,11 @@ hl.monitor({ output = "DP-3", mode = "1920x1080@180.00Hz", cm = "srgb", bitdepth
 hl.monitor({ output = "eDP-1", mode = "1920x1080@60.01Hz", scale = 1.0 })
 
 hl.on("hyprland.start", function()
-	hl.exec_cmd("hyprsunset")
-	hl.exec_cmd("wl-paste --type text --watch cliphist store")
-	hl.exec_cmd("wl-paste --type image --watch cliphist store")
-	hl.exec_cmd("waybar")
-	hl.exec_cmd("swaybg -i ~/Sync/Pictures/default.jpg")
+    hl.exec_cmd("hyprsunset")
+    hl.exec_cmd("wl-paste --type text --watch cliphist store")
+    hl.exec_cmd("wl-paste --type image --watch cliphist store")
+    hl.exec_cmd("waybar")
+    hl.exec_cmd("swaybg -i ~/Sync/Pictures/default.jpg")
 end)
 
 hl.env("XCURSOR_SIZE", "26")
@@ -17,110 +17,110 @@ hl.env("XCURSOR_THEME", "ComixCursors-White")
 hl.env("HYPRCURSOR_THEME", "ComixCursors-White")
 
 hl.config({
-	general = {
-		gaps_out = 0,
-		gaps_in = 1,
-		border_size = 1,
-		col = {
-			active_border = "#000000",
-			inactive_border = "#000000",
-		},
-		allow_tearing = true,
-		layout = "dwindle",
-		resize_on_border = true,
-		no_focus_fallback = false,
-	},
+    general = {
+        gaps_out = 0,
+        gaps_in = 1,
+        border_size = 1,
+        col = {
+            active_border = "#000000",
+            inactive_border = "#000000",
+        },
+        allow_tearing = true,
+        layout = "dwindle",
+        resize_on_border = true,
+        no_focus_fallback = false,
+    },
 
-	dwindle = {
-		preserve_split = true,
-	},
+    dwindle = {
+        preserve_split = true,
+    },
 
-	render = {
-		direct_scanout = 2,
-		cm_auto_hdr = 0,
-	},
+    render = {
+        direct_scanout = 2,
+        cm_auto_hdr = 0,
+    },
 
-	decoration = {
-		rounding = 0,
-		rounding_power = 1,
+    decoration = {
+        rounding = 0,
+        rounding_power = 1,
 
-		active_opacity = 1.0,
-		inactive_opacity = 1.0,
+        active_opacity = 1.0,
+        inactive_opacity = 1.0,
 
-		shadow = {
-			enabled = false,
-			color = "0x80000000",
-			color_inactive = "0x40000000",
-			offset = { 0, 2 },
-			range = 24,
-			render_power = 3,
-			scale = 1.03,
-			sharp = false,
-		},
+        shadow = {
+            enabled = false,
+            color = "0x80000000",
+            color_inactive = "0x40000000",
+            offset = { 0, 2 },
+            range = 24,
+            render_power = 3,
+            scale = 1.03,
+            sharp = false,
+        },
 
-		blur = {
-			enabled = false,
-		},
-	},
+        blur = {
+            enabled = false,
+        },
+    },
 
-	animations = { enabled = false },
+    animations = { enabled = false },
 
-	group = {
-		groupbar = {
-			enabled = true,
-			font_family = "Inconsolata Medium",
-			font_size = 14,
-			gaps_in = 4,
-			gaps_out = 2,
-			indicator_height = 0,
-			text_color = "0xffffffff",
-			text_color_inactive = "0xffb3b393",
-			text_color_locked_active = "0xff000000",
-		},
-		col = {
-			border_active = "0xff000000",
-			border_inactive = "0xff000000",
-			border_locked_active = "0xff000000",
-			border_locked_inactive = "0xff000000",
-		},
-	},
+    group = {
+        groupbar = {
+            enabled = true,
+            font_family = "Inconsolata Medium",
+            font_size = 14,
+            gaps_in = 4,
+            gaps_out = 2,
+            indicator_height = 0,
+            text_color = "0xffffffff",
+            text_color_inactive = "0xffb3b393",
+            text_color_locked_active = "0xff000000",
+        },
+        col = {
+            border_active = "0xff000000",
+            border_inactive = "0xff000000",
+            border_locked_active = "0xff000000",
+            border_locked_inactive = "0xff000000",
+        },
+    },
 
-	binds = {
-		movefocus_cycles_groupfirst = false,
-		drag_threshold = 10,
-		window_direction_monitor_fallback = false,
-	},
+    binds = {
+        movefocus_cycles_groupfirst = false,
+        drag_threshold = 10,
+        window_direction_monitor_fallback = false,
+    },
 
-	cursor = {
-		no_warps = false,
-	},
+    cursor = {
+        no_warps = false,
+    },
 
-	misc = {
-		force_default_wallpaper = 0,
-		disable_splash_rendering = true,
-		disable_hyprland_logo = true,
-		bell_sound = "none",
-		vrr = 0,
-	},
+    misc = {
+        force_default_wallpaper = 0,
+        disable_splash_rendering = true,
+        disable_hyprland_logo = true,
+        bell_sound = "none",
+        vrr = 0,
+    },
 
-	input = {
-		kb_layout = "us",
-		kb_variant = "",
-		kb_model = "",
-		kb_options = "caps:none",
-		kb_rules = "",
-		repeat_rate = 40,
-		repeat_delay = 300,
+    input = {
+        kb_layout = "us",
+        kb_variant = "",
+        kb_model = "",
+        kb_options = "ctrl:nocaps",
+        kb_rules = "",
+        repeat_rate = 40,
+        repeat_delay = 300,
 
-		sensitivity = 0,
-		accel_profile = "flat",
+        sensitivity = 0,
+        accel_profile = "flat",
 
-		follow_mouse = 1,
+        follow_mouse = 1,
 
-		touchpad = {
-			natural_scroll = false,
-		},
-	},
+        touchpad = {
+            natural_scroll = false,
+        },
+    },
 })
 
 --- Keybinds
@@ -143,20 +143,20 @@ hl.bind(mainMod .. " + minus", hl.dsp.layout("splitratio -0.1"), { repeating = t
 hl.bind(mainMod .. " + equal", hl.dsp.layout("splitratio +0.1"), { repeating = true })
 
 hl.bind(mainMod .. " + H", function()
-	hl.dispatch(hl.dsp.focus({ direction = "left" }))
-	hl.dispatch(hl.dsp.window.bring_to_top())
+    hl.dispatch(hl.dsp.focus({ direction = "left" }))
+    hl.dispatch(hl.dsp.window.bring_to_top())
 end)
 hl.bind(mainMod .. " + J", function()
-	hl.dispatch(hl.dsp.focus({ direction = "down" }))
-	hl.dispatch(hl.dsp.window.bring_to_top())
+    hl.dispatch(hl.dsp.focus({ direction = "down" }))
+    hl.dispatch(hl.dsp.window.bring_to_top())
 end)
 hl.bind(mainMod .. " + K", function()
-	hl.dispatch(hl.dsp.focus({ direction = "up" }))
-	hl.dispatch(hl.dsp.window.bring_to_top())
+    hl.dispatch(hl.dsp.focus({ direction = "up" }))
+    hl.dispatch(hl.dsp.window.bring_to_top())
 end)
 hl.bind(mainMod .. " + L", function()
-	hl.dispatch(hl.dsp.focus({ direction = "right" }))
-	hl.dispatch(hl.dsp.window.bring_to_top())
+    hl.dispatch(hl.dsp.focus({ direction = "right" }))
+    hl.dispatch(hl.dsp.window.bring_to_top())
 end)
 
 hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ direction = "left", group_aware = true }))
@@ -184,11 +184,11 @@ hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down", grou
 -- hl.bind(mainMod .. " + F", hl.dsp.window.float({ action = "toggle" }))
 
 for i = 1, 2 do
-	hl.workspace_rule({ workspace = tostring(i), persistent = true })
+    hl.workspace_rule({ workspace = tostring(i), persistent = true })
 end
 for i = 1, 2 do
-	hl.bind(mainMod .. " + " .. i, hl.dsp.focus({ workspace = i }))
-	hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i }))
+    hl.bind(mainMod .. " + " .. i, hl.dsp.focus({ workspace = i }))
+    hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i }))
 end
 
 hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen())
@@ -199,14 +199,14 @@ hl.bind("SUPER + ALT_L", hl.dsp.window.drag(), { mouse = true })
 hl.bind("SUPER + CTRL_L", hl.dsp.window.resize(), { mouse = true })
 
 hl.bind(
-	"XF86AudioRaiseVolume",
-	hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"),
-	{ locked = true, repeating = true }
+    "XF86AudioRaiseVolume",
+    hl.dsp.exec_cmd("wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"),
+    { locked = true, repeating = true }
 )
 hl.bind(
-	"XF86AudioLowerVolume",
-	hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
-	{ locked = true, repeating = true }
+    "XF86AudioLowerVolume",
+    hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
+    { locked = true, repeating = true }
 )
 hl.bind("XF86AudioMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"), { locked = true })
 hl.bind("XF86AudioMicMute", hl.dsp.exec_cmd("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"), { locked = true })
@@ -219,8 +219,8 @@ hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true 
 
 hl.bind(mainMod .. " + S", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
 hl.bind(
-	mainMod .. " + SHIFT + S",
-	hl.dsp.exec_cmd('grim -g "$(slurp)" ~/Pictures/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png')
+    mainMod .. " + SHIFT + S",
+    hl.dsp.exec_cmd('grim -g "$(slurp)" ~/Pictures/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png')
 )
 hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("~/.config/hypr/scripts/clipmenu.sh"))
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("~/.config/hypr/scripts/fzfpdf.sh"))
@@ -228,38 +228,40 @@ hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("~/.config/hypr/scripts/power.sh
 
 --- Window rules
 hl.window_rule({
-	-- Ignore maximize requests from all apps.
-	name = "suppress-maximize-events",
-	match = { class = ".*" },
+    -- Ignore maximize requests from all apps.
+    name = "suppress-maximize-events",
+    match = { class = ".*" },
 
-	suppress_event = "maximize",
+    suppress_event = "maximize",
 })
 
 hl.window_rule({
-	-- Fix some dragging issues with XWayland
-	name = "fix-xwayland-drags",
-	match = {
-		class = "^$",
-		title = "^$",
-		xwayland = true,
-		float = true,
-		fullscreen = false,
-		pin = false,
-	},
-	no_focus = true,
+    -- Fix some dragging issues with XWayland
+    name = "fix-xwayland-drags",
+    match = {
+        class = "^$",
+        title = "^$",
+        xwayland = true,
+        float = true,
+        fullscreen = false,
+        pin = false,
+    },
+    no_focus = true,
 })
 
 hl.window_rule({
-	match = { class = "cs2" },
-	immediate = true,
+    match = { class = ".*" },
+    float = true,
 })
 
 hl.window_rule({
-	match = { class = "gamescope" },
-	immediate = true,
+    match = { class = "cs2" },
+    immediate = true,
+    fullscreen = true,
 })
 
 hl.window_rule({
-	match = { class = ".*" },
-	float = true,
+    match = { class = "gamescope" },
+    immediate = true,
+    fullscreen = true,
 })
