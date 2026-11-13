@@ -2,6 +2,10 @@
 vim.loader.enable()
 
 vim.g.mapleader = " "
+vim.g.loaded_node_provider = 0
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_python3_provider = 0
+vim.g.loaded_ruby_provider = 0
 
 vim.opt.mouse = "a"
 vim.o.termguicolors = true
@@ -170,11 +174,6 @@ require("mason-tool-installer").setup({
         "jdtls",
         "tinymist",
         "marksman",
-        -- formatters
-        "stylua",
-        "google-java-format",
-        "typstyle",
-        "prettier",
         -- debug
         "java-debug-adapter",
     },
@@ -230,6 +229,24 @@ vim.diagnostic.config({
     },
 })
 
+-- Format on save
+vim.api.nvim_create_autocmd("LspAttach", {
+    callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if not client or not client:supports_method("textDocument/formatting", args.buf) then
+            return
+        end
+        local group = vim.api.nvim_create_augroup("lsp-format-" .. args.buf, { clear = true })
+        vim.api.nvim_create_autocmd("BufWritePre", {
+            group = group,
+            buffer = args.buf,
+            callback = function()
+                vim.lsp.buf.format({ bufnr = args.buf, timeout_ms = 500 })
+            end,
+        })
+    end,
+})
+
 --- Completion
 vim.pack.add({ "https://github.com/nvim-mini/mini.completion" })
 require("mini.completion").setup({})
@@ -257,20 +274,6 @@ vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.o.foldtext = ""
 vim.o.foldlevelstart = 99
 vim.wo.foldcolumn = "1"
-
---- Format
-vim.pack.add({ "https://github.com/stevearc/conform.nvim" })
-
-require("conform").setup({
-    formatters_by_ft = {
-        lua = { "stylua" },
-        markdown = { "prettier" },
-    },
-    format_on_save = {
-        timeout_ms = 500,
-        lsp_format = "fallback",
-    },
-})
 
 --- Fzf-lua
 vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
@@ -328,13 +331,47 @@ require("orgmode").setup({
         },
         c = {
             description = "Calendar",
-            template = "* TODO %?\n  DEADLINE: %^t",
+            template = "* TODO %?\n  SCHEDULED: %^t",
             target = "~/Sync/Notes/org/calendar.org",
             headline = "Planned",
         },
     },
 })
 vim.lsp.enable("org")
+
+vim.pack.add({
+    "https://github.com/3rd/image.nvim",
+    "https://github.com/HakonHarnes/img-clip.nvim",
+})
+
+require("image").setup({
+    backend = "sixel",
+    processor = "magick_cli",
+    integrations = {
+        markdown = {
+            enabled = true,
+            clear_in_insert_mode = true,
+            only_render_image_at_cursor = true,
+            only_render_image_at_cursor_mode = "popup",
+        },
+        org = {
+            enabled = true,
+            only_render_image_at_cursor = true,
+            only_render_image_at_cursor_mode = "popup",
+        },
+    },
+})
+
+require("img-clip").setup({
+    default = {
+        dir_path = "assets",
+        relative_to_current_file = true,
+        prompt_for_file_name = false,
+    },
+    filetypes = {
+        org = { template = "[[file:$FILE_PATH]]" },
+    },
+})
 
 --- Keybinds / keymaps
 for i = 1, 9 do
@@ -381,3 +418,4 @@ vim.keymap.set({ "n" }, "<A-k>", "<C-w>k")
 vim.keymap.set({ "n" }, "<A-l>", "<C-w>l")
 vim.keymap.set({ "n", "x", "o" }, "gs", "<Plug>(leap)")
 vim.keymap.set("n", "gS", "<Plug>(leap-from-window)")
+vim.keymap.set("n", "<leader>p", "<cmd>PasteImage<cr>", { desc = "Paste image from clipboard" })
