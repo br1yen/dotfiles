@@ -73,6 +73,7 @@ require("mellifluous").setup({
         dark = function(highlighter, colors)
             highlighter.set("@org.agenda.scheduled", { fg = colors.green:lightened(10) })
             highlighter.set("@org.agenda.scheduled_past", { fg = highlighter.get("LineNr").fg })
+            highlighter.set("Folded", { fg = colors.green:lightened(10) })
         end,
     },
 })
