@@ -1,16 +1,26 @@
 {
-	"layer": "bottom",
-	"position": "bottom",
-	"height": 18,
-  "margin" : 0,
-  "spacing": 0,
-	"modules-left": ["hyprland/window"],
-	"modules-right": ["clock", "custom/battery"],
-	"hyprland/window": { "format": "{title}" },
-	"clock": { "format": "{:%m-%d-%y, %H:%M}         " },
-  "custom/battery": {
-      "exec": "~/.config/waybar/scripts/battery.sh",
-      "interval": 30,
-      "tooltip": false
-  }
+        "layer": "bottom",
+        "position": "bottom",
+        "height": 20,
+        "margin" : 0,
+        "spacing": 0,
+        "modules-left": [
+        "hyprland/window",
+        "custom/lparen",
+        "tray",
+        "custom/rparen"
+        ],
+        "modules-right": ["clock", "custom/battery"],
+        "hyprland/window": { "format": "{class}" },
+        "clock": { "format": "{:%m-%d-%y, %H:%M}         " },
+        "custom/battery": {
+                "exec": "~/.config/waybar/scripts/battery.sh",
+                "interval": 30,
+                "tooltip": false
+        }, 
+        
+    "custom/lparen": { "format": "   (", "interval": "once", "tooltip": false },
+    "custom/rparen": { "format": ")", "interval": "once", "tooltip": false },
+
+    "tray": { "icon-size": 14, "spacing": 4 }
 }

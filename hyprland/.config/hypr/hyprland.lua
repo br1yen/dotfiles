@@ -183,10 +183,10 @@ hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down", grou
 
 -- hl.bind(mainMod .. " + F", hl.dsp.window.float({ action = "toggle" }))
 
-for i = 1, 2 do
+for i = 1, 3 do
     hl.workspace_rule({ workspace = tostring(i), persistent = true })
 end
-for i = 1, 2 do
+for i = 1, 3 do
     hl.bind(mainMod .. " + " .. i, hl.dsp.focus({ workspace = i }))
     hl.bind(mainMod .. " + SHIFT + " .. i, hl.dsp.window.move({ workspace = i }))
 end
