@@ -5,6 +5,7 @@ hl.monitor({ output = "eDP-1", mode = "1920x1080@60.01Hz", scale = 1.0 })
 
 hl.on("hyprland.start", function()
     hl.exec_cmd("hyprsunset")
+    hl.exec_cmd("nm-applet")
     hl.exec_cmd("wl-paste --type text --watch cliphist store")
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
     hl.exec_cmd("waybar")
@@ -18,7 +19,7 @@ hl.env("HYPRCURSOR_THEME", "ComixCursors-White")
 
 hl.config({
     general = {
-        gaps_out = 0,
+        gaps_out = 2,
         gaps_in = 1,
         border_size = 1,
         col = {
@@ -164,24 +165,24 @@ hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "right", gro
 hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up", group_aware = true }))
 hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down", group_aware = true }))
 
--- hl.bind(mainMod .. " + W", hl.dsp.group.toggle())
--- hl.bind(mainMod .. " + N", hl.dsp.group.next())
--- hl.bind(mainMod .. " + P", hl.dsp.group.prev())
--- hl.bind(mainMod .. " + SHIFT + N", hl.dsp.group.move_window())
--- hl.bind(mainMod .. " + SHIFT + P", hl.dsp.group.move_window({ forward = false }))
+hl.bind(mainMod .. " + W", hl.dsp.group.toggle())
+hl.bind(mainMod .. " + N", hl.dsp.group.next())
+hl.bind(mainMod .. " + P", hl.dsp.group.prev())
+hl.bind(mainMod .. " + SHIFT + N", hl.dsp.group.move_window())
+hl.bind(mainMod .. " + SHIFT + P", hl.dsp.group.move_window({ forward = false }))
 
--- hl.bind("SUPER + space", function()
--- 	local window = hl.get_active_window()
--- 	if not window then
--- 		return
--- 	end
--- 	hl.dispatch(hl.dsp.window.cycle_next({
--- 		floating = not window.floating,
--- 		tiled = window.floating,
--- 	}))
--- end, { description = "Switch focus between tiled and floating windows" })
+hl.bind("SUPER + space", function()
+    local window = hl.get_active_window()
+    if not window then
+        return
+    end
+    hl.dispatch(hl.dsp.window.cycle_next({
+        floating = not window.floating,
+        tiled = window.floating,
+    }))
+end, { description = "Switch focus between tiled and floating windows" })
 
--- hl.bind(mainMod .. " + F", hl.dsp.window.float({ action = "toggle" }))
+hl.bind(mainMod .. " + F", hl.dsp.window.float({ action = "toggle" }))
 
 for i = 1, 3 do
     hl.workspace_rule({ workspace = tostring(i), persistent = true })
@@ -249,10 +250,10 @@ hl.window_rule({
     no_focus = true,
 })
 
-hl.window_rule({
-    match = { class = ".*" },
-    float = true,
-})
+-- hl.window_rule({
+--     match = { class = ".*" },
+--     float = true,
+-- })
 
 hl.window_rule({
     match = { class = "cs2" },

@@ -15,7 +15,7 @@ vim.o.laststatus = 3
 vim.o.showmode = false
 vim.o.cursorline = false
 vim.o.winborder = "none"
-vim.o.colorcolumn = "80"
+vim.o.colorcolumn = "0"
 
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
@@ -46,7 +46,7 @@ vim.o.updatetime = 250
 vim.o.splitright = true
 vim.o.splitbelow = true
 
-vim.o.scrolloff = 0
+vim.o.scrolloff = 999
 vim.o.sidescrolloff = 10
 vim.o.smoothscroll = true
 vim.o.confirm = true
@@ -274,7 +274,7 @@ vim.o.foldmethod = "expr"
 vim.o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
 vim.o.foldtext = ""
 vim.o.foldlevelstart = 99
-vim.wo.foldcolumn = "1"
+vim.wo.foldcolumn = "0"
 
 --- Fzf-lua
 vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
@@ -296,9 +296,6 @@ require("oil").setup({
     },
 })
 
---- Leap
-vim.pack.add({ "https://codeberg.org/andyg/leap.nvim.git" })
-
 --- Stay-centered
 vim.pack.add({ "https://github.com/arnamak/stay-centered.nvim" })
 require("stay-centered").setup({
@@ -314,6 +311,7 @@ require("orgmode").setup({
 
     org_todo_keywords = { "TODO(t)", "|", "DONE(d)" },
     org_startup_folded = "showeverything",
+    org_startup_indented = true,
     org_hide_emphasis_markers = true,
     org_deadline_warning_days = 7,
 
@@ -379,8 +377,6 @@ for i = 1, 9 do
     vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to tab " .. i })
 end
 vim.keymap.set("n", "-", "<cmd>Oil<cr>", { desc = "Open file explorer" })
-vim.keymap.set("n", "<leader>w", "<cmd>w<cr>", { desc = "Write" })
-vim.keymap.set("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
 vim.keymap.set("n", "<C-[>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
 vim.keymap.set("n", "<Esc>", "<cmd>nohlsearch<CR>", { desc = "Remove highlights" })
 vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
@@ -417,6 +413,4 @@ vim.keymap.set({ "n" }, "<A-h>", "<C-w>h")
 vim.keymap.set({ "n" }, "<A-j>", "<C-w>j")
 vim.keymap.set({ "n" }, "<A-k>", "<C-w>k")
 vim.keymap.set({ "n" }, "<A-l>", "<C-w>l")
-vim.keymap.set({ "n", "x", "o" }, "gs", "<Plug>(leap)")
-vim.keymap.set("n", "gS", "<Plug>(leap-from-window)")
 vim.keymap.set("n", "<leader>p", "<cmd>PasteImage<cr>", { desc = "Paste image from clipboard" })
