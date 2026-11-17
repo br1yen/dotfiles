@@ -1,6 +1,6 @@
 * {
-	font-family: "Inconsolata Medium";
-	font-size: 16px;
+    font-family: "Inconsolata Medium";
+    font-size: 16px;
 	border: none;
 	border-radius: 0;
 	min-height: 0;
@@ -12,8 +12,8 @@ window#waybar {
 	background: #1a1a1a;
 	color: #dadada;
 	border-top: 1px solid #000000;
-  margin: 0;
-  padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
 #window, #clock, #battery {

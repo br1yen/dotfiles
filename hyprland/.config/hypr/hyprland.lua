@@ -12,10 +12,10 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("swaybg -i ~/Sync/Pictures/default.jpg")
 end)
 
-hl.env("XCURSOR_SIZE", "26")
-hl.env("HYPRCURSOR_SIZE", "26")
-hl.env("XCURSOR_THEME", "ComixCursors-White")
-hl.env("HYPRCURSOR_THEME", "ComixCursors-White")
+hl.env("XCURSOR_SIZE", "24")
+hl.env("HYPRCURSOR_SIZE", "24")
+hl.env("XCURSOR_THEME", "Hackneyed-Dark")
+hl.env("HYPRCURSOR_THEME", "Hackneyed-Dark")
 
 hl.config({
     general = {
@@ -128,10 +128,10 @@ hl.config({
 local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("~/.config/hypr/scripts/wmenu.sh"))
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("foot yazi"))
-hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("foot nvim"))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("kitty yazi"))
+hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("kitty nvim"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("helium-browser"))
-hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("foot"))
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("kitty"))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 hl.bind(mainMod .. " + ALT + H", hl.dsp.layout("preselect l"))

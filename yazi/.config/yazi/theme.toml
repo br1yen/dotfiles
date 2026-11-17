@@ -1,11 +1,26 @@
 [mgr]
 border_symbol = " "
 border_style = { fg = "reset" }
+find_keyword   = { fg = "yellow", underline = true }
+find_position  = { fg = "magenta", bg = "reset" }
+symlink_target = {}
+
+[tabs]
+active = { bg = "blue" }
+
+[mode]
+normal_main = { bg = "blue" }
+select_main = { bg = "red" }
+unset_main  = { bg = "red" }
+
+[tasks]
+hovered = { fg = "magenta" }
 
 [indicator]
 padding = { open = "▐", close = "▌" }
 
 [status]
+progress_label = {}
 sep_left = { open = "█", close = "█" }
 sep_right = { open = "█", close = "█" }
 
@@ -18,3 +33,4 @@ conds = []
 
 [spot]
 border = { fg = "#89b4fa" }
+hint = { fg = "darkgray" }
