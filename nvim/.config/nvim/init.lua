@@ -343,6 +343,9 @@ vim.pack.add({
     "https://github.com/HakonHarnes/img-clip.nvim",
 })
 
+
+vim.pack.add({ 'https://codeberg.org/andyg/leap.nvim' })
+
 require("image").setup({
     backend = "sixel",
     processor = "magick_cli",
@@ -414,3 +417,13 @@ vim.keymap.set({ "n" }, "<A-j>", "<C-w>j")
 vim.keymap.set({ "n" }, "<A-k>", "<C-w>k")
 vim.keymap.set({ "n" }, "<A-l>", "<C-w>l")
 vim.keymap.set("n", "<leader>p", "<cmd>PasteImage<cr>", { desc = "Paste image from clipboard" })
+vim.keymap.set({ 'n', 'x', 'o' }, 'gs', '<Plug>(leap)')
+vim.keymap.set({ 'n', 'x', 'o' }, 'gl', function()
+    local line = vim.fn.line('.')
+    local top, bot = math.max(1, line - 3), line + 3
+    require('leap').leap {
+        pattern = '\\v(%<' .. top .. 'l|%>' .. bot .. 'l)$',
+        windows = { vim.fn.win_getid() },
+        opts = { safe_labels = '' },
+    }
+end)
