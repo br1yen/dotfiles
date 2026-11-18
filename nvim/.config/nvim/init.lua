@@ -378,7 +378,7 @@ require("img-clip").setup({
     },
 })
 
---- Keybinds / keymaps
+-- Keybinds / keymaps
 for i = 1, 9 do
     vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to tab " .. i })
 end
