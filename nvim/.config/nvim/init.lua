@@ -79,6 +79,7 @@ require("mellifluous").setup({
         end,
     },
 })
+vim.opt.background = "dark"
 vim.cmd.colorscheme("mellifluous")
 
 --- Autocmds
