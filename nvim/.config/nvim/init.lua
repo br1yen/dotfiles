@@ -9,13 +9,14 @@ vim.g.loaded_ruby_provider = 0
 
 vim.opt.mouse = "a"
 vim.o.termguicolors = true
-vim.o.relativenumber = true
+vim.o.relativenumber = false
 vim.o.signcolumn = "no"
-vim.o.laststatus = 3
 vim.o.showmode = false
 vim.o.cursorline = false
 vim.o.winborder = "none"
 vim.o.colorcolumn = "0"
+vim.opt.guicursor = ""
+vim.opt.laststatus = 3
 
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
@@ -54,8 +55,6 @@ vim.o.completeopt = "menuone,noselect,fuzzy"
 vim.o.pumheight = 10
 
 vim.opt.path:append("**")
-
-vim.opt.guicursor = ""
 
 vim.api.nvim_create_autocmd("UIEnter", {
     callback = function()
@@ -411,21 +410,13 @@ end, { desc = "Find notes" })
 vim.keymap.set("n", "<leader>ng", function()
     require("fzf-lua").live_grep({ cwd = "~/Sync/Notes" })
 end, { desc = "Search notes" })
-vim.keymap.set({ "t", "i" }, "<A-h>", "<C-\\><C-n><C-w>h")
-vim.keymap.set({ "t", "i" }, "<A-j>", "<C-\\><C-n><C-w>j")
-vim.keymap.set({ "t", "i" }, "<A-k>", "<C-\\><C-n><C-w>k")
-vim.keymap.set({ "t", "i" }, "<A-l>", "<C-\\><C-n><C-w>l")
-vim.keymap.set({ "n" }, "<A-h>", "<C-w>h")
-vim.keymap.set({ "n" }, "<A-j>", "<C-w>j")
-vim.keymap.set({ "n" }, "<A-k>", "<C-w>k")
-vim.keymap.set({ "n" }, "<A-l>", "<C-w>l")
 vim.keymap.set("n", "<leader>p", "<cmd>PasteImage<cr>", { desc = "Paste image from clipboard" })
 vim.keymap.set({ 'n', 'x', 'o' }, 'gs', '<Plug>(leap)')
 vim.keymap.set({ 'n', 'x', 'o' }, 'gl', function()
     local line = vim.fn.line('.')
     local top, bot = math.max(1, line - 3), line + 3
     require('leap').leap {
-        pattern = '\\v(%<' .. top .. 'l|%>' .. bot .. 'l)$',
+        pattern = '\\v(%<' .. top .. 'l|%>' .. bot .. 'l)^',
         windows = { vim.fn.win_getid() },
         opts = { safe_labels = '' },
     }
