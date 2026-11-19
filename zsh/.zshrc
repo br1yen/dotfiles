@@ -5,11 +5,7 @@ path=(~/.local/bin $path)
 # Default editor
 export EDITOR="nvim"
 export VISUAL="nvim"
-bindkey -v
-export KEYTIMEOUT=1
-bindkey -M viins '^?' backward-delete-char
-bindkey -M viins '^H' backward-delete-char
-bindkey -M viins '^W' backward-kill-word
+bindkey -e
 
 # nvim as man pager
 export MANPAGER='nvim +Man!'
