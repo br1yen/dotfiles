@@ -74,6 +74,7 @@ require("mellifluous").setup({
     highlight_overrides = {
         dark = function(highlighter, colors)
             highlighter.set("@org.agenda.scheduled", { fg = colors.green:lightened(10) })
+            highlighter.set("@org.checkbox.org", { fg = colors.green })
             highlighter.set("@org.agenda.scheduled_past", { fg = highlighter.get("LineNr").fg })
             highlighter.set("Folded", { fg = colors.green:lightened(10) })
         end,
@@ -282,7 +283,32 @@ vim.wo.foldcolumn = "0"
 --- Fzf-lua
 vim.pack.add({ "https://github.com/ibhagwan/fzf-lua" })
 require("fzf-lua").setup({
-    winopts = { border = "none", fullscreen = true },
+    fzf_colors = {
+        ["fg"] = { "fg", "Normal" },
+        ["bg"] = { "bg", "Normal" },
+        ["fg+"] = { "fg", "CursorLine" },
+        ["bg+"] = { "bg", "CursorLine" },
+        ["hl"] = { "fg", "Comment" },
+        ["hl+"] = { "fg", "Statement" },
+        ["border"] = { "fg", "FloatBorder" },
+        ["prompt"] = { "fg", "Special" },
+        ["pointer"] = { "fg", "Special" },
+        ["marker"] = { "fg", "Keyword" },
+    },
+    fzf_opts = {
+        ["--no-scrollbar"] = true,
+    },
+    winopts = {
+        fullscreen = true,
+        border = "none",
+        on_create = function()
+            vim.keymap.set("t", "<C-[>", "<M-Esc>", {
+                buffer = true,
+                nowait = true,
+                silent = true,
+            })
+        end,
+    },
 })
 
 --- Oil
