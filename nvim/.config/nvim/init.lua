@@ -9,7 +9,7 @@ vim.g.loaded_ruby_provider = 0
 
 vim.opt.mouse = "a"
 vim.o.termguicolors = true
-vim.o.relativenumber = false
+vim.o.relativenumber = true
 vim.o.signcolumn = "no"
 vim.o.showmode = false
 vim.o.cursorline = false
@@ -367,44 +367,21 @@ require("orgmode").setup({
 })
 vim.lsp.enable("org")
 
-vim.pack.add({
-    "https://github.com/3rd/image.nvim",
-    "https://github.com/HakonHarnes/img-clip.nvim",
-})
-
-
+--- Leap
 vim.pack.add({ 'https://codeberg.org/andyg/leap.nvim' })
 
-require("image").setup({
-    backend = "sixel",
-    processor = "magick_cli",
-    integrations = {
-        markdown = {
-            enabled = true,
-            clear_in_insert_mode = true,
-            only_render_image_at_cursor = true,
-            only_render_image_at_cursor_mode = "popup",
-        },
-        org = {
-            enabled = true,
-            only_render_image_at_cursor = true,
-            only_render_image_at_cursor_mode = "popup",
-        },
+--- Images
+vim.pack.add({
+    "https://github.com/folke/snacks.nvim",
+})
+
+require("snacks").setup({
+    image = {
+        enabled = true,
     },
 })
 
-require("img-clip").setup({
-    default = {
-        dir_path = "assets",
-        relative_to_current_file = true,
-        prompt_for_file_name = false,
-    },
-    filetypes = {
-        org = { template = "[[file:$FILE_PATH]]" },
-    },
-})
-
--- Keybinds / keymaps
+--- Keybinds / keymaps
 for i = 1, 9 do
     vim.keymap.set("n", "<leader>" .. i, i .. "gt", { desc = "Go to tab " .. i })
 end

@@ -128,10 +128,10 @@ hl.config({
 local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("~/.config/hypr/scripts/wmenu.sh"))
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("kitty yazi"))
-hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("kitty nvim"))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("ghostty yazi"))
+hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("ghostty nvim"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("helium-browser"))
-hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("kitty"))
+hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("ghostty"))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 hl.bind(mainMod .. " + ALT + H", hl.dsp.layout("preselect l"))
