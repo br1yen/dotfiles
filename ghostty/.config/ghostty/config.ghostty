@@ -1,6 +1,9 @@
 font-family = Inconsolata
 font-size = 14
 
+window-padding-y = 0
+window-padding-x = 0
+
 clipboard-write = allow
 clipboard-read = deny
 
@@ -20,10 +23,6 @@ bell-features = no-system,no-audio,no-attention,no-title,no-border
 mouse-scroll-multiplier = precision:0.8,discrete:1
 custom-shader = shaders/cursor-warp.glsl
 custom-shader-animation = true
-
-window-theme = ghostty
-window-titlebar-background = #1a1a1a
-window-titlebar-foreground = #a8a1be
 
 background = #1a1a1a
 foreground = #dadada

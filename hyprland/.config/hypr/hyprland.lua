@@ -6,10 +6,15 @@ hl.monitor({ output = "eDP-1", mode = "1920x1080@60.01Hz", scale = 1.0 })
 hl.on("hyprland.start", function()
     hl.exec_cmd("hyprsunset")
     hl.exec_cmd("nm-applet")
+    hl.exec_cmd("blueman-applet")
     hl.exec_cmd("wl-paste --type text --watch cliphist store")
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
     hl.exec_cmd("waybar")
     hl.exec_cmd("swaybg -i ~/Sync/Pictures/default.jpg")
+
+    if vim.loop.os_gethostname() == "lovetrain" then
+        hl.exec_cmd("hypridle")
+    end
 end)
 
 hl.env("XCURSOR_SIZE", "24")
@@ -19,8 +24,8 @@ hl.env("HYPRCURSOR_THEME", "Hackneyed-Dark")
 
 hl.config({
     general = {
-        gaps_out = 2,
-        gaps_in = 1,
+        gaps_out = 4,
+        gaps_in = 2,
         border_size = 1,
         col = {
             active_border = "#000000",

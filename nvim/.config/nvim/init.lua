@@ -66,7 +66,7 @@ vim.api.nvim_create_autocmd("UIEnter", {
 vim.pack.add({ "https://github.com/ramojus/mellifluous.nvim" })
 require("mellifluous").setup({
     styles = {
-        comments = { italic = false },
+        comments = { italic = true },
     },
     flat_background = {
         line_numbers = true,

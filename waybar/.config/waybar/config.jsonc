@@ -1,7 +1,7 @@
 {
         "layer": "bottom",
         "position": "bottom",
-        "height": 18,
+        "height": 20,
         "margin" : 0,
         "spacing": 0,
         "modules-left": [
@@ -12,7 +12,7 @@
         ],
         "modules-right": ["clock", "custom/battery"],
         "hyprland/window": { "format": "{class}" },
-        "clock": { "format": "{:%m-%d-%y,%H:%M}          " },
+        "clock": { "format": "{%H:%M,%m-%d-%y}          " },
         "custom/battery": {
                 "exec": "~/.config/waybar/scripts/battery.sh",
                 "interval": 30,
