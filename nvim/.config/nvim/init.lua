@@ -341,8 +341,14 @@ require("orgmode").setup({
     org_todo_keywords = { "TODO(t)", "|", "DONE(d)" },
     org_startup_folded = "showeverything",
     org_startup_indented = true,
-    org_hide_emphasis_markers = true,
+    org_hide_leading_stars = true,
+    org_hide_emphasis_markers = false,
     org_deadline_warning_days = 7,
+
+    org_blank_before_new_entry = {
+        heading = false,
+        plain_list_item = false,
+    },
 
     org_capture_templates = {
         t = {
@@ -373,11 +379,29 @@ vim.pack.add({ 'https://codeberg.org/andyg/leap.nvim' })
 --- Images
 vim.pack.add({
     "https://github.com/folke/snacks.nvim",
+    "https://github.com/HakonHarnes/img-clip.nvim",
 })
 
 require("snacks").setup({
     image = {
         enabled = true,
+        icons = {
+            image = "",
+        },
+    },
+})
+
+require("img-clip").setup({
+    default = {
+        dir_path = "assets",
+        relative_to_current_file = true,
+        use_absolute_path = false,
+        prompt_for_file_name = false,
+    },
+    filetypes = {
+        org = {
+            template = "[[file:$FILE_PATH]]",
+        },
     },
 })
 
