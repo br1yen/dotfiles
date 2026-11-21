@@ -132,8 +132,7 @@ hl.config({
 local mainMod = "SUPER"
 
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("~/.config/hypr/scripts/wmenu.sh"))
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("ghostty yazi"))
-hl.bind(mainMod .. " + C", hl.dsp.exec_cmd("ghostty nvim"))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("ghostty -e yazi"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("helium-browser"))
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("ghostty"))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
@@ -143,7 +142,7 @@ hl.bind(mainMod .. " + ALT + L", hl.dsp.layout("preselect r"))
 hl.bind(mainMod .. " + ALT + K", hl.dsp.layout("preselect u"))
 hl.bind(mainMod .. " + ALT + J", hl.dsp.layout("preselect d"))
 
-hl.bind(mainMod .. " + E", hl.dsp.layout("togglesplit"))
+hl.bind(mainMod .. " + R", hl.dsp.layout("togglesplit"))
 hl.bind(mainMod .. " + minus", hl.dsp.layout("splitratio -0.1"), { repeating = true })
 hl.bind(mainMod .. " + equal", hl.dsp.layout("splitratio +0.1"), { repeating = true })
 
@@ -223,10 +222,8 @@ hl.bind("XF86AudioPlay", hl.dsp.exec_cmd("playerctl play-pause"), { locked = tru
 hl.bind("XF86AudioPrev", hl.dsp.exec_cmd("playerctl previous"), { locked = true })
 
 hl.bind(mainMod .. " + S", hl.dsp.exec_cmd('grim -g "$(slurp)" - | wl-copy'))
-hl.bind(
-    mainMod .. " + SHIFT + S",
-    hl.dsp.exec_cmd('grim -g "$(slurp)" ~/Pictures/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png')
-)
+hl.bind(mainMod .. " + SHIFT + S",
+    hl.dsp.exec_cmd('grim -g "$(slurp)" ~/Pictures/screenshots/$(date +%Y-%m-%d_%H-%M-%S).png'))
 hl.bind(mainMod .. " + V", hl.dsp.exec_cmd("~/.config/hypr/scripts/clipmenu.sh"))
 hl.bind(mainMod .. " + O", hl.dsp.exec_cmd("~/.config/hypr/scripts/fzfpdf.sh"))
 hl.bind(mainMod .. " + Escape", hl.dsp.exec_cmd("~/.config/hypr/scripts/power.sh"))
@@ -253,11 +250,6 @@ hl.window_rule({
     },
     no_focus = true,
 })
-
--- hl.window_rule({
---     match = { class = ".*" },
---     float = true,
--- })
 
 hl.window_rule({
     match = { class = "cs2" },
