@@ -12,7 +12,9 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("waybar")
     hl.exec_cmd("swaybg -i ~/Sync/Pictures/mellifluous4.jpg")
 
-    if vim.loop.os_gethostname() == "lovetrain" then
+    local hostname = io.popen("hostname"):read("*a"):gsub("%s+", "")
+
+    if hostname == "lovetrain" then
         hl.exec_cmd("hypridle")
     end
 end)
