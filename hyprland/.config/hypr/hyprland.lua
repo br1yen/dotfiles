@@ -10,7 +10,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("wl-paste --type text --watch cliphist store")
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
     hl.exec_cmd("waybar")
-    hl.exec_cmd("swaybg -i ~/Sync/Pictures/default.jpg")
+    hl.exec_cmd("swaybg -i ~/Sync/Pictures/mellifluous4.jpg")
 
     if vim.loop.os_gethostname() == "lovetrain" then
         hl.exec_cmd("hypridle")
@@ -24,9 +24,9 @@ hl.env("HYPRCURSOR_THEME", "Hackneyed-Dark")
 
 hl.config({
     general = {
-        gaps_out = 4,
-        gaps_in = 2,
-        border_size = 1,
+        gaps_out = 5,
+        gaps_in = 1,
+        border_size = 0,
         col = {
             active_border = "#000000",
             inactive_border = "#000000",
@@ -75,13 +75,12 @@ hl.config({
         groupbar = {
             enabled = true,
             font_family = "Inconsolata Medium",
-            font_size = 14,
+            font_size = 16,
             gaps_in = 4,
             gaps_out = 2,
             indicator_height = 0,
             text_color = "0xffffffff",
-            text_color_inactive = "0xffb3b393",
-            text_color_locked_active = "0xff000000",
+            text_color_inactive = "0xff5b5b5b",
         },
         col = {
             border_active = "0xff000000",

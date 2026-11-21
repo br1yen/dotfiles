@@ -298,6 +298,10 @@ require("fzf-lua").setup({
     fzf_opts = {
         ["--no-scrollbar"] = true,
     },
+    preview = {
+        scrollbar = false,
+        hidden = false,
+    },
     winopts = {
         fullscreen = true,
         border = "none",
@@ -373,9 +377,6 @@ require("orgmode").setup({
 })
 vim.lsp.enable("org")
 
---- Leap
-vim.pack.add({ 'https://codeberg.org/andyg/leap.nvim' })
-
 --- Images
 vim.pack.add({
     "https://github.com/folke/snacks.nvim",
@@ -439,13 +440,3 @@ vim.keymap.set("n", "<leader>ng", function()
     require("fzf-lua").live_grep({ cwd = "~/Sync/Notes" })
 end, { desc = "Search notes" })
 vim.keymap.set("n", "<leader>p", "<cmd>PasteImage<cr>", { desc = "Paste image from clipboard" })
-vim.keymap.set({ 'n', 'x', 'o' }, 'gs', '<Plug>(leap)')
-vim.keymap.set({ 'n', 'x', 'o' }, 'gl', function()
-    local line = vim.fn.line('.')
-    local top, bot = math.max(1, line - 3), line + 3
-    require('leap').leap {
-        pattern = '\\v(%<' .. top .. 'l|%>' .. bot .. 'l)^',
-        windows = { vim.fn.win_getid() },
-        opts = { safe_labels = '' },
-    }
-end)
