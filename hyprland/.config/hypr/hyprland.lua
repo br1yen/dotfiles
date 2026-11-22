@@ -21,8 +21,8 @@ hl.env("HYPRCURSOR_THEME", "Hackneyed-Dark")
 
 hl.config({
     general = {
-        gaps_out = 40,
-        gaps_in = 2,
+        gaps_out = 46,
+        gaps_in = 4,
         border_size = 0,
         col = {
             active_border = "#000000",
