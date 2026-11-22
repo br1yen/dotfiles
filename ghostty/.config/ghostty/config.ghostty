@@ -24,7 +24,6 @@ mouse-scroll-multiplier = precision:0.8,discrete:1
 custom-shader = shaders/cursor-warp.glsl
 custom-shader-animation = true
 
-background-opacity = 0.8
 background = #1a1a1a
 foreground = #dadada
 selection-background = #2d2d2d

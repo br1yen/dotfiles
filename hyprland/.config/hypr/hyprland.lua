@@ -76,9 +76,9 @@ hl.config({
     group = {
         groupbar = {
             enabled = true,
-            font_family = "Inconsolata Medium",
-            font_size = 16,
-            gaps_in = 4,
+            font_family = "Lilex Nerd Font Mono Medium",
+            font_size = 14,
+            gaps_in = 0,
             gaps_out = 2,
             indicator_height = 0,
             text_color = "0xffffffff",

@@ -17,7 +17,6 @@ vim.o.winborder = "none"
 vim.o.colorcolumn = "0"
 vim.opt.guicursor = ""
 vim.opt.laststatus = 3
-
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.o.softtabstop = 4
@@ -66,7 +65,7 @@ vim.api.nvim_create_autocmd("UIEnter", {
 vim.pack.add({ "https://github.com/ramojus/mellifluous.nvim" })
 require("mellifluous").setup({
     styles = {
-        comments = { italic = false },
+        comments = { italic = true },
     },
     flat_background = {
         line_numbers = true,
