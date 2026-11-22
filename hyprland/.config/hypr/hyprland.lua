@@ -126,18 +126,13 @@ hl.config({
 })
 
 --- Keybinds
-local mainMod = "SUPER"
+local mainMod = "ALT"
 
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("~/.config/hypr/scripts/wmenu.sh"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("ghostty -e yazi"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("helium-browser"))
 hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("ghostty"))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
-
-hl.bind(mainMod .. " + ALT + H", hl.dsp.layout("preselect l"))
-hl.bind(mainMod .. " + ALT + L", hl.dsp.layout("preselect r"))
-hl.bind(mainMod .. " + ALT + K", hl.dsp.layout("preselect u"))
-hl.bind(mainMod .. " + ALT + J", hl.dsp.layout("preselect d"))
 
 hl.bind(mainMod .. " + R", hl.dsp.layout("togglesplit"))
 hl.bind(mainMod .. " + minus", hl.dsp.layout("splitratio -0.1"), { repeating = true })
