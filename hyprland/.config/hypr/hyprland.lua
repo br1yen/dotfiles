@@ -11,12 +11,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
     hl.exec_cmd("waybar")
     hl.exec_cmd("swaybg -i ~/Sync/Pictures/mellifluous4.jpg")
-
-    local hostname = io.popen("hostname"):read("*a"):gsub("%s+", "")
-
-    if hostname == "lovetrain" then
-        hl.exec_cmd("hypridle")
-    end
+    hl.exec_cmd("hypridle")
 end)
 
 hl.env("XCURSOR_SIZE", "24")
