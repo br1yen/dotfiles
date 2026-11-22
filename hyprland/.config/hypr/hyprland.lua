@@ -131,7 +131,7 @@ local mainMod = "ALT"
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("~/.config/hypr/scripts/wmenu.sh"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("ghostty -e yazi"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("helium-browser"))
-hl.bind(mainMod .. " + T", hl.dsp.exec_cmd("ghostty"))
+hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd("ghostty"))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 hl.bind(mainMod .. " + R", hl.dsp.layout("togglesplit"))
