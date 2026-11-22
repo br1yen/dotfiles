@@ -42,3 +42,4 @@ setopt SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
 # aliases
 alias grep='grep --color=auto'
 alias diff='diff --color=auto'
+alias vi='nvim'
