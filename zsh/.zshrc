@@ -43,3 +43,5 @@ setopt SHARE_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
 alias grep='grep --color=auto'
 alias diff='diff --color=auto'
 alias vi='nvim'
+alias lockdots='chmod -R a-w "$HOME/.dotfiles"'
+alias unlockdots='chmod -R u+w "$HOME/.dotfiles"'

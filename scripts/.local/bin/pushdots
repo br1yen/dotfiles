@@ -1,6 +1,8 @@
 #!/bin/bash
 
+chmod -R u+w ~/.dotfiles
 cd ~/.dotfiles
 git add .
 git commit -a -m "update"
 git push
+chmod -R a-w ~/.dotfiles
