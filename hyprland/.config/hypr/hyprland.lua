@@ -4,6 +4,7 @@ hl.monitor({ output = "DP-3", mode = "1920x1080@180.00Hz", cm = "srgb", bitdepth
 hl.monitor({ output = "eDP-1", mode = "1920x1080@60.01Hz", scale = 1.0 })
 
 hl.on("hyprland.start", function()
+    hl.exec_cmd("swaybg -i ~/Sync/Pictures/mellifluous4.jpg")
     hl.exec_cmd("hyprsunset")
     hl.exec_cmd("nm-applet")
     hl.exec_cmd("ghostty --gtk-single-instance=true --initial-window=false")
@@ -11,7 +12,6 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("wl-paste --type text --watch cliphist store")
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
     hl.exec_cmd("waybar")
-    hl.exec_cmd("swaybg -i ~/Sync/Pictures/mellifluous4.jpg")
     hl.exec_cmd("hypridle")
 end)
 
