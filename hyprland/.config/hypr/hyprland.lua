@@ -29,13 +29,19 @@ hl.config({
             inactive_border = "#00000020",
         },
         allow_tearing = true,
-        layout = "dwindle",
+        layout = "scrolling",
         resize_on_border = true,
-        no_focus_fallback = true,
+        no_focus_fallback = false,
     },
 
     dwindle = {
         preserve_split = true,
+    },
+
+    scrolling = {
+        fullscreen_on_one_column = false,
+        explicit_column_widths = "0.5, 1.0",
+        follow_min_visible = 1.0
     },
 
     render = {
@@ -71,6 +77,7 @@ hl.config({
     group = {
         groupbar = {
             enabled = true,
+            stacked = true,
             font_family = "Lilex Nerd Font Mono Medium",
             font_size = 14,
             gaps_in = 0,
@@ -88,7 +95,7 @@ hl.config({
     },
 
     binds = {
-        movefocus_cycles_groupfirst = true,
+        movefocus_cycles_groupfirst = false,
         drag_threshold = 10,
         window_direction_monitor_fallback = false,
     },
@@ -134,24 +141,41 @@ hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("helium-browser"))
 hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd("ghostty"))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
-hl.bind(mainMod .. " + R", hl.dsp.layout("togglesplit"))
-hl.bind(mainMod .. " + minus", hl.dsp.layout("splitratio -0.1"), { repeating = true })
-hl.bind(mainMod .. " + equal", hl.dsp.layout("splitratio +0.1"), { repeating = true })
+hl.bind(mainMod .. " + C", hl.dsp.layout("center"))
+hl.bind(mainMod .. " + N", function()
+    hl.dispatch(hl.dsp.layout("focus r"))
+    hl.dispatch(hl.dsp.layout("focus l"))
+end)
+hl.bind(mainMod .. " + P", function()
+    hl.dispatch(hl.dsp.layout("focus l"))
+    hl.dispatch(hl.dsp.layout("focus r"))
+end)
 
-hl.bind(mainMod .. " + H", function()
-    hl.dispatch(hl.dsp.focus({ direction = "left" }))
-    hl.dispatch(hl.dsp.window.bring_to_top())
-end)
-hl.bind(mainMod .. " + J", function()
-    hl.dispatch(hl.dsp.focus({ direction = "down" }))
-end)
-hl.bind(mainMod .. " + K", function()
-    hl.dispatch(hl.dsp.focus({ direction = "up" }))
-    hl.dispatch(hl.dsp.window.bring_to_top())
-end)
-hl.bind(mainMod .. " + L", function()
-    hl.dispatch(hl.dsp.focus({ direction = "right" }))
-    hl.dispatch(hl.dsp.window.bring_to_top())
+local function has_neighbor(dir, back)
+    local before = hl.get_active_window()
+    hl.dispatch(hl.dsp.layout("focus " .. dir))
+    local after = hl.get_active_window()
+    local moved = after ~= nil and before ~= nil and after ~= before
+    if moved then hl.dispatch(hl.dsp.layout("focus " .. back)) end
+    return moved
+end
+
+hl.bind(mainMod .. " + R", function()
+    local wrap = hl.get_config("scrolling.wrap_focus")
+    hl.config({ scrolling = { wrap_focus = false } })
+    local left  = has_neighbor("l", "r")
+    local right = has_neighbor("r", "l")
+    hl.config({ scrolling = { wrap_focus = wrap } })
+
+    hl.dispatch(hl.dsp.layout("colresize +conf"))
+    if left and right then
+        hl.dispatch(hl.dsp.layout("center"))
+    elseif left then
+        hl.dispatch(hl.dsp.layout("focus l"))
+        hl.dispatch(hl.dsp.layout("focus r"))
+    else
+        hl.dispatch(hl.dsp.layout("fit_into_view"))
+    end
 end)
 
 local function group_position(window)
@@ -173,28 +197,71 @@ local function group_position(window)
     return pos, count
 end
 
-local function move_group_first(direction)
+local function focus_tab_first(direction)
     return function()
         local window = hl.get_active_window()
         if not window then
             return
         end
         local pos, count = group_position(window)
-        local forward = direction == "right"
+        local forward = direction == "down"
         local at_edge = (forward and pos == count) or (not forward and pos == 1)
 
         if pos and not at_edge then
-            hl.dispatch(hl.dsp.group.move_window({ forward = forward }))
+            hl.dispatch(forward and hl.dsp.group.next() or hl.dsp.group.prev())
+        else
+            hl.dispatch(hl.dsp.focus({ direction = direction }))
+            hl.dispatch(hl.dsp.window.bring_to_top())
+        end
+    end
+end
+
+hl.bind(mainMod .. " + H", hl.dsp.layout("focus l"))
+hl.bind(mainMod .. " + L", hl.dsp.layout("focus r"))
+hl.bind(mainMod .. " + J", focus_tab_first("down"))
+hl.bind(mainMod .. " + K", focus_tab_first("up"))
+
+local function spit_out(direction)
+    return function()
+        local window = hl.get_active_window()
+        if not window then
+            return
+        end
+        if group_position(window) then
+            hl.dispatch(hl.dsp.window.move({ out_of_group = true }))
+            hl.dispatch(hl.dsp.layout("promote"))
+            if direction == "left" then
+                hl.dispatch(hl.dsp.layout("swapcol l"))
+            end
         else
             hl.dispatch(hl.dsp.window.move({ direction = direction, group_aware = true }))
         end
     end
 end
 
-hl.bind(mainMod .. " + SHIFT + H", move_group_first("left"))
-hl.bind(mainMod .. " + SHIFT + L", move_group_first("right"))
-hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up", group_aware = true }))
-hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down", group_aware = true }))
+local function reorder_in_group(direction)
+    return function()
+        local window = hl.get_active_window()
+        if not window then
+            return
+        end
+        local pos, count = group_position(window)
+        local forward = direction == "down"
+        if pos then
+            local at_edge = (forward and pos == count) or (not forward and pos == 1)
+            if not at_edge then
+                hl.dispatch(hl.dsp.group.move_window({ forward = forward }))
+            end
+        else
+            hl.dispatch(hl.dsp.window.move({ direction = direction }))
+        end
+    end
+end
+
+hl.bind(mainMod .. " + SHIFT + H", spit_out("left"))
+hl.bind(mainMod .. " + SHIFT + L", spit_out("right"))
+hl.bind(mainMod .. " + SHIFT + J", reorder_in_group("down"))
+hl.bind(mainMod .. " + SHIFT + K", reorder_in_group("up"))
 
 hl.bind(mainMod .. " + W", hl.dsp.group.toggle())
 

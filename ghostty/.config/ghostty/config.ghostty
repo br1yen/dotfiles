@@ -8,7 +8,6 @@ clipboard-write = allow
 clipboard-read = deny
 
 confirm-close-surface = false
-scrollback-limit = 25000000
 
 resize-overlay = never
 app-notifications = no-clipboard-copy,no-config-reload
@@ -21,8 +20,9 @@ shell-integration-features = no-cursor
 bell-features = no-system,no-audio,no-attention,no-title,no-border
 
 mouse-scroll-multiplier = precision:0.8,discrete:1
-custom-shader = shaders/cursor-warp.glsl
-custom-shader-animation = true
+
+# custom-shader = shaders/cursor-warp.glsl
+# custom-shader-animation = true
 
 background = #1a1a1a
 foreground = #dadada
