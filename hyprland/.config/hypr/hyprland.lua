@@ -21,17 +21,17 @@ hl.env("HYPRCURSOR_THEME", "Hackneyed-Dark")
 
 hl.config({
     general = {
-        gaps_out = 46,
-        gaps_in = 4,
-        border_size = 0,
+        gaps_out = 50,
+        gaps_in = 0,
+        border_size = 10,
         col = {
-            active_border = "#000000",
-            inactive_border = "#000000",
+            active_border = "#00000040",
+            inactive_border = "#00000020",
         },
         allow_tearing = true,
         layout = "dwindle",
         resize_on_border = true,
-        no_focus_fallback = false,
+        no_focus_fallback = true,
     },
 
     dwindle = {
@@ -55,7 +55,7 @@ hl.config({
             color = "0x80000000",
             color_inactive = "0x40000000",
             offset = { 0, 2 },
-            range = 24,
+            range = 4,
             render_power = 3,
             scale = 1.03,
             sharp = false,
@@ -74,21 +74,21 @@ hl.config({
             font_family = "Lilex Nerd Font Mono Medium",
             font_size = 14,
             gaps_in = 0,
-            gaps_out = 2,
+            gaps_out = 1,
             indicator_height = 0,
             text_color = "0xffffffff",
             text_color_inactive = "0xff5b5b5b",
         },
         col = {
-            border_active = "0xff000000",
-            border_inactive = "0xff000000",
-            border_locked_active = "0xff000000",
-            border_locked_inactive = "0xff000000",
+            border_active = "#00000040",
+            border_inactive = "#00000020",
+            border_locked_active = "#00000040",
+            border_locked_inactive = "#00000020",
         },
     },
 
     binds = {
-        movefocus_cycles_groupfirst = false,
+        movefocus_cycles_groupfirst = true,
         drag_threshold = 10,
         window_direction_monitor_fallback = false,
     },
@@ -131,7 +131,7 @@ local mainMod = "ALT"
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("~/.config/hypr/scripts/wmenu.sh"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("ghostty -e yazi"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("helium-browser"))
-hl.bind(mainMod .. " + SPACE", hl.dsp.exec_cmd("ghostty"))
+hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd("ghostty"))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 hl.bind(mainMod .. " + R", hl.dsp.layout("togglesplit"))
@@ -154,16 +154,49 @@ hl.bind(mainMod .. " + L", function()
     hl.dispatch(hl.dsp.window.bring_to_top())
 end)
 
-hl.bind(mainMod .. " + SHIFT + H", hl.dsp.window.move({ direction = "left", group_aware = true }))
-hl.bind(mainMod .. " + SHIFT + L", hl.dsp.window.move({ direction = "right", group_aware = true }))
+local function group_position(window)
+    local group = window.group
+    if not group or not group.members then
+        return nil
+    end
+    local count = 0
+    local pos
+    for i, member in ipairs(group.members) do
+        count = i
+        if member.address == window.address then
+            pos = i
+        end
+    end
+    if count < 2 then
+        return nil
+    end
+    return pos, count
+end
+
+local function move_group_first(direction)
+    return function()
+        local window = hl.get_active_window()
+        if not window then
+            return
+        end
+        local pos, count = group_position(window)
+        local forward = direction == "right"
+        local at_edge = (forward and pos == count) or (not forward and pos == 1)
+
+        if pos and not at_edge then
+            hl.dispatch(hl.dsp.group.move_window({ forward = forward }))
+        else
+            hl.dispatch(hl.dsp.window.move({ direction = direction, group_aware = true }))
+        end
+    end
+end
+
+hl.bind(mainMod .. " + SHIFT + H", move_group_first("left"))
+hl.bind(mainMod .. " + SHIFT + L", move_group_first("right"))
 hl.bind(mainMod .. " + SHIFT + K", hl.dsp.window.move({ direction = "up", group_aware = true }))
 hl.bind(mainMod .. " + SHIFT + J", hl.dsp.window.move({ direction = "down", group_aware = true }))
 
 hl.bind(mainMod .. " + W", hl.dsp.group.toggle())
-hl.bind(mainMod .. " + N", hl.dsp.group.next())
-hl.bind(mainMod .. " + P", hl.dsp.group.prev())
-hl.bind(mainMod .. " + SHIFT + N", hl.dsp.group.move_window())
-hl.bind(mainMod .. " + SHIFT + P", hl.dsp.group.move_window({ forward = false }))
 
 hl.bind("SUPER + space", function()
     local window = hl.get_active_window()
@@ -188,8 +221,8 @@ end
 
 hl.bind(mainMod .. " + SHIFT + F", hl.dsp.window.fullscreen())
 
-hl.bind("SUPER + mouse:272", hl.dsp.window.drag(), { mouse = true })
-hl.bind("SUPER + mouse:273", hl.dsp.window.resize(), { mouse = true })
+hl.bind(mainMod .. " + mouse:272", hl.dsp.window.drag(), { mouse = true })
+hl.bind(mainMod .. " + mouse:273", hl.dsp.window.resize(), { mouse = true })
 hl.bind("SUPER + ALT_L", hl.dsp.window.drag(), { mouse = true })
 hl.bind("SUPER + CTRL_L", hl.dsp.window.resize(), { mouse = true })
 

@@ -9,7 +9,7 @@
 }
 
 window#waybar {
-	background: transparent;
+	background: #00000020;
 	color: #aeaeae;
 	border-top: 0px solid #000000;
     margin: 0;
