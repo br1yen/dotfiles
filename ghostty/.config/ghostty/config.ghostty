@@ -1,13 +1,16 @@
-font-family = Lilex Nerd Font Mono Medium
+font-family = Lilex Nerd Font Mono
+font-style = Medium
 font-size = 11
 
 window-padding-y = 0
 window-padding-x = 0
-
 clipboard-write = allow
 clipboard-read = deny
 
 confirm-close-surface = false
+
+gtk-single-instance = true
+quit-after-last-window-closed = false
 
 resize-overlay = never
 app-notifications = no-clipboard-copy,no-config-reload

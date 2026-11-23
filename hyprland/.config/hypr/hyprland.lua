@@ -6,6 +6,7 @@ hl.monitor({ output = "eDP-1", mode = "1920x1080@60.01Hz", scale = 1.0 })
 hl.on("hyprland.start", function()
     hl.exec_cmd("hyprsunset")
     hl.exec_cmd("nm-applet")
+    hl.exec_cmd("ghostty --gtk-single-instance=true --initial-window=false")
     hl.exec_cmd("blueman-applet")
     hl.exec_cmd("wl-paste --type text --watch cliphist store")
     hl.exec_cmd("wl-paste --type image --watch cliphist store")
@@ -136,9 +137,9 @@ hl.config({
 local mainMod = "ALT"
 
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("~/.config/hypr/scripts/wmenu.sh"))
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("ghostty -e yazi"))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("ghostty +new-window -e yazi"))
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd("helium-browser"))
-hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd("ghostty"))
+hl.bind(mainMod .. " + RETURN", hl.dsp.exec_cmd("ghostty +new-window"))
 hl.bind(mainMod .. " + Q", hl.dsp.window.close())
 
 hl.bind(mainMod .. " + C", hl.dsp.layout("center"))
