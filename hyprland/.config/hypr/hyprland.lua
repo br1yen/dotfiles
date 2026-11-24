@@ -4,7 +4,7 @@ hl.monitor({ output = "DP-3", mode = "1920x1080@180.00Hz", cm = "srgb", bitdepth
 hl.monitor({ output = "eDP-1", mode = "1920x1080@60.01Hz", scale = 1.0 })
 
 hl.on("hyprland.start", function()
-    hl.exec_cmd("awww.sh")
+    hl.exec_cmd("~/.local/bin/awww.sh")
     hl.exec_cmd("hyprsunset")
     hl.exec_cmd("nm-applet")
     hl.exec_cmd("ghostty --gtk-single-instance=true --initial-window=false")
