@@ -191,13 +191,16 @@ vim.lsp.enable("marksman")
 
 -- Lua
 vim.lsp.config("lua_ls", {
+    on_init = function(client)
+        local path = client.workspace_folders and client.workspace_folders[1].name
+        if path == vim.fn.stdpath("config") then
+            client.config.settings.Lua.workspace.library = { vim.env.VIMRUNTIME }
+        end
+    end,
     settings = {
         Lua = {
             runtime = { version = "LuaJIT" },
-            workspace = {
-                checkThirdParty = false,
-                library = { vim.env.VIMRUNTIME },
-            },
+            workspace = { checkThirdParty = false },
         },
     },
 })
@@ -439,3 +442,6 @@ vim.keymap.set("n", "<leader>ng", function()
     require("fzf-lua").live_grep({ cwd = "~/Sync/Notes" })
 end, { desc = "Search notes" })
 vim.keymap.set("n", "<leader>p", "<cmd>PasteImage<cr>", { desc = "Paste image from clipboard" })
+vim.keymap.set("n", "<leader>x", function()
+    vim.system({ "love", "." })
+end, { desc = "Run LÖVE project" })
