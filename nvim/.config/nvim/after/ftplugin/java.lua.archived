@@ -15,8 +15,8 @@ end
 -- Find the Java debugger bundle if it has been installed.
 local debug_jars = vim.fn.glob(
     vim.fn.stdpath("data")
-        .. "/mason/packages/java-debug-adapter/extension/server/"
-        .. "com.microsoft.java.debug.plugin-*.jar",
+    .. "/mason/packages/java-debug-adapter/extension/server/"
+    .. "com.microsoft.java.debug.plugin-*.jar",
     false,
     true
 )

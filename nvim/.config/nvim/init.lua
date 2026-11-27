@@ -149,19 +149,19 @@ vim.api.nvim_create_autocmd("FileChangedShellPost", {
 })
 
 --- Debug
-vim.pack.add({
-    "https://github.com/mfussenegger/nvim-dap",
-    {
-        src = "https://github.com/igorlfs/nvim-dap-view",
-        version = vim.version.range("1.*"),
-    },
-    "https://github.com/theHamsta/nvim-dap-virtual-text",
-})
-require("dap-view").setup()
-require("nvim-dap-virtual-text").setup({
-    commented = true,
-    highlight_changed_variables = true,
-})
+-- vim.pack.add({
+--     "https://github.com/mfussenegger/nvim-dap",
+--     {
+--         src = "https://github.com/igorlfs/nvim-dap-view",
+--         version = vim.version.range("1.*"),
+--     },
+--     "https://github.com/theHamsta/nvim-dap-virtual-text",
+-- })
+-- require("dap-view").setup()
+-- require("nvim-dap-virtual-text").setup({
+--     commented = true,
+--     highlight_changed_variables = true,
+-- })
 
 --- Mason
 vim.pack.add({
@@ -175,39 +175,37 @@ require("mason-tool-installer").setup({
     ensure_installed = {
         -- LSP servers
         "lua-language-server",
-        "jdtls",
+        -- "jdtls",
         "tinymist",
-        "marksman",
-        -- debug
-        "java-debug-adapter",
+        -- "marksman",
+
+        -- Debug
+        -- "java-debug-adapter",
     },
 })
 --- LSP
 vim.pack.add({ "https://github.com/neovim/nvim-lspconfig" })
 
 -- Markdown
-vim.lsp.config("marksman", { filetypes = { "markdown" } })
-vim.lsp.enable("marksman")
+-- vim.lsp.config("marksman", { filetypes = { "markdown" } })
+-- vim.lsp.enable("marksman")
 
 -- Lua
 vim.lsp.config("lua_ls", {
-    on_init = function(client)
-        local path = client.workspace_folders and client.workspace_folders[1].name
-        if path == vim.fn.stdpath("config") then
-            client.config.settings.Lua.workspace.library = { vim.env.VIMRUNTIME }
-        end
-    end,
     settings = {
         Lua = {
             runtime = { version = "LuaJIT" },
-            workspace = { checkThirdParty = false },
+            workspace = {
+                checkThirdParty = false,
+                library = { vim.env.VIMRUNTIME },
+            },
         },
     },
 })
 vim.lsp.enable({ "lua_ls" })
 
 -- Java
-vim.pack.add({ "https://github.com/mfussenegger/nvim-jdtls" })
+-- vim.pack.add({ "https://github.com/mfussenegger/nvim-jdtls" })
 
 -- Typst
 vim.lsp.config("tinymist", {
@@ -266,7 +264,7 @@ vim.api.nvim_create_autocmd("FileType", {
 
 --- Treesitter
 vim.pack.add({ { src = "https://github.com/nvim-treesitter/nvim-treesitter", version = "main" } })
-local parsers = { "lua", "typst", "java", "markdown", "markdown_inline" }
+local parsers = { "lua", "typst" }
 require("nvim-treesitter").install(parsers)
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "lua", "java", "typst", "markdown" },
@@ -299,10 +297,6 @@ require("fzf-lua").setup({
     },
     fzf_opts = {
         ["--no-scrollbar"] = true,
-    },
-    preview = {
-        scrollbar = false,
-        hidden = false,
     },
     winopts = {
         fullscreen = true,
@@ -420,15 +414,15 @@ vim.keymap.set("t", "<C-[>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 vim.keymap.set("n", "<leader>pc", pack_clean, { desc = "Pack: clean unused" })
 vim.keymap.set("n", "<leader>d", vim.diagnostic.setloclist, { desc = "Diagnostics (loclist)" })
 vim.keymap.set("n", "<leader>D", vim.diagnostic.setqflist, { desc = "Diagnostics (quickfix)" })
-vim.keymap.set("n", "gbb", require("dap").toggle_breakpoint, { desc = "Debug: Toggle breakpoint" })
-vim.keymap.set("n", "gbc", require("dap").continue, { desc = "Debug: Continue" })
-vim.keymap.set("n", "gbn", require("dap").step_over, { desc = "Debug: Step over" })
-vim.keymap.set("n", "gbi", require("dap").step_into, { desc = "Debug: Step into" })
-vim.keymap.set("n", "gbo", require("dap").step_out, { desc = "Debug: Step out" })
-vim.keymap.set("n", "gbt", require("dap").terminate, { desc = "Debug: Terminate" })
-vim.keymap.set("n", "<leader>br", require("dap").repl.open, { desc = "Debug: Open REPL" })
-vim.keymap.set("n", "<leader>bl", require("dap").run_last, { desc = "Debug: Run last configuration" })
-vim.keymap.set("n", "<leader>bv", "<cmd>DapViewToggle<CR>", { desc = "Debug: Toggle view" })
+-- vim.keymap.set("n", "gbb", require("dap").toggle_breakpoint, { desc = "Debug: Toggle breakpoint" })
+-- vim.keymap.set("n", "gbc", require("dap").continue, { desc = "Debug: Continue" })
+-- vim.keymap.set("n", "gbn", require("dap").step_over, { desc = "Debug: Step over" })
+-- vim.keymap.set("n", "gbi", require("dap").step_into, { desc = "Debug: Step into" })
+-- vim.keymap.set("n", "gbo", require("dap").step_out, { desc = "Debug: Step out" })
+-- vim.keymap.set("n", "gbt", require("dap").terminate, { desc = "Debug: Terminate" })
+-- vim.keymap.set("n", "<leader>br", require("dap").repl.open, { desc = "Debug: Open REPL" })
+-- vim.keymap.set("n", "<leader>bl", require("dap").run_last, { desc = "Debug: Run last configuration" })
+-- vim.keymap.set("n", "<leader>bv", "<cmd>DapViewToggle<CR>", { desc = "Debug: Toggle view" })
 vim.keymap.set("n", "<leader>f", "<cmd>FzfLua files<cr>", { desc = "Find files" })
 vim.keymap.set("n", "<leader>g", "<cmd>FzfLua live_grep<cr>", { desc = "Live grep" })
 vim.keymap.set("n", "<leader>l", "<cmd>FzfLua buffers<cr>", { desc = "Buffers" })
